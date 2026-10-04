@@ -47,6 +47,92 @@ El instalador acepta `--dry-run` para revisar el efecto antes de escribir, nunca
 
 El diseño toma patrones verificables de los principales sistemas de agentes —procedimientos por rol y artefactos intermedios, grafos de estado con puntos de control, transferencias con guardrails, sandboxes paralelos, subagentes definidos en archivo, instrucciones por directorio y planes ejecutables— sin depender de ninguno. El detalle está en [AGENT-ORCHESTRATION](docs/manuals/AGENT-ORCHESTRATION.md), Parte II.
 
+## Mapa del repositorio
+
+```text
+dev-funcy-agents-03-10-26/
+├─ AGENTS.md                      Reglas de arranque para cualquier host (fuente única)
+├─ CLAUDE.md                      Importa AGENTS.md para Claude Code
+├─ EOS_MASTER_SYSTEM_INSTRUCTION.md   Constitución maestra (secciones 0–95)
+├─ library.json                  Manifiesto: documentos, fuentes, agentes y pisos por módulo
+├─ .claude-plugin/
+│  ├─ plugin.json                Plugin eos-agents para Claude Code
+│  └─ marketplace.json           Marketplace para `/plugin marketplace add`
+├─ agents/                       13 definiciones de subagentes + README
+├─ skills/                       6 skills de modo: INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT
+├─ docs/
+│  ├─ manuals/                   12 módulos mayores de especificación
+│  ├─ sources/                   4 conversaciones fuente (bytes intactos + SHA-256) y trazabilidad
+│  ├─ CODEX-NAVIGATION-GUIDE.md  Orden de lectura y qué prevalece
+│  ├─ PROJECT-PROFILE.md         Perfil real de esta biblioteca
+│  ├─ VERIFICATION.md            Qué verifica y qué no el validador
+│  └─ DEPTH-REPORT.md            Medidas por módulo
+├─ prompts/                      Prompts de arranque y tareas tipo
+├─ templates/                    Registros reutilizables (ADR, EXEC-PLAN, INCIDENT-RECORD, …)
+├─ scripts/
+│  ├─ validate-library.mjs       Validador sin dependencias
+│  └─ install-agents.mjs         Instalador para Claude Code / Codex
+└─ tests/                        Pruebas del validador (22) y del instalador (9)
+```
+
+## Guía por host, paso a paso
+
+### Claude Code dentro de este repositorio
+
+1. Clona el repositorio y ábrelo en el Code tab.
+2. [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md); Claude lee las reglas EOS al iniciar.
+3. Pide un modo, por ejemplo: «Aplica EOS en MODE=AUDIT y entrégame hallazgos por severidad».
+4. Los 13 subagentes de [agents/](agents/README.md) y las 6 skills quedan disponibles para el orquestador.
+
+### Claude Code como plugin en cualquier proyecto
+
+```bash
+# en Claude Code
+/plugin marketplace add oprbguitar/dev-funcy-agents-03-10-26
+/plugin install eos-agents
+```
+
+Tras instalarlo, los subagentes `eos-*` aparecen en la lista de agentes del host y las skills se cargan cuando la tarea las necesita.
+
+### Claude Code o Codex como copia local
+
+```bash
+# simula primero y revisa qué se crearía
+node scripts/install-agents.mjs --host all --target ../mi-proyecto --dry-run
+
+# instala de verdad (claude | codex | all)
+node scripts/install-agents.mjs --host codex --target ../mi-proyecto
+```
+
+El instalador copia una instantánea de la biblioteca en `.eos/`, coloca agentes y skills en el lugar que cada host espera (`.claude/` para Claude Code, `.agents/` para Codex), reescribe los enlaces internos para que apunten a `.eos/`, añade un bloque EOS delimitado al final del `AGENTS.md` del destino y registra lo creado en `.eos/install-manifest.json`. **Nunca sobrescribe un archivo existente**: lo reporta como omitido. Ejecutarlo dos veces es seguro (idempotente).
+
+Para desinstalar, elimina los archivos listados en `.eos/install-manifest.json` y el bloque entre `<!-- EOS:BEGIN -->` y `<!-- EOS:END -->` de tu `AGENTS.md`.
+
+### Otro host o modelo local
+
+Entrega al modelo [AGENTS.md](AGENTS.md), la skill del modo y el archivo del rol pertinente. La biblioteca funciona por lectura: no necesita red ni servicios de IA activos.
+
+## Profundidad de los doce módulos
+
+Por decisión del propietario, cada módulo mayor supera **1,001 líneas de contenido y 12,000 palabras**, medidas por el validador (excluye líneas vacías, títulos, fences, separadores y puntuación estructural). Medición del 2026-10-03:
+
+| Módulo | Líneas | Palabras |
+|---|---:|---:|
+| [AI-GATEWAY](docs/manuals/AI-GATEWAY.md) | 1 233 | 31 689 |
+| [UPDATES-RELIABILITY](docs/manuals/UPDATES-RELIABILITY.md) | 1 109 | 34 347 |
+| [COMPLIANCE-IP-PRODUCT](docs/manuals/COMPLIANCE-IP-PRODUCT.md) | 1 115 | 33 477 |
+| [PAYMENTS](docs/manuals/PAYMENTS.md) | 1 008 | 16 281 |
+| [SECURITY-FABRIC](docs/manuals/SECURITY-FABRIC.md) | 1 001 | 19 351 |
+| [STORAGE-DATA](docs/manuals/STORAGE-DATA.md) | 1 002 | 16 985 |
+| [PRIME-DIRECTIVE](docs/manuals/PRIME-DIRECTIVE.md) | 1 002 | 18 709 |
+| [AGENT-ORCHESTRATION](docs/manuals/AGENT-ORCHESTRATION.md) | 1 001 | 17 834 |
+| [MIGRATION-HANDOFF](docs/manuals/MIGRATION-HANDOFF.md) | 1 002 | 15 274 |
+| [ENGINEERING-QUALITY](docs/manuals/ENGINEERING-QUALITY.md) | 1 005 | 14 802 |
+| [INCIDENT-RESPONSE](docs/manuals/INCIDENT-RESPONSE.md) | 1 001 | 14 439 |
+| [CAPABILITY-PROFILER](docs/manuals/CAPABILITY-PROFILER.md) | 1 002 | 13 377 |
+
+Los números miden alcance, no calidad técnica; la revisión de dominio sigue siendo necesaria. El [informe de profundidad](docs/DEPTH-REPORT.md) explica el método.
+
 ## Empieza según tu trabajo
 
 | Lo que necesitas | Entrada | Resultado esperado |
