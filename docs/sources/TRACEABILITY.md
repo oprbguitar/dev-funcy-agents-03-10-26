@@ -86,7 +86,7 @@ Fuente exacta: [SRC-02-operational-capabilities.txt](SRC-02-operational-capabili
 
 | Sección original | Línea | Desarrollo principal |
 |---|---:|---|
-| 1. CAPABILITY PROFILER — no instalar todo en todos los sistemas | 24 | [ENGINEERING-QUALITY](../manuals/ENGINEERING-QUALITY.md) |
+| 1. CAPABILITY PROFILER — no instalar todo en todos los sistemas | 24 | [CAPABILITY-PROFILER](../manuals/CAPABILITY-PROFILER.md) |
 | 2. CONNECTION & SESSION OBSERVATORY | 98 | [SECURITY-FABRIC](../manuals/SECURITY-FABRIC.md) |
 | 3. PROXY/IP SECURITY | 193 | [SECURITY-FABRIC](../manuals/SECURITY-FABRIC.md) |
 | 4. CONNECTION ADMIN PANEL | 217 | [SECURITY-FABRIC](../manuals/SECURITY-FABRIC.md) |
