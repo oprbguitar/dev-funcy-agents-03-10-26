@@ -21,6 +21,8 @@ const library = async () => {
   await writeFile(path.join(root, 'docs/manuals/PRIME.md'), `# Prime\n${signature}\n`);
   await writeFile(path.join(root, 'docs/sources/SRC.txt'), 'fuente\n');
   await writeFile(path.join(root, 'docs/sources/source-index.json'), '{}\n');
+  await mkdir(path.join(root, 'scripts'), { recursive: true });
+  await writeFile(path.join(root, 'scripts/eos.mjs'), `// ${signature}\n`);
   await writeFile(path.join(root, 'agents/README.md'), `# Agentes\n${signature}\n`);
   await writeFile(path.join(root, 'agents/eos-demo.md'),
     `---\nname: eos-demo\ndescription: demo\n---\n${signature}\n[Prime](../docs/manuals/PRIME.md) [Web](https://example.com) [Top](#a)\n`);
@@ -61,6 +63,10 @@ test('installs snapshot, Claude agents and skills with rewritten links and a man
   // El bloque instalado apunta al núcleo ligero y deja la constitución completa para carga por secciones.
   assert.match(await readFile(path.join(target, 'AGENTS.md'), 'utf8'),
     /Núcleo obligatorio: `\.eos\/EOS-CORE\.md`[\s\S]*solo por secciones/);
+  // El CLI de contexto y verificación viaja con la instantánea y el bloque explica cómo usarlo.
+  assert.ok(await exists(path.join(target, '.eos/scripts/eos.mjs')));
+  assert.match(await readFile(path.join(target, 'AGENTS.md'), 'utf8'),
+    /node \.eos\/scripts\/eos\.mjs context[\s\S]*node \.eos\/scripts\/eos\.mjs gate/);
   assert.match(await readFile(path.join(target, 'CLAUDE.md'), 'utf8'), /@AGENTS\.md/);
   const manifest = JSON.parse(await readFile(path.join(target, '.eos/install-manifest.json'), 'utf8'));
   assert.equal(manifest.version, '3.0.0');

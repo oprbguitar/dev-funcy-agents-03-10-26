@@ -33,5 +33,9 @@ jobs:
         run: node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs
       - name: Test agent installer with coverage gates
         run: node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs
+      - name: Test EOS context and gate CLI with coverage gates
+        run: node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/eos.test.mjs
+      - name: Smoke-test context pack on the real corpus
+        run: node scripts/eos.mjs context "login sesiones rate limit" --mode AUDIT --list
       - name: Check patch whitespace
         run: git show --format= --check HEAD

@@ -2,6 +2,19 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 3.5.0 — 2026-10-04
+
+### CLI de contexto y verificación
+
+- Añade `scripts/eos.mjs`, sin dependencias ni red ni modelos:
+  - `context "<tarea>" [--mode] [--budget] [--limit] [--list] [--out]`: indexa constitución y manuales por encabezados `#`–`###`, parte secciones mayores de 6,000 caracteres, clasifica con BM25 (encabezado con triple peso, stemming ligero español/inglés, prioridad 1.5× a los manuales del modo) y entrega solo lo que cabe en el presupuesto, con marcas `archivo:líneas`.
+  - `gate [--config] [--json]`: ejecuta `eos.gate.json` y muestra solo los fallos resumidos (máximo 15 líneas por comando) o un bloque `eos-result`.
+  - `index [--out]`: tabla de 1,033 secciones con tokens estimados (unos 510k tokens en total en el corpus).
+- Añade `eos.gate.json` con las cinco verificaciones de la biblioteca y `tests/eos.test.mjs` (14 pruebas, cobertura de líneas y funciones 100%).
+- El instalador copia el CLI a `.eos/scripts/eos.mjs` y documenta su uso en el bloque EOS del destino.
+- EOS-CORE, AGENTS, CLAUDE, orquestador y qa-verifier usan `context --list` antes de cargar manuales y `gate` en lugar de logs completos. El CI ejecuta las pruebas del CLI y una prueba sobre el corpus real.
+- Límite: la selección es léxica; no comprende sinónimos sin raíz común.
+
 ## 3.1.0 — 2026-10-04
 
 ### Contexto ligero
