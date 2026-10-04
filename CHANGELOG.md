@@ -9,6 +9,7 @@
 - Conserva las secciones 0–83 del maestro y añade aclaraciones 84–95 sobre autoridad, capacidades, evidencias, privacidad, permisos, IA, invariantes y gates.
 - Normaliza modos IA a OFF, LOCAL, LOCAL_REMOTE, CLOUD_API, PRIVATE_CLOUD, HYBRID y AUTO. Aclara que la presencia del puerto no activa modelos ni gasto.
 - Corrige el algoritmo AUDIT con evaluación read-only y retorno antes de modificar/configurar componentes. Acota loops por tiempo, pasos, presupuesto y autorización.
+- El algoritmo descarta acciones prohibidas y retorna con propuesta revisable cuando falta autorización, antes de ejecutar o registrar verificación de un cambio inexistente.
 - Añade diez manuales de dominio que desarrollan entradas, responsables, contratos, fallos, aceptación y operación.
 - Añade seis skills canónicas, prompts por especialidad y plantillas para registros verificables.
 - Amplía README, entrada de agentes, perfil real de la biblioteca, guía de navegación, firma y procedencia.

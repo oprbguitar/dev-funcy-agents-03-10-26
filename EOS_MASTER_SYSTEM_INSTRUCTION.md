@@ -2714,10 +2714,14 @@ function EOS(project):
 
         if action.is_forbidden:
             reject_and_report(action)
-        elif action.is_within_auto_scope or authorization.covers(action):
-            execute(action)
-        else:
-            request_human_approval(action)
+            continue
+
+        if not (action.is_within_auto_scope or authorization.covers(action)):
+            proposal = prepare_reviewable_action_without_target_mutation(action)
+            request_human_approval(proposal)
+            return pending_authorization_report(proposal, evidence)
+
+        execute(action)
 
         verify_result()
         update_documentation()
