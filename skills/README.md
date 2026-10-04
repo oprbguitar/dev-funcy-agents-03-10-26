@@ -9,7 +9,7 @@ Son procedimientos documentales y no crean servicios, agentes ni permisos.
 El host decide qué herramientas existen y cómo invocarlas.
 Su instalación global queda fuera del alcance salvo solicitud expresa.
 
-Empieza leyendo la [constitución](../EOS_MASTER_SYSTEM_INSTRUCTION.md),
+Empieza leyendo [EOS-CORE](../EOS-CORE.md) (la [constitución](../EOS_MASTER_SYSTEM_INSTRUCTION.md) solo por secciones),
 el [AGENTS.md](../AGENTS.md) y el [README general](../README.md).
 Escoge un modo principal y carga solo manuales necesarios.
 Combinar modos exige explicar la transición y conservar límites previos.

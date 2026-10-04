@@ -10,7 +10,7 @@ description: Responder a incidentes con contención proporcional, autorizaciones
 ## Trigger
 
 Usa esta skill ante degradación, abuso, exposición o pérdida de servicio.
-Lee la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md)
+Lee [EOS-CORE](../../EOS-CORE.md); abre la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md) solo en las secciones que indique
 y [INCIDENT-RESPONSE](../../docs/manuals/INCIDENT-RESPONSE.md).
 La urgencia no crea permisos extraordinarios.
 

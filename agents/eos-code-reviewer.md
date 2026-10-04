@@ -19,7 +19,7 @@ assistant: "Usaré eos-code-reviewer para examinar consumidores, rutas de error 
 Las optimizaciones pueden eliminar validaciones; el revisor examina consecuencias, no estilo.
 </commentary>
 </example>
-model: inherit
+model: sonnet
 color: red
 tools: ["Read", "Grep", "Glob", "Bash"]
 ---
@@ -65,6 +65,8 @@ Hallazgos:
 Sin hallazgos en: áreas revisadas sin problemas (si aplica)
 Límites: lo que no se revisó
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

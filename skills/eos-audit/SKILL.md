@@ -10,7 +10,7 @@ description: Auditar un destino en lectura y entregar hallazgos verificables sin
 ## Trigger
 
 Usa esta skill cuando el usuario solicita análisis, revisión o auditoría.
-Lee la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md).
+Lee [EOS-CORE](../../EOS-CORE.md); abre la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md) solo en las secciones que indique.
 El modo AUDIT conserva el sistema objetivo en lectura.
 No convierte recomendaciones en cambios ejecutados.
 

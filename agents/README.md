@@ -37,9 +37,22 @@ Ningún agente tiene por definición herramientas para publicar, enviar mensajes
 - Codex lee `AGENTS.md` de forma nativa. `node scripts/install-agents.mjs --host codex --target <ruta>` añade un bloque EOS delimitado al `AGENTS.md` del destino, copia las skills a `.agents/skills/` y los roles a `.agents/eos-agents/`.
 - Para asumir un rol, Codex lee el archivo del agente y aplica su proceso, herramientas permitidas y formato de salida.
 
+## Niveles de modelo
+
+Cada agente declara en `model` el nivel mínimo que su riesgo justifica, para no ejecutar todo con el modelo más caro de la sesión:
+
+| Nivel | Agentes | Criterio |
+|---|---|---|
+| `opus` | architect, security-reviewer, compliance-analyst, incident-commander | Decisiones difíciles de revertir o con impacto legal y de seguridad |
+| `sonnet` | planner, tdd-guide, implementer, code-reviewer, migration-archaeologist, release-manager, docs-writer | Trabajo de ingeniería acotado por un plan |
+| `haiku` | qa-verifier | Ejecutar comandos y reportar estados exactos |
+| `inherit` | orchestrator | Usa el modelo que eligió el responsable para la sesión |
+
+El responsable puede cambiar el valor en el frontmatter o en la copia instalada. Codex y otros hosts ignoran este campo.
+
 ## Formato común de entregas
 
-Todas las definiciones usan el mismo esquema: estado (`COMPLETED`, `PARTIAL`, `BLOCKED`, `FAILED`), archivos, verificaciones con `PASS`/`FAIL`/`NOT_RUN`/`NOT_APPLICABLE` y hallazgos con severidad (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `INFO`) y veredicto (`CONFIRMED`, `PLAUSIBLE`). Así el orquestador consolida entregas de varios agentes.
+Todas las definiciones usan el mismo esquema: estado (`COMPLETED`, `PARTIAL`, `BLOCKED`, `FAILED`), archivos, verificaciones con `PASS`/`FAIL`/`NOT_RUN`/`NOT_APPLICABLE` y hallazgos con severidad (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `INFO`) y veredicto (`CONFIRMED`, `PLAUSIBLE`). Así el orquestador consolida entregas de varios agentes. Cada entrega cierra con el bloque JSON `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md): el orquestador integra leyendo solo ese bloque y abre la prosa únicamente ante `PARTIAL`, `BLOCKED`, `FAILED` o hallazgos `CRITICAL`/`HIGH`.
 
 ## Mantenimiento
 

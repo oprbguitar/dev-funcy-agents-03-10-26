@@ -19,7 +19,7 @@ assistant: "Usaré eos-release-manager para armar el paquete de transferencia co
 La transferencia exige un paquete verificable por el receptor.
 </commentary>
 </example>
-model: inherit
+model: sonnet
 color: blue
 tools: ["Read", "Grep", "Glob", "Bash", "Edit", "Write"]
 ---
@@ -56,6 +56,8 @@ Notas de versión: ruta
 Reversión: procedimiento → ensayada sí/no
 Autorización requerida: acción → destino → efecto
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

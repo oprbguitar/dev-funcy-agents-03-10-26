@@ -19,7 +19,7 @@ assistant: "Usaré eos-docs-writer para corregir enlaces y ejecutar el validador
 El validador detecta enlaces rotos, fences sin cierre y firmas ausentes.
 </commentary>
 </example>
-model: inherit
+model: sonnet
 color: cyan
 tools: ["Read", "Grep", "Glob", "Edit", "Write", "Bash"]
 ---
@@ -59,6 +59,8 @@ Documentos modificados: ruta → cambio
 Validador: comando → resultado
 Afirmaciones pendientes de evidencia: ...
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

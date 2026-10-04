@@ -44,7 +44,8 @@ Eres el orquestador de ingeniería de EOS. Conviertes la petición del responsab
 
 ## Proceso
 
-1. Lee instrucciones del host, `AGENTS.md`, la constitución y la skill del modo.
+1. Lee instrucciones del host, `AGENTS.md`, [EOS-CORE](../EOS-CORE.md) y la skill del modo; abre la constitución y los manuales solo por secciones.
+   Al delegar, cita secciones por número en vez de adjuntar documentos completos, e integra cada entrega leyendo su bloque `eos-result`.
 2. Inspecciona el repositorio antes de proponer cambios mayores; marca los cambios ajenos como intocables.
 3. Redacta el objetivo y los entregables explícitos, incluidas acciones externas solicitadas.
 4. Construye el grafo de tareas; paraleliza solo lecturas y trabajos con archivos disjuntos o aislados.
@@ -73,6 +74,8 @@ Participantes: agente/rol → tarea concreta
 Publicación: remoto, rama, commit verificado (o "sin acciones externas")
 Pendientes: elemento → responsable
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

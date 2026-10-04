@@ -6,7 +6,7 @@ This repository is governed by `EOS_MASTER_SYSTEM_INSTRUCTION.md`.
 
 Any coding agent, autonomous agent, Claude/Codex-style tool, local model, or human-assisted automation operating in this repository must:
 
-1. Read `EOS_MASTER_SYSTEM_INSTRUCTION.md` first.
+1. Read `EOS-CORE.md` first. Open `EOS_MASTER_SYSTEM_INSTRUCTION.md` or a manual only at the sections that EOS-CORE section 9 maps to the task; never load them whole by routine.
 2. Detect operating mode: `INIT`, `ADOPT`, `MIGRATE`, or `AUDIT`.
 3. Inspect the repository before proposing major changes.
 4. Build or refresh the Project Profile.
@@ -30,13 +30,13 @@ Any coding agent, autonomous agent, Claude/Codex-style tool, local model, or hum
 
 ## Source of truth
 
-`EOS_MASTER_SYSTEM_INSTRUCTION.md` is the master constitution for this repository.
+`EOS_MASTER_SYSTEM_INSTRUCTION.md` is the master constitution for this repository. `EOS-CORE.md` is its mandatory operational digest; if they disagree, the constitution prevails and the gap is reported.
 
 **System Owner / Signature:** Pierre R. Boss
 
 ---
 
-## Operación de esta edición — EOS 3.0.0
+## Operación de esta edición — EOS 3.1.0
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
@@ -47,7 +47,7 @@ Lee también [la guía de navegación](docs/CODEX-NAVIGATION-GUIDE.md). La const
 1. Identifica objetivo, modo, criticidad, sistema y límites. Si el encargo es documental, no lo conviertas en implementación de servicios.
 2. Inspecciona los archivos y `git status`; conserva cambios ajenos.
 3. Revisa el perfil real del destino. Para este repositorio usa [PROJECT-PROFILE](docs/PROJECT-PROFILE.md).
-4. Carga la [skill del modo](skills/README.md) y manuales relevantes. No cargues todo por rutina.
+4. Carga [EOS-CORE](EOS-CORE.md), la [skill del modo](skills/README.md) y solo las secciones de constitución y manuales que indica la tabla de carga bajo demanda de EOS-CORE.
 5. Establece un paquete con archivos propios, dependencias, pruebas, presupuesto, permisos y operaciones externas autorizadas.
 6. Reutiliza autorizaciones explícitas existentes dentro de su alcance. Preparar, probar y revisar una propuesta debe preceder a una aprobación pendiente de ejecución externa.
 
@@ -55,7 +55,7 @@ Lee también [la guía de navegación](docs/CODEX-NAVIGATION-GUIDE.md). La const
 
 Los roles concretos están definidos en [agents/](agents/README.md) (`eos-orchestrator`, `eos-planner`, `eos-architect`, `eos-tdd-guide`, `eos-implementer`, `eos-code-reviewer`, `eos-security-reviewer`, `eos-qa-verifier`, `eos-docs-writer`, `eos-migration-archaeologist`, `eos-incident-commander`, `eos-release-manager`, `eos-compliance-analyst`). En Claude Code se cargan como subagentes; en Codex u otros hosts, lee el archivo del rol y aplica su proceso, herramientas permitidas y formato de salida. Para trabajo largo usa [EXEC-PLAN](templates/EXEC-PLAN.md).
 
-Usa planner para cambios complejos; tdd-guide para herramientas nuevas o correcciones; code-reviewer después de cambios; security-reviewer para código sensible y antes de publicar; especialistas de dominio cuando lo justifique el riesgo. Solo llama a agentes que realmente existan en el host. Si ejecutas roles secuencialmente tú mismo, dilo con claridad.
+Usa planner para cambios complejos; tdd-guide para herramientas nuevas o correcciones; code-reviewer después de cambios; security-reviewer para código sensible y antes de publicar; especialistas de dominio cuando lo justifique el riesgo. Solo llama a agentes que realmente existan en el host. Si ejecutas roles secuencialmente tú mismo, dilo con claridad. Cada agente cierra con el bloque `eos-result` de [AGENT-RESULT](templates/AGENT-RESULT.md) y el orquestador integra leyendo ese bloque. Los agentes declaran un nivel de modelo (`haiku`, `sonnet`, `opus`, `inherit`) según riesgo; ver [agents/README](agents/README.md).
 
 Delegar incluye responsabilidad sobre archivos, entregables, límites, contexto mínimo y advertencia de que hay otros colaboradores. Paraleliza lecturas y módulos independientes. Mantén dependencias, edición del mismo archivo y publicación secuenciales. El orchestrator consolida hallazgos y conserva la responsabilidad de la entrega.
 

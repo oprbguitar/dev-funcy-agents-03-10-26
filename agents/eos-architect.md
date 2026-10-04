@@ -19,7 +19,7 @@ assistant: "Usaré eos-architect aplicando el manual AI-GATEWAY para definir mod
 El diseño de IA con privacidad es una decisión arquitectónica con contratos verificables.
 </commentary>
 </example>
-model: inherit
+model: opus
 color: magenta
 tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch"]
 ---
@@ -65,6 +65,8 @@ Contratos: interfaz → invariantes → errores → versionado
 Riesgos y consecuencias aceptadas
 Fuentes verificadas: URL o ruta → fecha de consulta
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

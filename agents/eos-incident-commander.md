@@ -19,7 +19,7 @@ assistant: "Usaré eos-incident-commander para redactar el postmortem sin culpas
 El postmortem convierte el incidente en controles verificables.
 </commentary>
 </example>
-model: inherit
+model: opus
 color: red
 tools: ["Read", "Grep", "Glob", "Bash", "Edit", "Write"]
 ---
@@ -58,6 +58,8 @@ Hipótesis: hipótesis → confianza → verificación
 Próxima actualización: hora
 Decisiones requeridas del responsable: ...
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

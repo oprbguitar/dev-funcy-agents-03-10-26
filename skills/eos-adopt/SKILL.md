@@ -11,7 +11,7 @@ description: Adoptar software existente mediante arqueología, baseline y mejora
 
 Usa esta skill para entender y mantener un sistema existente.
 También sirve antes de corregir un fallo en software desconocido.
-Lee la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md).
+Lee [EOS-CORE](../../EOS-CORE.md); abre la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md) solo en las secciones que indique.
 La regla central es comprender y preservar antes de reemplazar.
 
 ## Entradas

@@ -2,6 +2,16 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 3.1.0 — 2026-10-04
+
+### Contexto ligero
+
+- Añade `EOS-CORE.md` (7.2 KB, unos 2k tokens): destilado normativo de carga obligatoria con tabla de carga bajo demanda por tema, sección constitucional y manual. Sustituye la lectura completa de la constitución (60.7 KB, unos 16k tokens) al inicio de cada tarea y de cada subagente; la constitución sigue prevaleciendo ante discrepancia.
+- Actualiza `AGENTS.md`, skills, orquestador, guía de navegación, BOOTSTRAP e instalador para leer el núcleo y abrir constitución y manuales solo por secciones.
+- Añade la plantilla `AGENT-RESULT` con el bloque JSON `eos-result`; los trece agentes cierran con él y el orquestador integra leyendo solo ese bloque.
+- Asigna niveles de modelo por riesgo: `opus` a architect, security-reviewer, compliance-analyst e incident-commander; `sonnet` a planner, tdd-guide, implementer, code-reviewer, migration-archaeologist, release-manager y docs-writer; `haiku` a qa-verifier; `inherit` al orquestador.
+- Las cifras de tokens son estimaciones por tamaño (unos 3.7 caracteres por token en español), no mediciones de facturación.
+
 ## 3.0.0 — 2026-10-03
 
 ### Sistema de agentes clonable

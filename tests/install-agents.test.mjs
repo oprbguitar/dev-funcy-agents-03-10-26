@@ -58,6 +58,9 @@ test('installs snapshot, Claude agents and skills with rewritten links and a man
   const skill = await readFile(path.join(target, '.claude/skills/eos-audit/SKILL.md'), 'utf8');
   assert.match(skill, /\(\.\.\/\.\.\/\.\.\/\.eos\/docs\/manuals\/PRIME\.md\)/);
   assert.match(await readFile(path.join(target, 'AGENTS.md'), 'utf8'), /EOS:BEGIN[\s\S]*oprbguitar[\s\S]*EOS:END/);
+  // El bloque instalado apunta al núcleo ligero y deja la constitución completa para carga por secciones.
+  assert.match(await readFile(path.join(target, 'AGENTS.md'), 'utf8'),
+    /Núcleo obligatorio: `\.eos\/EOS-CORE\.md`[\s\S]*solo por secciones/);
   assert.match(await readFile(path.join(target, 'CLAUDE.md'), 'utf8'), /@AGENTS\.md/);
   const manifest = JSON.parse(await readFile(path.join(target, '.eos/install-manifest.json'), 'utf8'));
   assert.equal(manifest.version, '3.0.0');

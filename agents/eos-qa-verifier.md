@@ -19,7 +19,7 @@ assistant: "Usaré eos-qa-verifier para ejecutar las pruebas de caracterización
 La equivalencia se demuestra ejecutando los mismos casos en ambos sistemas.
 </commentary>
 </example>
-model: inherit
+model: haiku
 color: green
 tools: ["Read", "Grep", "Glob", "Bash"]
 ---
@@ -55,6 +55,8 @@ Resultados:
 Criterios sin verificación: ...
 Entornos no verificados: ...
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

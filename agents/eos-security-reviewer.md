@@ -19,7 +19,7 @@ assistant: "Antes del push usaré eos-security-reviewer para buscar secretos, ru
 Toda publicación pasa por revisión de secretos y material privado.
 </commentary>
 </example>
-model: inherit
+model: opus
 color: red
 tools: ["Read", "Grep", "Glob", "Bash"]
 ---
@@ -63,6 +63,8 @@ Hallazgos:
 Revisión previa a publicación: secretos / rutas personales / archivos ajenos → resultado
 Riesgos remanentes
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

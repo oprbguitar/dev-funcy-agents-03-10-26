@@ -19,7 +19,7 @@ assistant: "Usaré eos-compliance-analyst para contrastar cada promesa con la ma
 Las promesas solo pueden referirse a capacidades operativas.
 </commentary>
 </example>
-model: inherit
+model: opus
 color: magenta
 tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch"]
 ---
@@ -54,6 +54,8 @@ Licencias: componente → licencia → compatibilidad → acción
 Promesas revisadas: texto → capacidad → estado → coherente sí/no
 Preguntas para revisión competente: ...
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 
