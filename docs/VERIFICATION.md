@@ -2,11 +2,15 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+Edición verificada: 4.0.0 (2026-10-04).
+
 ## Herramientas y scope
 
 La biblioteca utiliza Node.js 24 y su test runner, filesystem, crypto y child_process de la biblioteca estándar. No instala paquetes npm ni módulos Python. Por eso no existe un lockfile que auditar con npm/pip; si se agregan dependencias, debe incorporarse una auditoría real además de revisar origen y licencia.
 
-El programa `scripts/validate-library.mjs` lee, sin modificar, el root elegido explícitamente o el repositorio que contiene el script. Valida forma del manifiesto, documentos registrados, duplicados, firma editorial, cierre de bloques backtick/tilde, enlaces locales en prosa, SHA-256 de fuentes y pisos documentales de los módulos. Rechaza rutas de manifiesto y enlaces que escapen lexicamente del repositorio. No imprime bytes fuente ni valores de secretos.
+El programa `scripts/validate-library.mjs` lee, sin modificar, el root elegido explícitamente o el repositorio que contiene el script. Valida forma del manifiesto, documentos registrados, duplicados, firma editorial, cierre de bloques backtick/tilde, enlaces locales en prosa, SHA-256 de fuentes y pisos documentales de los módulos. Rechaza rutas de manifiesto y enlaces que escapen lexicamente del repositorio. No imprime bytes fuente ni valores de secretos. Desde 4.0.0 también exige que la versión de `library.json` coincida con plugin, marketplace, la entrada más reciente de `CHANGELOG.md` y cada referencia de `version_refs`.
+
+`scripts/install-agents.mjs` instala sin sobrescribir y, con `--update`, reemplaza solo archivos intactos según los SHA-256 de `.eos/install-manifest.json`. `scripts/eos.mjs` selecciona contexto (`context`), ejecuta verificaciones confiadas (`gate`), registra corridas de agentes (`run`, `runs`) y mide la recuperación (`eval-context`).
 
 ## Reproducción
 
@@ -16,6 +20,8 @@ Desde la raíz del repositorio:
 node scripts/validate-library.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs
+node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/eos.test.mjs
+node scripts/eos.mjs eval-context
 git diff --check
 ```
 
@@ -38,6 +44,9 @@ node scripts/validate-library.mjs --root 'C:\ruta\a\copia EOS'
 | Agentes y plugin | Frontmatter de subagentes, coincidencia `name`/archivo, descripción, registro en `documents` y versión de `.claude-plugin/plugin.json` igual a `library.json` |
 | Instalador | Instantánea `.eos/`, copias para Claude Code y Codex, reescritura de enlaces, no sobrescritura, bloque idempotente en `AGENTS.md`/`CLAUDE.md`, simulación, rechazo del origen y CLI |
 | Profundidad | Líneas estructurales excluidas, piso de palabras independiente, perfiles inválidos, módulo no registrado/ausente y reporte de medidas |
+| Versiones | `version_refs`, entrada más reciente del CHANGELOG y marketplace contra `library.json` |
+| Actualización | Hashes por archivo, reemplazo solo de intactos, conflictos con `.eos-new`, instalaciones antiguas sin hashes, retirados y bloque renovado |
+| CLI eos | Stemming, secciones y fragmentos, BM25 con bonus de encabezado y modo, presupuesto, gate bloqueado/confiado/cambiado/riesgoso, uso de Claude y Codex, ledger y evaluación de recuperación |
 
 La edición 2.0 partió de un ciclo RED por ausencia del validador y alcanzó doce pruebas. La edición 3.0 añadió primero cinco pruebas de profundidad que fallaron antes de implementar el control, y después verificó su paso a GREEN. La salida más reciente de tests/CI es la autoridad para el número total de pruebas y la cobertura de líneas, ramas y funciones. El gate exige al menos 80% en cada categoría del código de soporte. No se atribuye esa cobertura a los manuales, proveedores o productos futuros.
 
@@ -62,6 +71,9 @@ El [informe de profundidad](DEPTH-REPORT.md) es una medición de esta revisión 
 - La calidad normativa, contradicciones y adecuación de ejemplos se revisan por dominio. No son certificadas por un test de estructura.
 - Las fuentes legales/técnicas tienen su fecha y alcance de consulta en cada manual. No se garantiza frescura automática.
 - No se prueba un sistema web, login, pago, WAF, backup o modelo real con estos tests.
+- `eval-context` mide 15 casos con secciones esperadas elegidas desde los encabezados. El 2026-10-04 dio Recall@5 0.633, Recall@10 0.767 y MRR 0.718; los dos casos de sinónimos sin raíz común fallan por diseño léxico. Un umbral aprobado no garantiza recuperación en tareas no representadas.
+- La lista de riesgos de `gate` es un freno, no un sandbox: un comando confiado conserva los permisos del usuario que lo ejecuta.
+- `run` mide solo lo que el host reporta; no verifica facturación del proveedor.
 - La detección de secretos exige revisar material completo y diff; una búsqueda de patrones no garantiza ausencia universal de información sensible.
 
 ## Gate antes de publicación

@@ -37,5 +37,7 @@ jobs:
         run: node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/eos.test.mjs
       - name: Smoke-test context pack on the real corpus
         run: node scripts/eos.mjs context "login sesiones rate limit" --mode AUDIT --list
+      - name: Evaluate context retrieval against thresholds
+        run: node scripts/eos.mjs eval-context
       - name: Check patch whitespace
         run: git show --format= --check HEAD

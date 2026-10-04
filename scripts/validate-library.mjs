@@ -98,6 +98,42 @@ async function checkPlugin(root, version) {
     : [`.claude-plugin/plugin.json: versión ${plugin?.version} distinta de ${version}`];
 }
 
+// El marketplace, si existe, declara la versión en metadata y en cada plugin.
+async function checkMarketplace(root, version) {
+  let raw;
+  try { raw = await readFile(path.join(root, '.claude-plugin', 'marketplace.json'), 'utf8'); }
+  catch { return []; }
+  let market;
+  try { market = JSON.parse(raw); } catch { return ['.claude-plugin/marketplace.json inválido']; }
+  const found = [market?.metadata?.version, ...(market?.plugins ?? []).map(plugin => plugin?.version)];
+  return found.filter(value => value !== version)
+    .map(value => `.claude-plugin/marketplace.json: versión ${value} distinta de ${version}`);
+}
+
+// Cada referencia registrada debe citar la versión vigente; evita deriva entre manifiesto y prosa.
+async function checkVersionRefs(root, refs, version, documents) {
+  const errors = [];
+  if (documents.includes('CHANGELOG.md')) {
+    const changelog = await readFile(path.join(root, 'CHANGELOG.md'), 'utf8').catch(() => '');
+    const latest = changelog.match(/^## (\S+)/m)?.[1] ?? 'ninguna';
+    if (latest !== version) errors.push(`CHANGELOG.md: la entrada más reciente es ${latest}, no ${version}`);
+  }
+  if (refs === undefined) return errors;
+  if (!Array.isArray(refs)) return [...errors, 'version_refs debe ser una lista'];
+  for (const ref of refs) {
+    if (!ref || typeof ref.path !== 'string' || typeof ref.pattern !== 'string' || !ref.pattern.includes('{version}')) {
+      errors.push(`version_refs inválido: ${JSON.stringify(ref)}`);
+      continue;
+    }
+    const expected = ref.pattern.replace('{version}', version);
+    const target = inside(root, ref.path);
+    const content = target ? await readFile(target, 'utf8').catch(() => null) : null;
+    if (content === null) errors.push(`${ref.path}: referencia de versión ilegible`);
+    else if (!content.includes(expected)) errors.push(`${ref.path}: falta "${expected}"`);
+  }
+  return errors;
+}
+
 async function checkModule(root, relative, requirement, documents) {
   if (!documents.includes(relative) || !requirement || typeof requirement !== 'object'
     || !Number.isSafeInteger(requirement.min_content_lines) || requirement.min_content_lines < 1
@@ -147,6 +183,8 @@ export async function validateLibrary(root) {
     }
   }
   errors.push(...await checkPlugin(root, manifest.version));
+  errors.push(...await checkMarketplace(root, manifest.version));
+  errors.push(...await checkVersionRefs(root, manifest.version_refs, manifest.version, manifest.documents));
   const modules = [];
   if (Object.hasOwn(manifest, 'module_requirements')) {
     const requirements = manifest.module_requirements;

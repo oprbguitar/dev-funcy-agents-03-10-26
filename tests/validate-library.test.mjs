@@ -215,3 +215,43 @@ test('plugin manifest version must match the library version', () => fixture(asy
   await writeFile(path.join(root, '.claude-plugin/plugin.json'), '{bad');
   assert.match((await validateLibrary(root)).errors.join('\n'), /plugin.json inválido/);
 }));
+
+const withManifest = async (root, extra) => {
+  const manifest = JSON.parse(await readFile(path.join(root, 'library.json'), 'utf8'));
+  await writeFile(path.join(root, 'library.json'), JSON.stringify({ ...manifest, ...extra }));
+};
+
+test('version references must quote the library version in each registered file', () => fixture(async root => {
+  await writeFile(path.join(root, 'README.md'), `# EOS\n\nEdición 2.0.0\n\n${signature}\n\n[Guía](guide.md)\n`);
+  await withManifest(root, { version_refs: [{ path: 'README.md', pattern: 'Edición {version}' }] });
+  assert.deepEqual((await validateLibrary(root)).errors, []);
+  await writeFile(path.join(root, 'README.md'), `# EOS\n\nEdición 1.0.0\n\n${signature}\n\n[Guía](guide.md)\n`);
+  assert.match((await validateLibrary(root)).errors.join('\n'), /README\.md: falta "Edición 2\.0\.0"/);
+  await withManifest(root, { version_refs: [{ path: 'nada.md', pattern: 'v{version}' }, { path: 'README.md' }, 'x'] });
+  const errors = (await validateLibrary(root)).errors.join('\n');
+  assert.match(errors, /nada\.md: referencia de versión ilegible/);
+  assert.match(errors, /version_refs inválido/);
+  await withManifest(root, { version_refs: {} });
+  assert.match((await validateLibrary(root)).errors.join('\n'), /version_refs debe ser una lista/);
+}));
+
+test('the latest CHANGELOG heading must match the library version', () => fixture(async root => {
+  await withManifest(root, { documents: ['README.md', 'guide.md', 'CHANGELOG.md'] });
+  await writeFile(path.join(root, 'CHANGELOG.md'), `# Cambios\n${signature}\n\n## 2.0.0 — hoy\n\n## 1.0.0 — antes\n`);
+  assert.deepEqual((await validateLibrary(root)).errors, []);
+  await writeFile(path.join(root, 'CHANGELOG.md'), `# Cambios\n${signature}\n\n## 1.0.0 — antes\n\n## 2.0.0 — hoy\n`);
+  assert.match((await validateLibrary(root)).errors.join('\n'), /CHANGELOG\.md: la entrada más reciente es 1\.0\.0/);
+  await writeFile(path.join(root, 'CHANGELOG.md'), `# Cambios\n${signature}\n`);
+  assert.match((await validateLibrary(root)).errors.join('\n'), /la entrada más reciente es ninguna/);
+}));
+
+test('marketplace manifest versions must match the library version', () => fixture(async root => {
+  await mkdir(path.join(root, '.claude-plugin'));
+  const market = version => JSON.stringify({ metadata: { version }, plugins: [{ name: 'eos', version }] });
+  await writeFile(path.join(root, '.claude-plugin/marketplace.json'), market('2.0.0'));
+  assert.deepEqual((await validateLibrary(root)).errors, []);
+  await writeFile(path.join(root, '.claude-plugin/marketplace.json'), market('1.0.0'));
+  assert.match((await validateLibrary(root)).errors.join('\n'), /marketplace\.json: versión 1\.0\.0/);
+  await writeFile(path.join(root, '.claude-plugin/marketplace.json'), '{bad');
+  assert.match((await validateLibrary(root)).errors.join('\n'), /marketplace\.json inválido/);
+}));

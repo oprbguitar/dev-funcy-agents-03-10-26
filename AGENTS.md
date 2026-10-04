@@ -36,7 +36,7 @@ Any coding agent, autonomous agent, Claude/Codex-style tool, local model, or hum
 
 ---
 
-## Operación de esta edición — EOS 3.5.0
+## Operación de esta edición — EOS 4.0.0
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
@@ -80,13 +80,14 @@ Delegar incluye responsabilidad sobre archivos, entregables, límites, contexto 
 
 La biblioteca no tiene frontend ni endpoints de aplicación. Prueba el validador con unitarias, integración con archivos y E2E de CLI. Para cambios en su código escribe una prueba que falle antes del ajuste, implementa y revisa cobertura de al menos 80% de líneas, ramas y funciones.
 
-Forma compacta (recomendada para agentes): `node scripts/eos.mjs gate` ejecuta los cinco comandos de [eos.gate.json](eos.gate.json) y muestra solo fallos resumidos. Equivalente detallado:
+Forma compacta (recomendada para agentes): `node scripts/eos.mjs gate` ejecuta los comandos de [eos.gate.json](eos.gate.json) y muestra solo fallos resumidos. La primera vez, o tras editar el archivo, el responsable revisa `gate --plan` y aprueba con `gate --trust`; la confianza se guarda fuera del repositorio con el SHA-256 del archivo. Equivalente detallado:
 
 ```powershell
 node scripts/validate-library.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/eos.test.mjs
+node scripts/eos.mjs eval-context
 git diff --check
 ```
 

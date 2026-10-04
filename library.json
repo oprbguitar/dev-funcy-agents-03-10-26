@@ -1,5 +1,5 @@
 {
-  "version": "3.5.0",
+  "version": "4.0.0",
   "owner": "Pierre R. Boss (oprbguitar)",
   "repository": "oprbguitar/dev-funcy-agents-03-10-26",
   "edition_date": "2026-10-04",
@@ -19,7 +19,10 @@
       "major_module_content_line_minimum",
       "major_module_word_minimum",
       "agent_frontmatter_and_registration",
-      "plugin_manifest_version_consistency"
+      "plugin_manifest_version_consistency",
+      "version_reference_consistency",
+      "marketplace_manifest_version_consistency",
+      "changelog_latest_entry"
     ],
     "does_not_certify": [
       "legal_compliance",
@@ -217,5 +220,31 @@
     "claude_agents_dir": ".claude/agents",
     "claude_skills_dir": ".claude/skills",
     "overwrite_policy": "never_overwrite_existing_files"
-  }
+  },
+  "version_refs": [
+    {
+      "path": "README.md",
+      "pattern": "Edición de especificaciones de ingeniería {version}"
+    },
+    {
+      "path": "README.md",
+      "pattern": "Aplica EOS {version}"
+    },
+    {
+      "path": "docs/PROJECT-PROFILE.md",
+      "pattern": "| Edición | {version}"
+    },
+    {
+      "path": "EOS-CORE.md",
+      "pattern": "núcleo EOS {version}"
+    },
+    {
+      "path": "AGENTS.md",
+      "pattern": "Operación de esta edición — EOS {version}"
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "pattern": "Edición verificada: {version}"
+    }
+  ]
 }
