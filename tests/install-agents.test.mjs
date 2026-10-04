@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { installAgents, rewriteLinks, parseArgs } from '../scripts/install-agents.mjs';
 
 const signature = 'Pierre R. Boss (oprbguitar)';
@@ -151,4 +152,80 @@ test('CLI installs end to end and rejects bad usage', () => withDirs(async (sour
   assert.match(run.stdout, /creados/);
   const refused = spawnSync(process.execPath, [script, '--target', source, '--source', source], { encoding: 'utf8' });
   assert.equal(refused.status, 1);
+}));
+
+const bumpLibrary = async (source, version, agentText) => {
+  const manifest = JSON.parse(await readFile(path.join(source, 'library.json'), 'utf8'));
+  await writeFile(path.join(source, 'library.json'), JSON.stringify({ ...manifest, version }));
+  await writeFile(path.join(source, 'agents/eos-demo.md'), `---\nname: eos-demo\ndescription: demo\n---\n${signature}\n${agentText}\n`);
+};
+
+test('records file hashes so a later update can tell untouched files from local edits', () => withDirs(async (source, target) => {
+  await installAgents({ source, target, host: 'claude' });
+  const manifest = JSON.parse(await readFile(path.join(target, '.eos/install-manifest.json'), 'utf8'));
+  assert.match(manifest.files['.claude/agents/eos-demo.md'], /^[a-f\d]{64}$/);
+  assert.match(manifest.files['.eos/AGENTS.md'], /^[a-f\d]{64}$/);
+}));
+
+test('update replaces untouched files, keeps local edits as conflicts and refreshes the EOS block', () => withDirs(async (source, target) => {
+  await writeFile(path.join(target, 'AGENTS.md'), '# Reglas locales\n');
+  await installAgents({ source, target, host: 'claude' });
+  await writeFile(path.join(target, '.claude/skills/eos-audit/SKILL.md'), 'editado por el equipo\n');
+  await bumpLibrary(source, '4.0.0', 'versión nueva');
+  await writeFile(path.join(source, 'skills/eos-audit/SKILL.md'), `---\nname: eos-audit\ndescription: audit\n---\n${signature}\nnueva skill\n`);
+
+  const plan = await installAgents({ source, target, host: 'claude', update: true, dryRun: true });
+  assert.ok(plan.updated.includes('.claude/agents/eos-demo.md'));
+  assert.ok(plan.conflicts.includes('.claude/skills/eos-audit/SKILL.md'));
+  assert.match(await readFile(path.join(target, '.claude/agents/eos-demo.md'), 'utf8'), /Prime/);
+
+  const result = await installAgents({ source, target, host: 'claude', update: true });
+  assert.match(await readFile(path.join(target, '.claude/agents/eos-demo.md'), 'utf8'), /versión nueva/);
+  assert.equal(await readFile(path.join(target, '.claude/skills/eos-audit/SKILL.md'), 'utf8'), 'editado por el equipo\n');
+  assert.match(await readFile(path.join(target, '.claude/skills/eos-audit/SKILL.md.eos-new'), 'utf8'), /nueva skill/);
+  assert.ok(result.unchanged.includes('.eos/docs/manuals/PRIME.md'));
+  const agents = await readFile(path.join(target, 'AGENTS.md'), 'utf8');
+  assert.ok(agents.startsWith('# Reglas locales\n'));
+  assert.match(agents, /## EOS 4\.0\.0/);
+  assert.doesNotMatch(agents, /## EOS 3\.0\.0/);
+  assert.equal(agents.match(/EOS:BEGIN/g).length, 1);
+  const manifest = JSON.parse(await readFile(path.join(target, '.eos/install-manifest.json'), 'utf8'));
+  assert.equal(manifest.version, '4.0.0');
+
+  const again = await installAgents({ source, target, host: 'claude', update: true });
+  assert.equal(again.updated.length, 0);
+  assert.ok(again.conflicts.includes('.claude/skills/eos-audit/SKILL.md'));
+}));
+
+test('update treats legacy installs without hashes as EOS-owned only inside .eos and reports removals', () => withDirs(async (source, target) => {
+  await installAgents({ source, target, host: 'claude' });
+  const record = path.join(target, '.eos/install-manifest.json');
+  const legacy = JSON.parse(await readFile(record, 'utf8'));
+  delete legacy.files;
+  legacy.created.push('.claude/agents/eos-retirado.md');
+  await writeFile(record, JSON.stringify(legacy));
+  await writeFile(path.join(source, 'docs/manuals/PRIME.md'), `# Prime v2\n${signature}\n`);
+  await bumpLibrary(source, '4.0.0', 'versión nueva');
+  const result = await installAgents({ source, target, host: 'claude', update: true });
+  assert.ok(result.updated.includes('.eos/docs/manuals/PRIME.md'));
+  assert.ok(result.conflicts.includes('.claude/agents/eos-demo.md'));
+  assert.ok(result.removed.includes('.claude/agents/eos-retirado.md'));
+  assert.match(await readFile(path.join(target, '.eos/docs/manuals/PRIME.md'), 'utf8'), /Prime v2/);
+}));
+
+test('update creates missing files and appends the block when absent', () => withDirs(async (source, target) => {
+  const result = await installAgents({ source, target, host: 'codex', update: true });
+  assert.ok(result.created.includes('.agents/eos-agents/eos-demo.md'));
+  assert.match(await readFile(path.join(target, 'AGENTS.md'), 'utf8'), /EOS:BEGIN/);
+  assert.deepEqual(parseArgs(['--target', 'x', '--update']), { target: 'x', host: 'all', dryRun: false, update: true });
+}));
+
+test('CLI prints the update plan by category', () => withDirs(async (source, target) => {
+  await installAgents({ source, target, host: 'claude' });
+  await bumpLibrary(source, '4.0.0', 'versión nueva');
+  const script = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'scripts', 'install-agents.mjs');
+  const run = spawnSync(process.execPath, [script, '--source', source, '--target', target, '--host', 'claude', '--update', '--dry-run'], { encoding: 'utf8' });
+  assert.equal(run.status, 0);
+  assert.match(run.stdout, /Simulación de actualización/);
+  assert.match(run.stdout, /~ \.claude\/agents\/eos-demo\.md \(actualizado\)/);
 }));

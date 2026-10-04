@@ -2,6 +2,18 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 4.0.0 — 2026-10-04
+
+### Seguridad, actualización y medición
+
+- **Gate con frontera de confianza.** `eos gate` ya no ejecuta un `eos.gate.json` sin revisión: `--plan` muestra comandos y SHA-256, `--trust` registra la aprobación en `~/.eos/trusted-gates.json` (fuera del repositorio) sin ejecutar nada y cualquier edición devuelve el gate a `BLOCKED` (código 2). Descarga y ejecución, borrado masivo, `git push`, `npm publish` y `gh pr merge` nunca se pueden confiar.
+- **Actualización segura.** `install-agents.mjs --update [--dry-run]` registra el SHA-256 de cada archivo instalado, reemplaza solo los intactos, conserva ediciones locales con la propuesta en `.eos-new`, informa retirados y renueva el bloque EOS de `AGENTS.md`. Las instalaciones 3.x sin hashes actualizan solo `.eos/`.
+- **Consistencia de versión.** El validador compara `library.json` con marketplace, la entrada más reciente del CHANGELOG y `version_refs` (README, PROJECT-PROFILE, EOS-CORE, AGENTS, VERIFICATION). Corrige la deriva 3.0.0/3.5.0 de README y PROJECT-PROFILE.
+- **Evaluación de contexto.** `eos eval-context` mide Recall@5, Recall@10 y MRR sobre `evals/context/cases.json` (15 casos, 2 de sinónimos difíciles). Línea base 0.60/0.60; el bonus por encabezado elegido con esta evaluación sube Recall@10 a 0.767 y MRR a 0.718. El CI exige al menos 0.70 y 0.65.
+- **Medición real.** `eos run --agent <rol> -- <comando>` registra en `.eos/runs.jsonl` el uso que reportan Claude Code (`--output-format json`) o Codex (`exec --json`); `eos runs` resume por agente. Sin datos del host queda `n/d`.
+- Pruebas: validador 25, instalador 14, CLI 18; cobertura de líneas y funciones 100% en los tres scripts.
+- No incluye runtime DAG propio: el host sigue ejecutando agentes por decisión de diseño.
+
 ## 3.5.0 — 2026-10-04
 
 ### CLI de contexto y verificación

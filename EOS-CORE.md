@@ -63,6 +63,8 @@ No fabriques pruebas ni cumplimiento · no ocultes fallos · no borres pruebas p
 - Escala los registros a la tarea: un parche pequeño no genera todo el inventario documental.
 - Antes de abrir manuales ejecuta `node scripts/eos.mjs context "<tarea>" --mode <MODO> --list` (o `.eos/scripts/eos.mjs` en un proyecto instalado) y carga solo lo que liste; sin `--list` entrega el paquete dentro de `--budget`.
 - Verifica con `node scripts/eos.mjs gate --json`: ejecuta `eos.gate.json` y devuelve solo los fallos resumidos. No pegues logs completos al contexto.
+- `gate` no ejecuta un `eos.gate.json` sin revisión: devuelve `BLOCKED` (código 2). Un agente nunca ejecuta `gate --trust` por su cuenta; muestra `gate --plan` al responsable y pide la confianza como aprobación A3. Un repositorio ajeno o en AUDIT se trata como no confiable.
+- Mide en lugar de estimar: lanza subagentes del host con `node scripts/eos.mjs run --agent <rol> -- <comando>` y consulta `eos.mjs runs`; los campos sin medición quedan `n/d`.
 
 ## 9. Carga bajo demanda
 
@@ -87,4 +89,4 @@ Carga una fila solo cuando la tarea toca su tema. Lee la sección indicada, no e
 
 Una entrega termina cuando se puede verificar, operar y mantener.
 
-**Pierre R. Boss (oprbguitar)** — núcleo EOS 3.5.0. Desarrollo documental asistido por IA.
+**Pierre R. Boss (oprbguitar)** — núcleo EOS 4.0.0. Desarrollo documental asistido por IA.

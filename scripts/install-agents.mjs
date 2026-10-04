@@ -5,6 +5,7 @@
 // no descarga código, no ejecuta comandos externos y no toca permisos del host.
 import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const HOSTS = new Set(['claude', 'codex', 'all']);
@@ -14,6 +15,7 @@ const SNAPSHOT_EXTRAS = ['.claude-plugin/plugin.json', '.claude-plugin/marketpla
 const END = '<!-- EOS:END -->';
 
 const toPosix = value => value.split(path.sep).join('/');
+const sha256 = data => createHash('sha256').update(data).digest('hex');
 const exists = file => stat(file).then(() => true, () => false);
 const isInside = (parent, child) => {
   const relative = path.relative(parent, child);
@@ -51,7 +53,8 @@ const eosBlock = version => [
   '',
   'Ahorro de contexto (sin modelo, sin red):',
   '- `node .eos/scripts/eos.mjs context "<tarea>" --mode <MODO> --list` muestra qué secciones cargar; sin `--list` entrega el paquete dentro del presupuesto (`--budget`, 8000 tokens por defecto).',
-  '- `node .eos/scripts/eos.mjs gate --json` ejecuta los comandos de `eos.gate.json` del proyecto y devuelve solo fallos resumidos como bloque `eos-result`.',
+  '- `node .eos/scripts/eos.mjs gate --json` ejecuta los comandos de `eos.gate.json` y devuelve solo fallos resumidos; exige revisión previa (`gate --plan`, luego `gate --trust` por el responsable).',
+  '- `node .eos/scripts/eos.mjs run --agent <rol> -- <comando del host>` registra tokens y costo reales en `.eos/runs.jsonl`; `runs` los resume.',
   '',
   'Antes de cambiar código: inspecciona el repositorio, detecta el modo, respeta cambios ajenos y entrega evidencia verificable.',
   END,
@@ -60,7 +63,7 @@ const eosBlock = version => [
 
 const claudeBlock = [BEGIN, '<!-- Reglas EOS de Pierre R. Boss (oprbguitar) vía AGENTS.md -->', '@AGENTS.md', END, ''].join('\n');
 
-export async function installAgents({ source, target, host = 'all', dryRun = false }) {
+export async function installAgents({ source, target, host = 'all', dryRun = false, update = false }) {
   if (!HOSTS.has(host)) throw new Error(`host inválido: ${host}; usa claude, codex o all`);
   const libraryRoot = path.resolve(source);
   const destRoot = path.resolve(target);
@@ -69,25 +72,55 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
   try { manifest = JSON.parse(await readFile(path.join(libraryRoot, 'library.json'), 'utf8')); }
   catch { throw new Error('library.json ausente o inválido en el origen'); }
 
+  const snapshotRoot = path.join(destRoot, '.eos');
+  const record = path.join(snapshotRoot, 'install-manifest.json');
+  const previous = JSON.parse(await readFile(record, 'utf8').catch(() => '{"created":[]}'));
+  const recorded = previous.files ?? {};
+  const files = { ...recorded };
   const created = [];
   const skipped = [];
-  const snapshotRoot = path.join(destRoot, '.eos');
-  const put = async (destFile, content) => {
-    const relative = toPosix(path.relative(destRoot, destFile));
-    if (await exists(destFile)) { skipped.push(relative); return; }
-    created.push(relative);
+  const updated = [];
+  const unchanged = [];
+  const conflicts = [];
+  const desired = new Set();
+  const write = async (destFile, content) => {
     if (dryRun) return;
     await mkdir(path.dirname(destFile), { recursive: true });
     await writeFile(destFile, content);
   };
-  const appendBlock = async (destFile, block, alreadyPresent) => {
+  // Instalación: nunca sobrescribe. Actualización: reemplaza solo lo que EOS escribió y nadie editó;
+  // una edición local queda intacta y la versión nueva se deja al lado como <archivo>.eos-new.
+  const put = async (destFile, content) => {
+    const relative = toPosix(path.relative(destRoot, destFile));
+    const hash = sha256(content);
+    desired.add(relative);
+    const current = await readFile(destFile).catch(() => null);
+    if (current === null) { created.push(relative); files[relative] = hash; await write(destFile, content); return; }
+    if (!update) { skipped.push(relative); return; }
+    const currentHash = sha256(current);
+    if (currentHash === hash) { unchanged.push(relative); files[relative] = hash; return; }
+    const untouched = recorded[relative] ? recorded[relative] === currentHash
+      : !previous.files && relative.startsWith('.eos/');
+    if (untouched) { updated.push(relative); files[relative] = hash; await write(destFile, content); return; }
+    conflicts.push(relative);
+    await write(`${destFile}.eos-new`, content);
+  };
+  const placeBlock = async (destFile, block, alreadyPresent) => {
     const relative = toPosix(path.relative(destRoot, destFile));
     const current = await readFile(destFile, 'utf8').catch(() => null);
-    if (current !== null && alreadyPresent(current)) { skipped.push(relative); return; }
+    if (current !== null && alreadyPresent(current)) {
+      const begin = current.indexOf(BEGIN);
+      const finish = current.indexOf(END, begin);
+      if (!update || begin < 0 || finish < 0) { skipped.push(relative); return; }
+      const next = current.slice(0, begin) + block.trimEnd() + current.slice(finish + END.length);
+      if (next === current) { unchanged.push(relative); return; }
+      updated.push(relative);
+      await write(destFile, next);
+      return;
+    }
     created.push(relative);
-    if (dryRun) return;
     const separator = current && !current.endsWith('\n') ? '\n\n' : current ? '\n' : '';
-    await writeFile(destFile, `${current ?? ''}${separator}${block}`);
+    await write(destFile, (current ?? '') + separator + block);
   };
 
   const snapshot = [...manifest.documents, ...manifest.sources.map(item => item.path), 'library.json'];
@@ -115,25 +148,29 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
     for (const file of agents) await copyRewritten(file, path.join(destRoot, '.agents/eos-agents', path.basename(file)));
     for (const file of skills) await copyRewritten(file, skillDest('.agents/skills', file));
   }
-  await appendBlock(path.join(destRoot, 'AGENTS.md'), eosBlock(manifest.version), text => text.includes(BEGIN));
+  await placeBlock(path.join(destRoot, 'AGENTS.md'), eosBlock(manifest.version), text => text.includes(BEGIN));
   if (host === 'claude' || host === 'all') {
-    await appendBlock(path.join(destRoot, 'CLAUDE.md'), claudeBlock,
+    await placeBlock(path.join(destRoot, 'CLAUDE.md'), claudeBlock,
       text => text.includes(BEGIN) || text.includes('@AGENTS.md'));
   }
+  // Retirados: instalados antes y ausentes de esta versión. Solo se informan; borrar es decisión humana.
+  const removed = update
+    ? [...new Set([...(previous.created ?? []), ...Object.keys(recorded)])]
+      .filter(relative => !desired.has(relative) && relative !== 'AGENTS.md' && relative !== 'CLAUDE.md')
+    : [];
 
-  if (!dryRun && created.length) {
-    const record = path.join(snapshotRoot, 'install-manifest.json');
-    const previous = JSON.parse(await readFile(record, 'utf8').catch(() => '{"created":[]}'));
-    await writeFile(record, `${JSON.stringify({
+  if (!dryRun && (created.length || update)) {
+    await writeFile(record, JSON.stringify({
       tool: 'scripts/install-agents.mjs',
       owner: manifest.owner,
       version: manifest.version,
       host,
       installed_at: new Date().toISOString(),
-      created: [...new Set([...previous.created, ...created])],
-    }, null, 2)}\n`);
+      created: [...new Set([...(previous.created ?? []), ...created])],
+      files,
+    }, null, 2) + '\n');
   }
-  return { created, skipped, dryRun };
+  return { created, skipped, updated, unchanged, conflicts, removed, dryRun };
 }
 
 export function parseArgs(args) {
@@ -141,25 +178,36 @@ export function parseArgs(args) {
   for (let index = 0; index < args.length; index += 1) {
     const flag = args[index];
     if (flag === '--dry-run') { options.dryRun = true; continue; }
+    if (flag === '--update') { options.update = true; continue; }
     if (!['--target', '--host', '--source'].includes(flag) || !args[index + 1]) return null;
     options[flag.slice(2)] = args[index + 1];
     index += 1;
   }
   if (!options.target) return null;
-  const { target, host, dryRun, source } = options;
-  return source ? { target, host, dryRun, source } : { target, host, dryRun };
+  const { target, host, dryRun, source, update } = options;
+  return { target, host, dryRun, ...(source ? { source } : {}), ...(update ? { update } : {}) };
 }
 
 async function main(args) {
   const options = parseArgs(args);
   if (!options) {
-    process.stderr.write('Uso: node scripts/install-agents.mjs --target <directorio> [--host claude|codex|all] [--dry-run]\n');
+    process.stderr.write('Uso: node scripts/install-agents.mjs --target <directorio> [--host claude|codex|all] [--update] [--dry-run]\n');
     process.exitCode = 1;
     return;
   }
   const source = options.source ?? path.dirname(path.dirname(fileURLToPath(import.meta.url)));
   try {
     const result = await installAgents({ ...options, source });
+    if (options.update) {
+      const head = result.dryRun ? 'Simulación de actualización' : 'Actualización completada';
+      process.stdout.write(head + ': ' + result.created.length + ' nuevos, ' + result.updated.length + ' actualizados, '
+        + result.unchanged.length + ' sin cambios, ' + result.conflicts.length + ' conflictos, ' + result.removed.length + ' retirados\n');
+      for (const file of result.created) process.stdout.write('  + ' + file + '\n');
+      for (const file of result.updated) process.stdout.write('  ~ ' + file + ' (actualizado)\n');
+      for (const file of result.conflicts) process.stdout.write('  ! ' + file + ' (modificado localmente; propuesta en ' + file + '.eos-new)\n');
+      for (const file of result.removed) process.stdout.write('  - ' + file + ' (ya no forma parte de EOS; revísalo y bórralo si corresponde)\n');
+      return;
+    }
     const summary = result.dryRun
       ? `Simulación: se crearían ${result.created.length} archivos; ${result.skipped.length} existentes no se modificarían`
       : `Instalación completada: ${result.created.length} archivos creados, ${result.skipped.length} omitidos por existir`;
