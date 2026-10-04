@@ -19,6 +19,7 @@ Copiar únicamente los formatos pertinentes.
 |---|---|
 | [PROJECT-PROFILE.md](PROJECT-PROFILE.md) | Inicio o adopción |
 | [TASK-PACKET.md](TASK-PACKET.md) | Asignación y handoff |
+| [EXEC-PLAN.md](EXEC-PLAN.md) | Trabajo largo con varios hitos o agentes |
 | [ADR.md](ADR.md) | Decisión arquitectónica |
 | [FINDING.md](FINDING.md) | Riesgo con evidencia |
 | [EXCEPTION.md](EXCEPTION.md) | Desviación temporal permitida |

@@ -1,3 +1,4 @@
+# Configuración del repositorio EOS — Pierre R. Boss (oprbguitar).
 * text=auto
 *.md text eol=lf
 *.mjs text eol=lf

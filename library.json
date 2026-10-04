@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "3.0.0",
   "owner": "Pierre R. Boss (oprbguitar)",
   "repository": "oprbguitar/dev-funcy-agents-03-10-26",
   "edition_date": "2026-10-03",
@@ -15,7 +15,11 @@
       "inline_local_markdown_links",
       "fenced_code_closure",
       "source_sha256_integrity",
-      "repository_escape_prevention"
+      "repository_escape_prevention",
+      "major_module_content_line_minimum",
+      "major_module_word_minimum",
+      "agent_frontmatter_and_registration",
+      "plugin_manifest_version_consistency"
     ],
     "does_not_certify": [
       "legal_compliance",
@@ -30,26 +34,44 @@
     "AGENTS.md",
     "AUTHORSHIP.md",
     "CHANGELOG.md",
+    "CLAUDE.md",
+    "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+    "README.md",
+    "agents/README.md",
+    "agents/eos-architect.md",
+    "agents/eos-code-reviewer.md",
+    "agents/eos-compliance-analyst.md",
+    "agents/eos-docs-writer.md",
+    "agents/eos-implementer.md",
+    "agents/eos-incident-commander.md",
+    "agents/eos-migration-archaeologist.md",
+    "agents/eos-orchestrator.md",
+    "agents/eos-planner.md",
+    "agents/eos-qa-verifier.md",
+    "agents/eos-release-manager.md",
+    "agents/eos-security-reviewer.md",
+    "agents/eos-tdd-guide.md",
     "docs/CODEX-NAVIGATION-GUIDE.md",
+    "docs/DEPTH-REPORT.md",
     "docs/PROJECT-PROFILE.md",
     "docs/VERIFICATION.md",
     "docs/manuals/AGENT-ORCHESTRATION.md",
     "docs/manuals/AI-GATEWAY.md",
+    "docs/manuals/CAPABILITY-PROFILER.md",
     "docs/manuals/COMPLIANCE-IP-PRODUCT.md",
     "docs/manuals/ENGINEERING-QUALITY.md",
     "docs/manuals/INCIDENT-RESPONSE.md",
     "docs/manuals/MIGRATION-HANDOFF.md",
     "docs/manuals/PAYMENTS.md",
+    "docs/manuals/PRIME-DIRECTIVE.md",
     "docs/manuals/SECURITY-FABRIC.md",
     "docs/manuals/STORAGE-DATA.md",
     "docs/manuals/UPDATES-RELIABILITY.md",
     "docs/sources/README.md",
     "docs/sources/TRACEABILITY.md",
-    "EOS_MASTER_SYSTEM_INSTRUCTION.md",
     "prompts/BOOTSTRAP.md",
     "prompts/README.md",
     "prompts/TASKS.md",
-    "README.md",
     "skills/README.md",
     "skills/eos-adopt/SKILL.md",
     "skills/eos-audit/SKILL.md",
@@ -60,6 +82,7 @@
     "templates/ADR.md",
     "templates/CAPABILITY-MATRIX.md",
     "templates/EXCEPTION.md",
+    "templates/EXEC-PLAN.md",
     "templates/FINDING.md",
     "templates/HANDOFF-CHECKLIST.md",
     "templates/INCIDENT-RECORD.md",
@@ -107,5 +130,90 @@
       "numbered_sections": 40,
       "authority": "historical_source_not_runtime_instruction"
     }
-  ]
+  ],
+  "depth_contract": {
+    "requested_by": "Pierre R. Boss (oprbguitar)",
+    "scope": "each major instruction module",
+    "counting": "nonblank content lines; exclude headings, fence markers, separators and structural punctuation",
+    "semantic_acceptance": "domain review; line/word counts do not establish technical depth"
+  },
+  "module_requirements": {
+    "docs/manuals/PRIME-DIRECTIVE.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/CAPABILITY-PROFILER.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/AGENT-ORCHESTRATION.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/AI-GATEWAY.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/SECURITY-FABRIC.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/INCIDENT-RESPONSE.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/PAYMENTS.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/STORAGE-DATA.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/UPDATES-RELIABILITY.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/ENGINEERING-QUALITY.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/COMPLIANCE-IP-PRODUCT.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    },
+    "docs/manuals/MIGRATION-HANDOFF.md": {
+      "min_content_lines": 1001,
+      "min_words": 12000
+    }
+  },
+  "agents": [
+    "agents/eos-architect.md",
+    "agents/eos-code-reviewer.md",
+    "agents/eos-compliance-analyst.md",
+    "agents/eos-docs-writer.md",
+    "agents/eos-implementer.md",
+    "agents/eos-incident-commander.md",
+    "agents/eos-migration-archaeologist.md",
+    "agents/eos-orchestrator.md",
+    "agents/eos-planner.md",
+    "agents/eos-qa-verifier.md",
+    "agents/eos-release-manager.md",
+    "agents/eos-security-reviewer.md",
+    "agents/eos-tdd-guide.md"
+  ],
+  "agent_system": {
+    "hosts": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "plugin_manifest": ".claude-plugin/plugin.json",
+    "marketplace_manifest": ".claude-plugin/marketplace.json",
+    "installer": "scripts/install-agents.mjs",
+    "codex_skills_dir": ".agents/skills",
+    "claude_agents_dir": ".claude/agents",
+    "claude_skills_dir": ".claude/skills",
+    "overwrite_policy": "never_overwrite_existing_files"
+  }
 }

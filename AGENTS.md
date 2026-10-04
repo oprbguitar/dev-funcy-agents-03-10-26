@@ -36,7 +36,7 @@ Any coding agent, autonomous agent, Claude/Codex-style tool, local model, or hum
 
 ---
 
-## Operación de esta edición — EOS 2.0.0
+## Operación de esta edición — EOS 3.0.0
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
@@ -53,19 +53,26 @@ Lee también [la guía de navegación](docs/CODEX-NAVIGATION-GUIDE.md). La const
 
 ### Roles y colaboración
 
+Los roles concretos están definidos en [agents/](agents/README.md) (`eos-orchestrator`, `eos-planner`, `eos-architect`, `eos-tdd-guide`, `eos-implementer`, `eos-code-reviewer`, `eos-security-reviewer`, `eos-qa-verifier`, `eos-docs-writer`, `eos-migration-archaeologist`, `eos-incident-commander`, `eos-release-manager`, `eos-compliance-analyst`). En Claude Code se cargan como subagentes; en Codex u otros hosts, lee el archivo del rol y aplica su proceso, herramientas permitidas y formato de salida. Para trabajo largo usa [EXEC-PLAN](templates/EXEC-PLAN.md).
+
 Usa planner para cambios complejos; tdd-guide para herramientas nuevas o correcciones; code-reviewer después de cambios; security-reviewer para código sensible y antes de publicar; especialistas de dominio cuando lo justifique el riesgo. Solo llama a agentes que realmente existan en el host. Si ejecutas roles secuencialmente tú mismo, dilo con claridad.
 
 Delegar incluye responsabilidad sobre archivos, entregables, límites, contexto mínimo y advertencia de que hay otros colaboradores. Paraleliza lecturas y módulos independientes. Mantén dependencias, edición del mismo archivo y publicación secuenciales. El orchestrator consolida hallazgos y conserva la responsabilidad de la entrega.
 
 ### Reglas de edición
 
-- `skills/` es la superficie canónica de procedimientos. No crees comandos duplicados.
+- `skills/` es la superficie canónica de procedimientos y `agents/` la de roles. No crees comandos duplicados.
+- Cada archivo propio, incluidos scripts, pruebas, workflows y definiciones de agentes, lleva en su cabecera o comentario inicial la firma `Pierre R. Boss (oprbguitar)`. Los mensajes de commit terminan con la línea `Firma: Pierre R. Boss (oprbguitar)`.
+- Al añadir un agente, regístralo en `library.json` (`documents` y `agents`) y en `agents/README.md`; mantén la versión de `.claude-plugin/plugin.json` igual a la de `library.json`.
 - Un manual tiene una función concreta. Usa plantillas para registros y evita copiar el mismo contrato en varios lugares.
 - Firma los documentos normativos con `Pierre R. Boss (oprbguitar)` y señala asistencia de IA.
 - Etiqueta ejemplos, números hipotéticos, decisiones propuestas y capacidades sin implementar.
 - No cambies los cuatro archivos fuente archivados. Una corrección editorial se documenta en trazabilidad; nunca se reescribe el antecedente.
 - No inventes una licencia OSS, credenciales, hechos del propietario, certificaciones ni resultados de operación.
 - Actualiza `library.json` cuando añadas documentos normativos. Las fuentes incluyen hashes exactos de sus bytes.
+- Cada módulo mayor debe superar el mínimo independiente de 1,000 líneas de contenido y 12,000 palabras definido en `module_requirements`. Los resúmenes constitucionales, prompts y plantillas tienen otra función y no necesitan alcanzar ese volumen.
+- No infles contadores con líneas partidas artificialmente, padding, boilerplate repetido ni placeholders. La revisión exige contratos, invariantes, estados, algoritmos, fallos, tradeoffs, ejemplos trabajados y pruebas de aceptación propios del dominio.
+- El mínimo del propietario aplica a documentos de especificación; no modifica las convenciones de tamaño para archivos de código.
 - Antes de citar obligaciones, precios, versiones o APIs actuales, verifica fuente primaria y registra alcance y fecha.
 - No guardes memoria personal/global sin solicitud explícita. El conocimiento de este proyecto se conserva en su documentación existente.
 
@@ -76,6 +83,7 @@ La biblioteca no tiene frontend ni endpoints de aplicación. Prueba el validador
 ```powershell
 node scripts/validate-library.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs
+node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs
 git diff --check
 ```
 
