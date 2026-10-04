@@ -53,7 +53,8 @@ El diseño toma patrones verificables de los principales sistemas de agentes —
 dev-funcy-agents-03-10-26/
 ├─ AGENTS.md                      Reglas de arranque para cualquier host (fuente única)
 ├─ CLAUDE.md                      Importa AGENTS.md para Claude Code
-├─ EOS_MASTER_SYSTEM_INSTRUCTION.md   Constitución maestra (secciones 0–95)
+├─ EOS-CORE.md                    Núcleo obligatorio (~2k tokens) y tabla de carga bajo demanda
+├─ EOS_MASTER_SYSTEM_INSTRUCTION.md   Constitución maestra (secciones 0–95), solo por secciones
 ├─ library.json                  Manifiesto: documentos, fuentes, agentes y pisos por módulo
 ├─ .claude-plugin/
 │  ├─ plugin.json                Plugin eos-agents para Claude Code
@@ -170,7 +171,7 @@ La constitución sirve de entrada y autoridad común. Las skills, prompts y plan
 
 ## Úsalo en otro proyecto
 
-1. Lee la constitución, PRIME-DIRECTIVE y CAPABILITY-PROFILER; selecciona el modo y las capacidades aplicables. Entrega al agente las reglas comunes, los contratos relevantes y las referencias de edición y cláusula.
+1. Lee [EOS-CORE](EOS-CORE.md) y, por secciones, la constitución, PRIME-DIRECTIVE y CAPABILITY-PROFILER; selecciona el modo y las capacidades aplicables. Entrega al agente las reglas comunes, los contratos relevantes y las referencias de edición y cláusula.
 2. Integra una referencia a EOS en el `AGENTS.md` existente del destino. Conserva instrucciones locales, controles de permisos y decisiones anteriores.
 3. Completa [Project Profile](templates/PROJECT-PROFILE.md), la matriz de capacidades y el [paquete de tarea](templates/TASK-PACKET.md).
 4. Usa la skill del modo y exige una salida con archivos, pruebas, hallazgos, límites y próximos pasos concretos.

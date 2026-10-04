@@ -19,7 +19,7 @@ assistant: "Usaré eos-implementer para corregir el hallazgo y añadir la prueba
 Las correcciones de hallazgos vuelven al dueño del archivo con prueba de regresión.
 </commentary>
 </example>
-model: inherit
+model: sonnet
 color: yellow
 tools: ["Read", "Grep", "Glob", "Edit", "Write", "Bash"]
 ---
@@ -63,6 +63,8 @@ Verificación: comando → resultado (extracto)
 Desviaciones del contrato: descripción → justificación
 Riesgos conocidos
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

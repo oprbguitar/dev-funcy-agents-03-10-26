@@ -19,7 +19,7 @@ assistant: "Usaré eos-migration-archaeologist para buscar triggers, procedimien
 Las reglas ocultas en la base suelen perderse en migraciones sin inventario.
 </commentary>
 </example>
-model: inherit
+model: sonnet
 color: yellow
 tools: ["Read", "Grep", "Glob", "Bash", "Write"]
 ---
@@ -56,6 +56,8 @@ Flujos críticos a caracterizar: ...
 Preguntas abiertas priorizadas: pregunta → impacto
 Activos sensibles: ruta → categoría (sin contenido)
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

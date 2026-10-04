@@ -4,7 +4,7 @@
 
 ## Orden de lectura
 
-Lee [AGENTS.md](../AGENTS.md), [la constitución](../EOS_MASTER_SYSTEM_INSTRUCTION.md), el perfil real del producto y la skill del modo. Después carga los manuales relacionados con la tarea. El orchestrator distribuye evidencia por rol para evitar que todos los agentes consuman el mismo contexto completo.
+Lee [AGENTS.md](../AGENTS.md), [EOS-CORE](../EOS-CORE.md), el perfil real del producto y la skill del modo. Después abre [la constitución](../EOS_MASTER_SYSTEM_INSTRUCTION.md) y los manuales solo en las secciones que la tabla de carga bajo demanda de EOS-CORE asigna a la tarea. El orchestrator distribuye evidencia por rol para evitar que todos los agentes consuman el mismo contexto completo.
 
 La constitución define principios comunes. Los manuales precisan operaciones. Las skills ordenan un flujo. Las plantillas registran decisiones. Los prompts son entradas que deben completarse; no confieren permisos nuevos.
 

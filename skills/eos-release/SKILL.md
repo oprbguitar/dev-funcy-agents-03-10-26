@@ -10,7 +10,7 @@ description: Preparar y verificar una release reproducible, revisada y vinculada
 ## Trigger
 
 Usa esta skill al preparar entrega, publicación o despliegue.
-Lee la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md)
+Lee [EOS-CORE](../../EOS-CORE.md); abre la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md) solo en las secciones que indique
 y [UPDATES-RELIABILITY](../../docs/manuals/UPDATES-RELIABILITY.md).
 Un push no demuestra un producto desplegado.
 

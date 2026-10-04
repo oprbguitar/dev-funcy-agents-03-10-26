@@ -19,7 +19,7 @@ assistant: "Usaré eos-planner para construir el grafo de tareas con ownership d
 La coordinación paralela segura depende de un plan con propietario único por archivo.
 </commentary>
 </example>
-model: inherit
+model: sonnet
 color: cyan
 tools: ["Read", "Grep", "Glob", "Write"]
 ---
@@ -65,6 +65,8 @@ Riesgos: riesgo → consecuencia → mitigación
 Aprobaciones requeridas: acción → destino → por qué
 Supuestos a verificar: supuesto → método
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

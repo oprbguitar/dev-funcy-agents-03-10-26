@@ -19,7 +19,7 @@ assistant: "Usaré eos-tdd-guide para capturar el comportamiento actual con prue
 En ADOPT y MIGRATE la caracterización precede a la modificación.
 </commentary>
 </example>
-model: inherit
+model: sonnet
 color: green
 tools: ["Read", "Grep", "Glob", "Edit", "Write", "Bash"]
 ---
@@ -62,6 +62,8 @@ Antes del cambio: comando → FAIL esperado (extracto)
 Después del cambio: comando → PASS (extracto)
 Cobertura: líneas / ramas / funciones (herramienta y comando)
 ```
+
+Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-RESULT.md); es lo único que el orquestador lee para integrar.
 
 ## Casos límite
 

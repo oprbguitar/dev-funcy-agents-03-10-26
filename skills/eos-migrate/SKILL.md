@@ -10,7 +10,7 @@ description: Cambiar tecnología, proveedor o esquema mediante equivalencia, coe
 ## Trigger
 
 Usa esta skill para migrar plataforma, lenguaje, base o proveedor.
-Lee la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md).
+Lee [EOS-CORE](../../EOS-CORE.md); abre la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md) solo en las secciones que indique.
 Una preferencia tecnológica no basta para justificar la migración.
 Requiere problema, evidencia y criterio de éxito.
 

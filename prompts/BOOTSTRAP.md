@@ -16,7 +16,7 @@ Autorizaciones externas existentes: <acción + destino + alcance, o ninguna>.
 Límites: <tiempo, costo, herramientas, privacidad, recursos>.
 Criticidad: <L0–L4 o evaluar>.
 
-Lee AGENTS.md del proyecto y la constitución EOS aplicable.
+Lee AGENTS.md del proyecto y EOS-CORE; abre la constitución EOS solo en las secciones aplicables.
 Inspecciona el estado actual antes de elegir arquitectura o escribir código.
 Separa hechos observados, supuestos y propuestas.
 Completa un perfil proporcional; no inventes usuarios, costos, ubicaciones o SLO.

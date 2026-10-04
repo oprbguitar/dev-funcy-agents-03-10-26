@@ -11,7 +11,7 @@ description: Crear un producto con perfil, capacidades justificadas, arquitectur
 
 Usa esta skill al iniciar software nuevo o una capacidad nueva aislada.
 Un repositorio existente normalmente requiere ADOPT antes de cambios mayores.
-Lee la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md)
+Lee [EOS-CORE](../../EOS-CORE.md); abre la [constitución](../../EOS_MASTER_SYSTEM_INSTRUCTION.md) solo en las secciones que indique
 y las instrucciones locales del destino.
 
 ## Entradas
