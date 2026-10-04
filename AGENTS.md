@@ -36,7 +36,7 @@ Any coding agent, autonomous agent, Claude/Codex-style tool, local model, or hum
 
 ---
 
-## Operación de esta edición — EOS 4.0.0
+## Operación de esta edición — EOS 4.1.0
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
@@ -71,6 +71,7 @@ Delegar incluye responsabilidad sobre archivos, entregables, límites, contexto 
 - No inventes una licencia OSS, credenciales, hechos del propietario, certificaciones ni resultados de operación.
 - Actualiza `library.json` cuando añadas documentos normativos. Las fuentes incluyen hashes exactos de sus bytes.
 - Cada módulo mayor debe superar el mínimo independiente de 1,000 líneas de contenido y 12,000 palabras definido en `module_requirements`. Los resúmenes constitucionales, prompts y plantillas tienen otra función y no necesitan alcanzar ese volumen.
+- Los pisos de volumen están congelados (`depth_contract.status = frozen`): no se elevan ni se persiguen. Mejora un manual con contratos, invariantes, casos de fallo, amenazas y pruebas de aceptación; no con más palabras.
 - No infles contadores con líneas partidas artificialmente, padding, boilerplate repetido ni placeholders. La revisión exige contratos, invariantes, estados, algoritmos, fallos, tradeoffs, ejemplos trabajados y pruebas de aceptación propios del dominio.
 - El mínimo del propietario aplica a documentos de especificación; no modifica las convenciones de tamaño para archivos de código.
 - Antes de citar obligaciones, precios, versiones o APIs actuales, verifica fuente primaria y registra alcance y fecha.
@@ -80,7 +81,7 @@ Delegar incluye responsabilidad sobre archivos, entregables, límites, contexto 
 
 La biblioteca no tiene frontend ni endpoints de aplicación. Prueba el validador con unitarias, integración con archivos y E2E de CLI. Para cambios en su código escribe una prueba que falle antes del ajuste, implementa y revisa cobertura de al menos 80% de líneas, ramas y funciones.
 
-Forma compacta (recomendada para agentes): `node scripts/eos.mjs gate` ejecuta los comandos de [eos.gate.json](eos.gate.json) y muestra solo fallos resumidos. La primera vez, o tras editar el archivo, el responsable revisa `gate --plan` y aprueba con `gate --trust`; la confianza se guarda fuera del repositorio con el SHA-256 del archivo. Equivalente detallado:
+Forma compacta (recomendada para agentes): `node scripts/eos.mjs gate` ejecuta los comandos de [eos.gate.json](eos.gate.json) y muestra solo fallos resumidos. La primera vez, o tras editar el archivo, el responsable revisa `gate --plan` y aprueba con `gate --trust`; la confianza se guarda fuera del repositorio con el SHA-256 del archivo y la huella de la revisión, así que tras cada commit o edición hay que volver a confiar (`--trust-commands` confía solo en los comandos, para repositorios propios). Equivalente detallado:
 
 ```powershell
 node scripts/validate-library.mjs

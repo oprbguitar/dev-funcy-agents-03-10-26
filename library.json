@@ -1,5 +1,5 @@
 {
-  "version": "4.0.0",
+  "version": "4.1.0",
   "owner": "Pierre R. Boss (oprbguitar)",
   "repository": "oprbguitar/dev-funcy-agents-03-10-26",
   "edition_date": "2026-10-04",
@@ -140,7 +140,9 @@
     "requested_by": "Pierre R. Boss (oprbguitar)",
     "scope": "each major instruction module",
     "counting": "nonblank content lines; exclude headings, fence markers, separators and structural punctuation",
-    "semantic_acceptance": "domain review; line/word counts do not establish technical depth"
+    "semantic_acceptance": "domain review; line/word counts do not establish technical depth",
+    "status": "frozen",
+    "policy": "Los pisos de 1,001 líneas y 12,000 palabras se conservan como requisito del propietario, pero quedan congelados: no se elevan ni son meta. Las mejoras futuras se miden por contratos, invariantes, casos de fallo, amenazas y pruebas de aceptación, no por volumen."
   },
   "module_requirements": {
     "docs/manuals/PRIME-DIRECTIVE.md": {

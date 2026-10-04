@@ -2,6 +2,20 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 4.1.0 — 2026-10-04
+
+### Endurecimiento tras revisión adversarial
+
+- **CRITICAL corregido — `eos run` sin shell.** Antes unía los argumentos con espacios y los ejecutaba con `shell:true`: se perdían los límites de cada argumento y `;`, `&` o `$()` de un prompt podían ejecutar comandos. Ahora usa `spawnSync(archivo, argv, { shell: false })`. En Windows resuelve PATH/PATHEXT; un shim `.cmd`/`.bat` pasa por `cmd.exe` con cada argumento entre comillas y rechaza `"`, `%`, `!`, saltos de línea y barra final.
+- **Confianza de gate por revisión.** La confianza registra el SHA-256 del gate y una huella del repositorio (árbol de HEAD, diff sin commit, archivos nuevos no ignorados; sin drivers de diff externos). Si cambia código, scripts o manifiestos, el gate devuelve `REVISION_CHANGED`. `--trust-commands` mantiene el alcance solo de comandos, rotulado en el plan.
+- **Privacidad operacional.** El ledger de `run` se mueve a `~/.eos/runs/<proyecto>.jsonl` (`EOS_HOME` lo cambia) y guarda la tarea solo como huella SHA-256 salvo `--log-task`. El instalador añade a `.gitignore` un bloque EOS para `.eos/context*.md`, `.eos/runs*.jsonl`, `.eos/.update-backup/` y `*.eos-new`.
+- **Actualización transaccional.** `--update` planifica sin escribir, respalda, aplica, verifica el hash de cada archivo y revierte todo ante un error; el manifiesto se escribe al final. Los archivos 3.x asumidos de EOS se informan y quedan respaldados.
+- **Router de política.** `context` incluye las secciones constitucionales obligatorias de cada tema detectado (pagos, seguridad, IA, datos, release, incidente, cumplimiento, migración) antes del BM25, y avisa si alguna queda fuera del presupuesto.
+- **Evaluación sin fuga.** `evals/context/cases.json` separa dev (15, único usado para ajustar), holdout (20) y adversarial (10). Medido: dev 0.767, holdout 0.950 (optimista) y adversarial 0.600 de Recall@10. CI exige umbrales en dev y holdout.
+- **Deriva corregida.** Cabeceras de `eos.mjs` e `install-agents.mjs` describen su comportamiento actual. Los pisos de volumen de los manuales quedan congelados (`depth_contract.status = frozen`).
+- **Pruebas adversariales.** Metacaracteres y espacios en `run` (en proceso y por CLI real), shim `.cmd` real en Windows, gate con `package.json` modificado y con un script nuevo, fallo inyectado en la actualización. Totales: validador 25, instalador 17, CLI 24.
+- Sigue sin runtime DAG propio: EOS es un framework de control para agentes del host, no un motor multiagente autónomo.
+
 ## 4.0.0 — 2026-10-04
 
 ### Seguridad, actualización y medición

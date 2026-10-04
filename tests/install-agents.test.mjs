@@ -229,3 +229,61 @@ test('CLI prints the update plan by category', () => withDirs(async (source, tar
   assert.match(run.stdout, /Simulación de actualización/);
   assert.match(run.stdout, /~ \.claude\/agents\/eos-demo\.md \(actualizado\)/);
 }));
+
+test('update is transactional: a failure mid-way restores every file and leaves the manifest untouched', () => withDirs(async (source, target) => {
+  await installAgents({ source, target, host: 'claude' });
+  const record = path.join(target, '.eos/install-manifest.json');
+  const before = await readFile(record, 'utf8');
+  const agent = path.join(target, '.claude/agents/eos-demo.md');
+  const originalAgent = await readFile(agent, 'utf8');
+  await bumpLibrary(source, '4.0.0', 'versión nueva');
+  await writeFile(path.join(source, 'docs/manuals/PRIME.md'), `# Prime v2\n${signature}\n`);
+  await writeFile(path.join(source, 'docs/manuals/NUEVO.md'), `# Nuevo\n${signature}\n`);
+  const manifest = JSON.parse(await readFile(path.join(source, 'library.json'), 'utf8'));
+  await writeFile(path.join(source, 'library.json'), JSON.stringify({ ...manifest, documents: [...manifest.documents, 'docs/manuals/NUEVO.md'] }));
+
+  let writes = 0;
+  const hooks = { beforeWrite: async relative => { writes += 1; if (relative === '.claude/agents/eos-demo.md') throw new Error('disco lleno simulado'); } };
+  await assert.rejects(installAgents({ source, target, host: 'claude', update: true, hooks }), /Actualización revertida sin cambios: disco lleno simulado/);
+  assert.ok(writes > 2);
+  assert.equal(await readFile(agent, 'utf8'), originalAgent);
+  assert.match(await readFile(path.join(target, '.eos/docs/manuals/PRIME.md'), 'utf8'), /^# Prime\n/);
+  assert.equal(await exists(path.join(target, '.eos/docs/manuals/NUEVO.md')), false);
+  assert.equal(await readFile(record, 'utf8'), before);
+
+  const ok = await installAgents({ source, target, host: 'claude', update: true });
+  assert.ok(ok.created.includes('.eos/docs/manuals/NUEVO.md'));
+  assert.match(await readFile(agent, 'utf8'), /versión nueva/);
+  assert.match(await readFile(path.join(target, '.eos/.update-backup/.claude/agents/eos-demo.md'), 'utf8'), /Prime/);
+}));
+
+test('adds an EOS block to .gitignore for local artifacts and renews it on update without duplicating', () => withDirs(async (source, target) => {
+  await writeFile(path.join(target, '.gitignore'), 'node_modules/\n');
+  await installAgents({ source, target, host: 'codex' });
+  const ignore = await readFile(path.join(target, '.gitignore'), 'utf8');
+  assert.ok(ignore.startsWith('node_modules/\n'));
+  for (const rule of ['.eos/context*.md', '.eos/runs*.jsonl', '.eos/.update-backup/', '*.eos-new']) assert.ok(ignore.includes(`\n${rule}\n`), rule);
+  await installAgents({ source, target, host: 'codex', update: true });
+  const again = await readFile(path.join(target, '.gitignore'), 'utf8');
+  assert.equal(again.match(/EOS:BEGIN/g).length, 1);
+  assert.equal(again, ignore);
+}));
+
+test('legacy updates report files assumed to belong to EOS and keep their previous version as backup', () => withDirs(async (source, target) => {
+  await installAgents({ source, target, host: 'claude' });
+  const record = path.join(target, '.eos/install-manifest.json');
+  const legacy = JSON.parse(await readFile(record, 'utf8'));
+  delete legacy.files;
+  await writeFile(record, JSON.stringify(legacy));
+  await writeFile(path.join(target, '.eos/docs/manuals/PRIME.md'), '# Prime personalizado\n');
+  await writeFile(path.join(source, 'docs/manuals/PRIME.md'), `# Prime v2\n${signature}\n`);
+  const result = await installAgents({ source, target, host: 'claude', update: true });
+  assert.deepEqual(result.legacy, ['.eos/docs/manuals/PRIME.md']);
+  assert.equal(await readFile(path.join(target, '.eos/.update-backup/.eos/docs/manuals/PRIME.md'), 'utf8'), '# Prime personalizado\n');
+  const script = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'scripts', 'install-agents.mjs');
+  delete legacy.files;
+  await writeFile(record, JSON.stringify(legacy));
+  await writeFile(path.join(source, 'docs/manuals/PRIME.md'), `# Prime v3\n${signature}\n`);
+  const run = spawnSync(process.execPath, [script, '--source', source, '--target', target, '--host', 'claude', '--update', '--dry-run'], { encoding: 'utf8' });
+  assert.match(run.stdout, /Aviso: 1 archivos de \.eos\/ sin hash previo/);
+}));

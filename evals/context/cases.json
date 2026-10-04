@@ -1,37 +1,566 @@
 {
   "owner": "Pierre R. Boss (oprbguitar)",
-  "description": "Casos de recuperación para eos context. Las secciones esperadas se eligieron leyendo los encabezados del índice, no la salida del ranking. Los casos 'dificil-*' usan sinónimos sin raíz común para medir el límite léxico.",
-  "thresholds": { "recall_at_10": 0.7, "mrr": 0.65 },
-  "cases": [
-    { "id": "login-fuerza-bruta", "query": "proteger el login contra fuerza bruta y limitar intentos", "mode": "AUDIT",
-      "expected": [{ "file": "docs/manuals/SECURITY-FABRIC.md", "heading": "Login: dos límites" }, { "file": "docs/manuals/SECURITY-FABRIC.md", "heading": "SF-23" }] },
-    { "id": "webhook-pagos", "query": "recibir webhooks de pagos firmados sin procesarlos dos veces", "mode": "ADOPT",
-      "expected": [{ "file": "docs/manuals/PAYMENTS.md", "heading": "Recepción durable de webhooks" }, { "file": "docs/manuals/SECURITY-FABRIC.md", "heading": "SF-28" }] },
-    { "id": "idempotencia-cobro", "query": "idempotencia para no cobrar dos veces al cliente", "mode": "ADOPT",
-      "expected": [{ "file": "docs/manuals/PAYMENTS.md", "heading": "Idempotencia durable" }] },
-    { "id": "backup-restore", "query": "probar que el backup se puede restaurar", "mode": "RELEASE",
-      "expected": [{ "file": "docs/manuals/STORAGE-DATA.md", "heading": "Ensayo de restauración" }, { "file": "docs/manuals/STORAGE-DATA.md", "heading": "Backups: diseño" }] },
-    { "id": "migracion-esquema", "query": "migración de esquema de base de datos sin downtime expand contract", "mode": "MIGRATE",
-      "expected": [{ "file": "docs/manuals/UPDATES-RELIABILITY.md", "heading": "Migraciones de datos expand contract" }] },
-    { "id": "canary-migracion", "query": "canary y vuelta atrás durante una migración", "mode": "MIGRATE",
-      "expected": [{ "file": "docs/manuals/MIGRATION-HANDOFF.md", "heading": "Canary, promoción y retorno" }, { "file": "docs/manuals/MIGRATION-HANDOFF.md", "heading": "Canary de migración" }] },
-    { "id": "ddos", "query": "ataque DDoS que satura el servidor de origen", "mode": "INCIDENT",
-      "expected": [{ "file": "docs/manuals/INCIDENT-RESPONSE.md", "heading": "Playbook DDoS" }, { "file": "docs/manuals/SECURITY-FABRIC.md", "heading": "DDoS y protección del origen" }] },
-    { "id": "secreto-expuesto", "query": "se filtró un secreto en el repositorio", "mode": "INCIDENT",
-      "expected": [{ "file": "docs/manuals/INCIDENT-RESPONSE.md", "heading": "Playbook de secreto expuesto" }] },
-    { "id": "postmortem", "query": "escribir el postmortem del incidente", "mode": "INCIDENT",
-      "expected": [{ "file": "docs/manuals/INCIDENT-RESPONSE.md", "heading": "Postmortem, auditabilidad" }, { "file": "docs/manuals/INCIDENT-RESPONSE.md", "heading": "Postmortem detallado" }] },
-    { "id": "inyeccion-agentes", "query": "defensa contra inyección de instrucciones en agentes", "mode": "AUDIT",
-      "expected": [{ "file": "docs/manuals/AI-GATEWAY.md", "heading": "Defensa ante inyección de instrucciones" }] },
-    { "id": "conciliacion", "query": "conciliar pagos del proveedor con el ledger interno", "mode": "AUDIT",
-      "expected": [{ "file": "docs/manuals/PAYMENTS.md", "heading": "Algoritmo de conciliación" }] },
-    { "id": "disco-lleno", "query": "el disco se llenó y la cuota está agotada", "mode": "INCIDENT",
-      "expected": [{ "file": "docs/manuals/STORAGE-DATA.md", "heading": "Runbook de disco lleno" }] },
-    { "id": "recursos-modelo", "query": "evaluar RAM y VRAM antes de cargar un modelo local", "mode": "INIT",
-      "expected": [{ "file": "docs/manuals/AI-GATEWAY.md", "heading": "Evaluación de recursos antes de descargar" }] },
-    { "id": "dificil-rotar-claves", "query": "renovar keys comprometidas y reemplazar tokens", "mode": "INCIDENT",
-      "expected": [{ "file": "docs/manuals/SECURITY-FABRIC.md", "heading": "SF-34" }, { "file": "docs/manuals/INCIDENT-RESPONSE.md", "heading": "Playbook de secreto expuesto" }] },
-    { "id": "dificil-copia-seguridad", "query": "copias de seguridad recuperables", "mode": "RELEASE",
-      "expected": [{ "file": "docs/manuals/STORAGE-DATA.md", "heading": "Backups: diseño" }, { "file": "docs/manuals/STORAGE-DATA.md", "heading": "Ensayo de restauración" }] }
-  ]
+  "description": "Recuperación de eos context por conjunto. dev: único conjunto usado para ajustar parámetros (HEADING_BONUS). holdout: temas no vistos, nunca usados para ajustar. adversarial: errores ortográficos, Spanglish, inglés, paráfrasis y consultas ambiguas; se reporta sin umbral para no maquillar el límite léxico. Las secciones esperadas se eligieron leyendo encabezados del índice, no la salida del ranking.",
+  "thresholds": {
+    "dev": {
+      "recall_at_10": 0.7,
+      "mrr": 0.65
+    },
+    "holdout": { "recall_at_10": 0.85, "mrr": 0.75 }
+  },
+  "sets": {
+    "dev": [
+      {
+        "id": "login-fuerza-bruta",
+        "query": "proteger el login contra fuerza bruta y limitar intentos",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "Login: dos límites"
+          },
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-23"
+          }
+        ]
+      },
+      {
+        "id": "webhook-pagos",
+        "query": "recibir webhooks de pagos firmados sin procesarlos dos veces",
+        "mode": "ADOPT",
+        "expected": [
+          {
+            "file": "docs/manuals/PAYMENTS.md",
+            "heading": "Recepción durable de webhooks"
+          },
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-28"
+          }
+        ]
+      },
+      {
+        "id": "idempotencia-cobro",
+        "query": "idempotencia para no cobrar dos veces al cliente",
+        "mode": "ADOPT",
+        "expected": [
+          {
+            "file": "docs/manuals/PAYMENTS.md",
+            "heading": "Idempotencia durable"
+          }
+        ]
+      },
+      {
+        "id": "backup-restore",
+        "query": "probar que el backup se puede restaurar",
+        "mode": "RELEASE",
+        "expected": [
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Ensayo de restauración"
+          },
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Backups: diseño"
+          }
+        ]
+      },
+      {
+        "id": "migracion-esquema",
+        "query": "migración de esquema de base de datos sin downtime expand contract",
+        "mode": "MIGRATE",
+        "expected": [
+          {
+            "file": "docs/manuals/UPDATES-RELIABILITY.md",
+            "heading": "Migraciones de datos expand contract"
+          }
+        ]
+      },
+      {
+        "id": "canary-migracion",
+        "query": "canary y vuelta atrás durante una migración",
+        "mode": "MIGRATE",
+        "expected": [
+          {
+            "file": "docs/manuals/MIGRATION-HANDOFF.md",
+            "heading": "Canary, promoción y retorno"
+          },
+          {
+            "file": "docs/manuals/MIGRATION-HANDOFF.md",
+            "heading": "Canary de migración"
+          }
+        ]
+      },
+      {
+        "id": "ddos",
+        "query": "ataque DDoS que satura el servidor de origen",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Playbook DDoS"
+          },
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "DDoS y protección del origen"
+          }
+        ]
+      },
+      {
+        "id": "secreto-expuesto",
+        "query": "se filtró un secreto en el repositorio",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Playbook de secreto expuesto"
+          }
+        ]
+      },
+      {
+        "id": "postmortem",
+        "query": "escribir el postmortem del incidente",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Postmortem, auditabilidad"
+          },
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Postmortem detallado"
+          }
+        ]
+      },
+      {
+        "id": "inyeccion-agentes",
+        "query": "defensa contra inyección de instrucciones en agentes",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/AI-GATEWAY.md",
+            "heading": "Defensa ante inyección de instrucciones"
+          }
+        ]
+      },
+      {
+        "id": "conciliacion",
+        "query": "conciliar pagos del proveedor con el ledger interno",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/PAYMENTS.md",
+            "heading": "Algoritmo de conciliación"
+          }
+        ]
+      },
+      {
+        "id": "disco-lleno",
+        "query": "el disco se llenó y la cuota está agotada",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Runbook de disco lleno"
+          }
+        ]
+      },
+      {
+        "id": "recursos-modelo",
+        "query": "evaluar RAM y VRAM antes de cargar un modelo local",
+        "mode": "INIT",
+        "expected": [
+          {
+            "file": "docs/manuals/AI-GATEWAY.md",
+            "heading": "Evaluación de recursos antes de descargar"
+          }
+        ]
+      },
+      {
+        "id": "dificil-rotar-claves",
+        "query": "renovar keys comprometidas y reemplazar tokens",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-34"
+          },
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Playbook de secreto expuesto"
+          }
+        ]
+      },
+      {
+        "id": "dificil-copia-seguridad",
+        "query": "copias de seguridad recuperables",
+        "mode": "RELEASE",
+        "expected": [
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Backups: diseño"
+          },
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Ensayo de restauración"
+          }
+        ]
+      }
+    ],
+    "holdout": [
+      {
+        "id": "h-contracargo",
+        "query": "el cliente abrió una disputa y pide contracargo",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/PAYMENTS.md",
+            "heading": "Disputas, contracargos"
+          }
+        ]
+      },
+      {
+        "id": "h-csrf",
+        "query": "proteger formularios contra CSRF y configurar cookies seguras",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-24"
+          }
+        ]
+      },
+      {
+        "id": "h-subida",
+        "query": "los usuarios suben archivos que hay que poner en cuarentena",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-29"
+          },
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-37"
+          }
+        ]
+      },
+      {
+        "id": "h-sbom",
+        "query": "generar SBOM y fijar versiones de dependencias",
+        "mode": "RELEASE",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-32"
+          },
+          {
+            "file": "docs/manuals/ENGINEERING-QUALITY.md",
+            "heading": "Dependencias y cadena de suministro"
+          }
+        ]
+      },
+      {
+        "id": "h-slo-rollout",
+        "query": "definir SLO para vigilar la salud del rollout",
+        "mode": "RELEASE",
+        "expected": [
+          {
+            "file": "docs/manuals/UPDATES-RELIABILITY.md",
+            "heading": "SLO observabilidad y salud de rollout"
+          }
+        ]
+      },
+      {
+        "id": "h-retencion",
+        "query": "cuánto tiempo retener datos y cómo atender pedidos de eliminación de titulares",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Retención, eliminación y derechos"
+          }
+        ]
+      },
+      {
+        "id": "h-tenant",
+        "query": "un tenant puede leer objetos de otro tenant",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-25"
+          }
+        ]
+      },
+      {
+        "id": "h-cola",
+        "query": "la cola de trabajos se detuvo en producción",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Cola de trabajos detenida"
+          }
+        ]
+      },
+      {
+        "id": "h-outbox",
+        "query": "patrón outbox para entregar eventos de pago",
+        "mode": "ADOPT",
+        "expected": [
+          {
+            "file": "docs/manuals/PAYMENTS.md",
+            "heading": "Outbox, entrega"
+          }
+        ]
+      },
+      {
+        "id": "h-shadow",
+        "query": "correr el sistema nuevo en paralelo comparando en sombra",
+        "mode": "MIGRATE",
+        "expected": [
+          {
+            "file": "docs/manuals/MIGRATION-HANDOFF.md",
+            "heading": "Ejecución en paralelo y comparación en sombra"
+          }
+        ]
+      },
+      {
+        "id": "h-caracterizacion",
+        "query": "pruebas de caracterización antes de migrar",
+        "mode": "MIGRATE",
+        "expected": [
+          {
+            "file": "docs/manuals/MIGRATION-HANDOFF.md",
+            "heading": "Pruebas de caracterización"
+          },
+          {
+            "file": "docs/manuals/MIGRATION-HANDOFF.md",
+            "heading": "Caracterización y equivalencia"
+          }
+        ]
+      },
+      {
+        "id": "h-embeddings",
+        "query": "cambiar el modelo de embeddings y migrar el índice",
+        "mode": "MIGRATE",
+        "expected": [
+          {
+            "file": "docs/manuals/AI-GATEWAY.md",
+            "heading": "Retrieval, embeddings compatibles"
+          }
+        ]
+      },
+      {
+        "id": "h-presupuesto-ia",
+        "query": "gobierno de costos y presupuesto de llamadas a IA",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/AI-GATEWAY.md",
+            "heading": "Gobierno de costos y presupuestos de IA"
+          }
+        ]
+      },
+      {
+        "id": "h-caida-proveedor",
+        "query": "el proveedor de IA se cayó y hay tormenta de reintentos",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/AI-GATEWAY.md",
+            "heading": "caída del proveedor y tormenta de reintentos"
+          }
+        ]
+      },
+      {
+        "id": "h-consumidor",
+        "query": "el consumidor quiere cancelar su suscripción",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/COMPLIANCE-IP-PRODUCT.md",
+            "heading": "cancelación de consumidor"
+          }
+        ]
+      },
+      {
+        "id": "h-patente",
+        "query": "esta invención podría ser patentable antes de publicarla",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/COMPLIANCE-IP-PRODUCT.md",
+            "heading": "potencial patente"
+          }
+        ]
+      },
+      {
+        "id": "h-aprobacion",
+        "query": "puntos de aprobación humana en la orquestación de agentes",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/AGENT-ORCHESTRATION.md",
+            "heading": "Intervención humana y puntos de aprobación"
+          }
+        ]
+      },
+      {
+        "id": "h-paralelismo",
+        "query": "paralelizar agentes con aislamiento real de archivos",
+        "mode": "INIT",
+        "expected": [
+          {
+            "file": "docs/manuals/AGENT-ORCHESTRATION.md",
+            "heading": "Paralelismo con aislamiento real"
+          }
+        ]
+      },
+      {
+        "id": "h-tdd",
+        "query": "qué significa realmente una prueba en rojo en TDD",
+        "mode": "INIT",
+        "expected": [
+          {
+            "file": "docs/manuals/ENGINEERING-QUALITY.md",
+            "heading": "TDD y significado real"
+          }
+        ]
+      },
+      {
+        "id": "h-windows",
+        "query": "endurecer hosts Windows y entornos locales de desarrollo",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-41"
+          }
+        ]
+      }
+    ],
+    "adversarial": [
+      {
+        "id": "a-typo-idempotencia",
+        "query": "idenpotensia en cobros duplicados",
+        "mode": "ADOPT",
+        "expected": [
+          {
+            "file": "docs/manuals/PAYMENTS.md",
+            "heading": "Idempotencia durable"
+          }
+        ]
+      },
+      {
+        "id": "a-spanglish-rate",
+        "query": "poner rate limiting al endpoint de login",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "Login: dos límites"
+          },
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-23"
+          }
+        ]
+      },
+      {
+        "id": "a-spanglish-backup",
+        "query": "hacer un restore test del backup",
+        "mode": "RELEASE",
+        "expected": [
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Ensayo de restauración"
+          }
+        ]
+      },
+      {
+        "id": "a-ingles",
+        "query": "signed webhook replay protection",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/SECURITY-FABRIC.md",
+            "heading": "SF-28"
+          }
+        ]
+      },
+      {
+        "id": "a-parafrasis-secreto",
+        "query": "alguien subió la API key al repo público",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Playbook de secreto expuesto"
+          }
+        ]
+      },
+      {
+        "id": "a-parafrasis-disco",
+        "query": "nos quedamos sin espacio en el servidor",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/STORAGE-DATA.md",
+            "heading": "Runbook de disco lleno"
+          }
+        ]
+      },
+      {
+        "id": "a-ambigua-migracion",
+        "query": "pasar de php a node sin romper nada",
+        "mode": "MIGRATE",
+        "expected": [
+          {
+            "file": "docs/manuals/MIGRATION-HANDOFF.md",
+            "heading": "La migración empieza con una causa comprobable"
+          },
+          {
+            "file": "docs/manuals/MIGRATION-HANDOFF.md",
+            "heading": "Caracterización y equivalencia"
+          }
+        ]
+      },
+      {
+        "id": "a-parafrasis-inyeccion",
+        "query": "un documento le dio órdenes ocultas al agente",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Playbook de inyección de instrucciones ejecutada"
+          }
+        ]
+      },
+      {
+        "id": "a-typo-ddos",
+        "query": "atake ddos al origen",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Playbook DDoS"
+          }
+        ]
+      },
+      {
+        "id": "a-coloquial-cobro",
+        "query": "le cobramos dos veces al cliente",
+        "mode": "INCIDENT",
+        "expected": [
+          {
+            "file": "docs/manuals/INCIDENT-RESPONSE.md",
+            "heading": "Playbook de cobro duplicado"
+          }
+        ]
+      }
+    ]
+  }
 }

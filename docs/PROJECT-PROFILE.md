@@ -5,7 +5,7 @@
 | Campo | Valor confirmado o decisión de esta edición |
 |---|---|
 | Producto | Biblioteca de instrucciones de ingeniería EOS |
-| Edición | 4.0.0: doce especificaciones mayores, núcleo EOS-CORE y CLI `eos.mjs` (context, gate con confianza, run, eval-context) |
+| Edición | 4.1.0: doce especificaciones mayores (pisos congelados), núcleo EOS-CORE y CLI `eos.mjs` endurecido (run sin shell, gate con confianza por revisión, router de política, evaluación dev/holdout/adversarial) |
 | Propietario editorial | Pierre R. Boss / oprbguitar |
 | Repositorio | `oprbguitar/dev-funcy-agents-03-10-26` |
 | Modo de este trabajo | ADOPT: conservar y ampliar una constitución existente |

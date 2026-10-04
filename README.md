@@ -1,6 +1,152 @@
 # Pierre R. Boss — Engineering Operating System
 
-**EOS · Edición de especificaciones de ingeniería 4.0.0 · 4 de octubre de 2026 · Perú**
+**EOS · Edición de especificaciones de ingeniería 4.1.0 · 4 de octubre de 2026 · Perú**
+
+> Quiero software que pueda entender, verificar, proteger, mantener y entregar. Quiero que cada decisión tenga una razón, cada permiso un límite y cada resultado una prueba. La IA debe ampliar mi capacidad de trabajo sin quitarme el control del sistema.
+>
+> — Pierre R. Boss / oprbguitar, declaración editorial de esta edición
+
+EOS es mi biblioteca de instrucciones para dirigir trabajo de ingeniería con Claude, Codex, modelos locales y otros entornos de agentes. Reúne arquitectura, desarrollo, revisión, seguridad activa, IA conectable, datos, pagos, almacenamiento, operación, UX, cumplimiento, propiedad intelectual y transferencia del producto.
+
+La biblioteca convierte cuatro conversaciones anteriores en procedimientos verificables. Conserva la constitución existente y desarrolla sus reglas con responsables, contratos, registros, escenarios de fallo y criterios de aceptación. Está escrita para dirigir mis proyectos con decisiones explícitas sobre autoridad, invariantes, concurrencia, recursos, recuperación y evidencia. Cada módulo mayor desarrolla una especificación extensa que puedo aplicar por sección y revisar contra el sistema concreto.
+
+**Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.** La firma es editorial; su alcance está explicado en [AUTHORSHIP.md](AUTHORSHIP.md).
+
+## Sistema de agentes listo para clonar
+
+El repositorio funciona como sistema de orquestación en Claude Code, Codex u otros hosts. No requiere instalar dependencias: los agentes y skills son Markdown, y el validador e instalador usan solo Node.js 24.
+
+```bash
+git clone https://github.com/oprbguitar/dev-funcy-agents-03-10-26.git
+```
+
+| Host | Cómo usarlo | Qué obtienes |
+|---|---|---|
+| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 6 skills |
+| Claude Code (como plugin) | `/plugin marketplace add oprbguitar/dev-funcy-agents-03-10-26` y luego instala `eos-agents` | Subagentes `eos-*` y skills en cualquier proyecto |
+| Claude Code (copia local) | `node scripts/install-agents.mjs --host claude --target <proyecto>` | `.claude/agents/`, `.claude/skills/`, `.eos/` y bloque en `AGENTS.md`/`CLAUDE.md` |
+| Codex | `node scripts/install-agents.mjs --host codex --target <proyecto>` | Bloque EOS en `AGENTS.md`, skills en `.agents/skills/`, roles en `.agents/eos-agents/` |
+| Otro host o modelo local | Entrega `AGENTS.md`, la skill del modo y el archivo del rol | Las mismas reglas por lectura manual |
+
+El instalador acepta `--dry-run` para revisar el efecto antes de escribir, nunca sobrescribe archivos existentes y registra lo creado en `.eos/install-manifest.json`. Revisa las herramientas de cada agente antes de habilitarlo en un proyecto con datos sensibles.
+
+| Agente | Para qué |
+|---|---|
+| [eos-orchestrator](agents/eos-orchestrator.md) | Coordina admisión, plan, delegación, integración, verificación y publicación autorizada |
+| [eos-planner](agents/eos-planner.md) | Planes ejecutables con hitos verificables y ownership de archivos |
+| [eos-architect](agents/eos-architect.md) | Contratos, tres alternativas y ADR |
+| [eos-tdd-guide](agents/eos-tdd-guide.md) | Pruebas primero y caracterización de sistemas existentes |
+| [eos-implementer](agents/eos-implementer.md) | Cambios acotados con verificación |
+| [eos-code-reviewer](agents/eos-code-reviewer.md) / [eos-security-reviewer](agents/eos-security-reviewer.md) | Revisión en solo lectura con severidad y evidencia |
+| [eos-qa-verifier](agents/eos-qa-verifier.md) | Ejecuta verificaciones y reporta estados exactos |
+| [eos-docs-writer](agents/eos-docs-writer.md) | Documentación sincronizada y firmada |
+| [eos-migration-archaeologist](agents/eos-migration-archaeologist.md) | Inventario y reglas ocultas de sistemas heredados |
+| [eos-incident-commander](agents/eos-incident-commander.md) | Respuesta a incidentes y postmortem |
+| [eos-release-manager](agents/eos-release-manager.md) | Releases reproducibles y transferencia |
+| [eos-compliance-analyst](agents/eos-compliance-analyst.md) | Aplicabilidad normativa, licencias y promesas comerciales |
+
+El diseño toma patrones verificables de los principales sistemas de agentes —procedimientos por rol y artefactos intermedios, grafos de estado con puntos de control, transferencias con guardrails, sandboxes paralelos, subagentes definidos en archivo, instrucciones por directorio y planes ejecutables— sin depender de ninguno. El detalle está en [AGENT-ORCHESTRATION](docs/manuals/AGENT-ORCHESTRATION.md), Parte II.
+
+## Mapa del repositorio
+
+```text
+dev-funcy-agents-03-10-26/
+├─ AGENTS.md                      Reglas de arranque para cualquier host (fuente única)
+├─ CLAUDE.md                      Importa AGENTS.md para Claude Code
+├─ EOS-CORE.md                    Núcleo obligatorio (~2k tokens) y tabla de carga bajo demanda
+├─ EOS_MASTER_SYSTEM_INSTRUCTION.md   Constitución maestra (secciones 0–95), solo por secciones
+├─ library.json                  Manifiesto: documentos, fuentes, agentes y pisos por módulo
+├─ .claude-plugin/
+│  ├─ plugin.json                Plugin eos-agents para Claude Code
+│  └─ marketplace.json           Marketplace para `/plugin marketplace add`
+├─ agents/                       13 definiciones de subagentes + README
+├─ skills/                       6 skills de modo: INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT
+├─ docs/
+│  ├─ manuals/                   12 módulos mayores de especificación
+│  ├─ sources/                   4 conversaciones fuente (bytes intactos + SHA-256) y trazabilidad
+│  ├─ CODEX-NAVIGATION-GUIDE.md  Orden de lectura y qué prevalece
+│  ├─ PROJECT-PROFILE.md         Perfil real de esta biblioteca
+│  ├─ VERIFICATION.md            Qué verifica y qué no el validador
+│  └─ DEPTH-REPORT.md            Medidas por módulo
+├─ prompts/                      Prompts de arranque y tareas tipo
+├─ templates/                    Registros reutilizables (ADR, EXEC-PLAN, INCIDENT-RECORD, …)
+├─ scripts/
+│  ├─ validate-library.mjs       Validador sin dependencias
+│  ├─ install-agents.mjs         Instalador para Claude Code / Codex
+│  └─ eos.mjs                    CLI: context, index, gate (con confianza), run, runs, eval-context
+├─ eos.gate.json                 Comandos que ejecuta `eos.mjs gate` en esta biblioteca
+├─ evals/context/cases.json      45 casos: dev (15, ajuste), holdout (20, nunca ajustado) y adversarial (10)
+└─ tests/                        Pruebas del validador (25), del instalador (17) y del CLI (24)
+```
+
+## Guía por host, paso a paso
+
+### Claude Code dentro de este repositorio
+
+1. Clona el repositorio y ábrelo en el Code tab.
+2. [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md); Claude lee las reglas EOS al iniciar.
+3. Pide un modo, por ejemplo: «Aplica EOS en MODE=AUDIT y entrégame hallazgos por severidad».
+4. Los 13 subagentes de [agents/](agents/README.md) y las 6 skills quedan disponibles para el orquestador.
+
+### Claude Code como plugin en cualquier proyecto
+
+```bash
+# en Claude Code
+/plugin marketplace add oprbguitar/dev-funcy-agents-03-10-26
+/plugin install eos-agents
+```
+
+Tras instalarlo, los subagentes `eos-*` aparecen en la lista de agentes del host y las skills se cargan cuando la tarea las necesita.
+
+### Claude Code o Codex como copia local
+
+```bash
+# simula primero y revisa qué se crearía
+node scripts/install-agents.mjs --host all --target ../mi-proyecto --dry-run
+
+# instala de verdad (claude | codex | all)
+node scripts/install-agents.mjs --host codex --target ../mi-proyecto
+```
+
+El instalador copia una instantánea de la biblioteca en `.eos/`, coloca agentes y skills en el lugar que cada host espera (`.claude/` para Claude Code, `.agents/` para Codex), reescribe los enlaces internos para que apunten a `.eos/`, añade un bloque EOS delimitado al final del `AGENTS.md` del destino y registra lo creado en `.eos/install-manifest.json`. **Nunca sobrescribe un archivo existente**: lo reporta como omitido. Ejecutarlo dos veces es seguro (idempotente).
+
+### Ahorro de tokens en el proyecto instalado
+
+El CLI viaja en `.eos/scripts/eos.mjs`. No usa modelos, red ni dependencias.
+
+```bash
+# qué secciones de constitución y manuales cargar para esta tarea (solo la lista)
+node .eos/scripts/eos.mjs context "corregir login y sesiones" --mode AUDIT --list
+
+# el paquete completo dentro de un presupuesto, a un archivo
+node .eos/scripts/eos.mjs context "corregir login y sesiones" --mode AUDIT --budget 6000 --out .eos/context.md
+
+# verificación con solo fallos resumidos (lee eos.gate.json del proyecto)
+node .eos/scripts/eos.mjs gate --json
+```
+
+`eos.gate.json` del proyecto destino define sus comandos, por ejemplo `{"commands":[{"name":"tests","run":"npm test"},{"name":"lint","run":"npm run lint"}]}`. Se ejecutan con la shell del sistema, por eso `gate` **no ejecuta nada sin revisión**: `gate --plan` muestra comandos, SHA-256 y estado; `gate --trust` registra tu aprobación en `~/.eos/trusted-gates.json` (fuera del repositorio, para que un repo no pueda autoaprobarse; `EOS_HOME` o `EOS_TRUST_STORE` cambian la ruta). La confianza cubre el archivo **y la revisión del repositorio** (árbol de HEAD, cambios sin commit y archivos nuevos no ignorados): si alguien cambia `package.json`, un script o un test, vuelve a `BLOCKED` aunque `npm test` siga igual. En un repositorio propio que editas a menudo, `gate --trust-commands` confía solo en los comandos, y el plan lo muestra como alcance reducido. Confiar no es aislar: un repositorio ajeno debe ejecutarse en un contenedor o una máquina desechable. Comandos de descarga y ejecución, borrado masivo, `git push`, `npm publish` o `gh pr merge` nunca se pueden confiar.
+
+### Actualizar una instalación existente
+
+```bash
+# desde la copia nueva de EOS: muestra nuevos, actualizados, conflictos y retirados sin escribir
+node scripts/install-agents.mjs --host all --target ../mi-proyecto --update --dry-run
+node scripts/install-agents.mjs --host all --target ../mi-proyecto --update
+```
+
+Se reemplaza solo lo que EOS instaló y nadie modificó (según el SHA-256 de `.eos/install-manifest.json`). La actualización es transaccional: primero planifica, luego respalda en `.eos/.update-backup/`, escribe, verifica cada hash y, ante cualquier error, restaura todo; el manifiesto se escribe al final. El instalador añade a `.gitignore` un bloque EOS para paquetes de contexto, respaldos y `.eos-new`. Una edición local se conserva y la versión nueva queda junto a ella como `<archivo>.eos-new`. En instalaciones 3.x sin hashes, `.eos/` se trata como propiedad de EOS (se informa cada archivo y la versión anterior queda en el respaldo) y lo demás como conflicto. El bloque EOS de `AGENTS.md` se renueva entre sus marcadores. Los archivos retirados solo se informan.
+
+### Medir tokens y costo reales
+
+```bash
+node .eos/scripts/eos.mjs run --agent eos-planner --task "plan OAuth" -- claude -p "Planifica OAuth según EOS" --output-format json
+node .eos/scripts/eos.mjs runs
+```
+
+`run` ejecuta el comando **sin shell**: cada argumento llega literal, así que `;`, `&`, `|`, `# Pierre R. Boss — Engineering Operating System
+
+**EOS · Edición de especificaciones de ingeniería 4.1.0 · 4 de octubre de 2026 · Perú**
 
 > Quiero software que pueda entender, verificar, proteger, mantener y entregar. Quiero que cada decisión tenga una razón, cada permiso un límite y cada resultado una prueba. La IA debe ampliar mi capacidad de trabajo sin quitarme el control del sistema.
 >
@@ -125,7 +271,7 @@ node .eos/scripts/eos.mjs context "corregir login y sesiones" --mode AUDIT --bud
 node .eos/scripts/eos.mjs gate --json
 ```
 
-`eos.gate.json` del proyecto destino define sus comandos, por ejemplo `{"commands":[{"name":"tests","run":"npm test"},{"name":"lint","run":"npm run lint"}]}`. Se ejecutan con la shell del sistema, por eso `gate` **no ejecuta nada sin revisión**: `gate --plan` muestra comandos, SHA-256 y estado; `gate --trust` registra tu aprobación en `~/.eos/trusted-gates.json` (fuera del repositorio, para que un repo no pueda autoaprobarse; `EOS_TRUST_STORE` cambia la ruta). Si el archivo cambia, vuelve a `BLOCKED`. Comandos de descarga y ejecución, borrado masivo, `git push`, `npm publish` o `gh pr merge` nunca se pueden confiar.
+`eos.gate.json` del proyecto destino define sus comandos, por ejemplo `{"commands":[{"name":"tests","run":"npm test"},{"name":"lint","run":"npm run lint"}]}`. Se ejecutan con la shell del sistema, por eso `gate` **no ejecuta nada sin revisión**: `gate --plan` muestra comandos, SHA-256 y estado; `gate --trust` registra tu aprobación en `~/.eos/trusted-gates.json` (fuera del repositorio, para que un repo no pueda autoaprobarse; `EOS_HOME` o `EOS_TRUST_STORE` cambian la ruta). La confianza cubre el archivo **y la revisión del repositorio** (árbol de HEAD, cambios sin commit y archivos nuevos no ignorados): si alguien cambia `package.json`, un script o un test, vuelve a `BLOCKED` aunque `npm test` siga igual. En un repositorio propio que editas a menudo, `gate --trust-commands` confía solo en los comandos, y el plan lo muestra como alcance reducido. Confiar no es aislar: un repositorio ajeno debe ejecutarse en un contenedor o una máquina desechable. Comandos de descarga y ejecución, borrado masivo, `git push`, `npm publish` o `gh pr merge` nunca se pueden confiar.
 
 ### Actualizar una instalación existente
 
@@ -135,7 +281,7 @@ node scripts/install-agents.mjs --host all --target ../mi-proyecto --update --dr
 node scripts/install-agents.mjs --host all --target ../mi-proyecto --update
 ```
 
-Se reemplaza solo lo que EOS instaló y nadie modificó (según el SHA-256 de `.eos/install-manifest.json`). Una edición local se conserva y la versión nueva queda junto a ella como `<archivo>.eos-new`. En instalaciones 3.x sin hashes, `.eos/` se trata como propiedad de EOS y lo demás como conflicto. El bloque EOS de `AGENTS.md` se renueva entre sus marcadores. Los archivos retirados solo se informan.
+Se reemplaza solo lo que EOS instaló y nadie modificó (según el SHA-256 de `.eos/install-manifest.json`). La actualización es transaccional: primero planifica, luego respalda en `.eos/.update-backup/`, escribe, verifica cada hash y, ante cualquier error, restaura todo; el manifiesto se escribe al final. El instalador añade a `.gitignore` un bloque EOS para paquetes de contexto, respaldos y `.eos-new`. Una edición local se conserva y la versión nueva queda junto a ella como `<archivo>.eos-new`. En instalaciones 3.x sin hashes, `.eos/` se trata como propiedad de EOS (se informa cada archivo y la versión anterior queda en el respaldo) y lo demás como conflicto. El bloque EOS de `AGENTS.md` se renueva entre sus marcadores. Los archivos retirados solo se informan.
 
 ### Medir tokens y costo reales
 
@@ -144,7 +290,7 @@ node .eos/scripts/eos.mjs run --agent eos-planner --task "plan OAuth" -- claude 
 node .eos/scripts/eos.mjs runs
 ```
 
-`run` guarda en `.eos/runs.jsonl` agente, estado, duración y el uso que reporte el host (`usage` y `total_cost_usd` de Claude Code; eventos `usage` de `codex exec --json`). Si el host no reporta uso, el registro queda `n/d`: no se estima. La selección de `context` es léxica (BM25 con stemming ligero), estima tokens por tamaño (unos 3.7 caracteres por token) y puede omitir una sección relevante redactada con otras palabras; si sospechas un hueco, amplía la consulta o el presupuesto.
+ o comillas dentro del prompt no ejecutan nada. En Windows, un shim `.cmd` (como `codex.cmd` de npm) pasa por `cmd.exe` con cada argumento entre comillas y se rechazan `"`, `%`, `!` y saltos de línea; para esos textos usa el `.exe` o un archivo. El ledger vive fuera del repositorio, en `~/.eos/runs/<proyecto>.jsonl`, y guarda la tarea solo como huella SHA-256 salvo `--log-task`. Registra agente, estado, duración y el uso que reporte el host (`usage` y `total_cost_usd` de Claude Code; eventos `usage` de `codex exec --json`). Si el host no reporta uso, el registro queda `n/d`: no se estima. La selección de `context` es léxica (BM25 con stemming ligero), estima tokens por tamaño (unos 3.7 caracteres por token) y puede omitir una sección relevante redactada con otras palabras; si sospechas un hueco, amplía la consulta o el presupuesto.
 
 Para desinstalar, elimina los archivos listados en `.eos/install-manifest.json` y el bloque entre `<!-- EOS:BEGIN -->` y `<!-- EOS:END -->` de tu `AGENTS.md`.
 
@@ -219,7 +365,7 @@ La constitución sirve de entrada y autoridad común. Las skills, prompts y plan
 Ejemplo de petición adaptada:
 
 ```text
-Aplica EOS 4.0.0 en MODE=ADOPT a este repositorio.
+Aplica EOS 4.1.0 en MODE=ADOPT a este repositorio.
 Objetivo: documentar y corregir el fallo de sesión que describo.
 Alcance: autenticación web y pruebas relacionadas.
 No cambies pagos, base de datos ni infraestructura.
@@ -250,7 +396,7 @@ node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs
 git diff --check
 ```
 
-O todo junto con salida compacta: `node scripts/eos.mjs gate` (la primera vez: `gate --plan` y `gate --trust`). La calidad de `context` se mide con `node scripts/eos.mjs eval-context`.
+O todo junto con salida compacta: `node scripts/eos.mjs gate` (la primera vez: `gate --plan` y `gate --trust`). La calidad de `context` se mide con `node scripts/eos.mjs eval-context` por conjunto: dev 0.767, holdout 0.950 y adversarial 0.600 de Recall@10 (2026-10-04).
 
 El validador revisa [library.json](library.json), existencia de documentos, firma editorial, frontmatter de los 13 agentes, versión del plugin, enlaces Markdown locales en prosa, cierre de bloques de código, SHA-256 de las cuatro fuentes y los pisos de líneas y palabras por módulo. Imprime las medidas de cada módulo cuando todos los controles pasan. No valida semánticamente contratos, no certifica legislación, no comprueba anchors ni enlaces externos y no prueba la seguridad de una aplicación. Las pruebas unitarias, de integración y de CLI cubren el validador; la cobertura no se extiende al texto ni a productos futuros. Consulta [VERIFICATION.md](docs/VERIFICATION.md).
 

@@ -1,10 +1,13 @@
-// CLI de contexto y verificación de EOS.
+// CLI de contexto, verificación y medición de EOS.
 // Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo asistido por IA.
-// Reduce tokens con código determinista: `context` elige secciones de la constitución y los
-// manuales por relevancia (BM25) dentro de un presupuesto, `gate` ejecuta verificaciones y
-// devuelve solo fallos resumidos, e `index` publica la tabla de secciones. Sin dependencias,
-// sin red y sin llamadas a modelos.
+// Reduce tokens con código determinista. `context` arma un paquete con secciones obligatorias
+// por tema (router de política) más secciones relevantes por BM25 dentro de un presupuesto;
+// `index` publica la tabla de secciones; `gate` ejecuta verificaciones solo si su archivo y la
+// revisión del repositorio fueron confiados; `run`/`runs` lanzan un comando del host sin shell y
+// registran su uso real fuera del repositorio; `eval-context` mide la recuperación por conjunto
+// (dev, holdout, adversarial). Sin dependencias, sin red y sin llamadas a modelos.
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { existsSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { homedir } from 'node:os';
@@ -134,26 +137,64 @@ export function rank(sections, query, mode) {
   }).filter(section => section.score > 0).sort((a, b) => b.score - a.score);
 }
 
-export function selectWithinBudget(ranked, budget, limit = 12) {
+// Router de política: versión ejecutable de la tabla de carga bajo demanda de EOS-CORE. Si la tarea
+// toca un tema, sus secciones constitucionales entran siempre, aunque BM25 no las encuentre: una
+// obligación normativa no debe depender de que la consulta comparta vocabulario con ella.
+export const CONSTITUTION = 'EOS_MASTER_SYSTEM_INSTRUCTION.md';
+export const POLICY_RULES = [
+  { topic: 'pagos', match: /\b(pag|cobr|payment|webhook|reembol|refund|factur|checkout|tarjet|card|ledger|concili)/, sections: [33, 34, 35, 36, 37, 90] },
+  { topic: 'seguridad', match: /\b(segur|secur|login|sesion|session|auth|oauth|mfa|ddos|waf|bot|rate|csrf|secret|credenc|token|vulner|cve|ataqu)/, sections: [16, 21, 88] },
+  { topic: 'ia', match: /\b(llm|model|prompt|embedd|agent|ollama|openai|claude|gpt|ia)\b/, sections: [11, 13, 14, 15, 89] },
+  { topic: 'datos', match: /\b(backup|respald|almacen|storage|disco|restaur|dato|base|schema|esquem|retenc)/, sections: [29, 32, 38, 90] },
+  { topic: 'release', match: /\b(releas|deploy|desplieg|actualiz|updat|rollback|canary|slo|version)/, sections: [41, 43, 60, 90] },
+  { topic: 'incidente', match: /\b(incident|caida|outage|postmort|brecha|breach|filtr|leak)/, sections: [42, 88] },
+  { topic: 'cumplimiento', match: /\b(legal|licenc|licens|regul|privac|cumpli|complian|ley|contrat|patent|marca|indecopi|gdpr)/, sections: [47, 48, 50, 56, 91] },
+  { topic: 'migracion', match: /\b(migr|handoff|transfer|reescrit|rewrite|legacy|hereda)/, sections: [58, 59] },
+];
+
+export function policySections(sections, task) {
+  const query = terms(task).join(' ');
+  const topics = POLICY_RULES.filter(rule => rule.match.test(query));
+  const wanted = new Set(topics.flatMap(rule => rule.sections));
+  const mandatory = sections.filter(section => section.file === CONSTITUTION
+    && wanted.has(Number(section.heading.match(/^(\d+)\.\s/)?.[1])))
+    .map(section => ({ ...section, mandatory: true, score: 0, tokens: estimateTokens(section.text) }));
+  return { topics: topics.map(rule => rule.topic), mandatory };
+}
+
+// Las obligatorias entran primero y no cuentan contra el límite de secciones; si exceden el
+// presupuesto se reportan como omitidas para que nadie crea que el paquete las incluye.
+export function selectWithinBudget(ranked, budget, limit = 12, mandatory = []) {
   const chosen = [];
+  const omitted = [];
   let used = 0;
-  for (const section of ranked) {
-    if (chosen.length >= limit) break;
-    if (used + section.tokens > budget) continue;
+  for (const section of mandatory) {
+    if (used + section.tokens > budget) { omitted.push(section); continue; }
     chosen.push(section);
     used += section.tokens;
   }
+  const taken = new Set(chosen.map(section => `${section.file}:${section.start}`));
+  let relevant = 0;
+  for (const section of ranked) {
+    if (relevant >= limit) break;
+    if (taken.has(`${section.file}:${section.start}`) || used + section.tokens > budget) continue;
+    chosen.push(section);
+    used += section.tokens;
+    relevant += 1;
+  }
   chosen.sort((a, b) => a.file.localeCompare(b.file) || a.start - b.start);
-  return { chosen, used };
+  return { chosen, used, omitted };
 }
 
-export function renderPack({ task, mode, budget, chosen, used, listOnly }) {
+export function renderPack({ task, mode, budget, chosen, used, listOnly, topics = [], omitted = [] }) {
   const head = [
     '# Paquete de contexto EOS',
     `Tarea: ${task} | Modo: ${mode ?? 'sin modo'} | Presupuesto: ${budget} tokens | Usado: ~${used} | Secciones: ${chosen.length}`,
+    `Temas de política: ${topics.length ? topics.join(', ') : 'ninguno'}`,
     '',
     ...chosen.map(section =>
-      `- ${section.file}:${section.start}-${section.end} — ${section.heading} (~${section.tokens} tokens, ${section.score.toFixed(2)})`),
+      `- ${section.file}:${section.start}-${section.end} — ${section.heading} (~${section.tokens} tokens, ${section.mandatory ? 'obligatoria' : section.score.toFixed(2)})`),
+    ...omitted.map(section => `- OMITIDA POR PRESUPUESTO (obligatoria): ${section.file}:${section.start}-${section.end} — ${section.heading}`),
   ];
   if (!chosen.length) head.push('Sin coincidencias: usa términos del dominio (p. ej. "rollback", "webhook", "sesión").');
   if (listOnly) return `${head.join('\n')}\n`;
@@ -185,30 +226,89 @@ export const RISKY = [
 ];
 export const riskyReason = run => RISKY.find(pattern => pattern.test(run))?.source ?? null;
 
-export const defaultTrustStore = () => process.env.EOS_TRUST_STORE ?? path.join(homedir(), '.eos', 'trusted-gates.json');
+// Estado operativo de EOS fuera de cualquier repositorio: confianza de gates y ledger de corridas.
+export const eosHome = () => process.env.EOS_HOME ?? path.join(homedir(), '.eos');
+export const defaultTrustStore = () => process.env.EOS_TRUST_STORE ?? path.join(eosHome(), 'trusted-gates.json');
+export const projectId = dir => `${path.basename(dir).replace(/[^a-z0-9_-]+/gi, '_')}-${createHash('sha256').update(path.resolve(dir)).digest('hex').slice(0, 10)}`;
+export const defaultLedger = dir => path.join(eosHome(), 'runs', `${projectId(dir)}.jsonl`);
+
+// Huella de lo que el gate realmente ejecuta: árbol de HEAD, cambios sin commit y archivos no
+// ignorados sin seguimiento. Si cambia package.json, un script o un test, la confianza caduca.
+// Desactiva diff externo y textconv para no ejecutar drivers configurados. Fuera de git: null.
+export function revisionFingerprint(dir) {
+  const git = (...args) => spawnSync('git', args, { cwd: dir, maxBuffer: 512 * 1024 * 1024 });
+  const tree = git('rev-parse', 'HEAD^{tree}');
+  if (tree.status !== 0) return null;
+  const hash = createHash('sha256').update(tree.stdout);
+  hash.update(git('diff', 'HEAD', '--binary', '--no-ext-diff', '--no-textconv').stdout);
+  const untracked = git('ls-files', '--others', '--exclude-standard', '-z').stdout.toString('utf8').split('\0').filter(Boolean).sort();
+  for (const file of untracked) {
+    hash.update(`\0${file}\0`);
+    try { hash.update(readFileSync(path.join(dir, file))); } catch { hash.update('ilegible'); }
+  }
+  return hash.digest('hex');
+}
+
+// Resuelve el ejecutable sin shell. En Windows recorre PATH con PATHEXT para distinguir un .exe
+// de un shim .cmd/.bat; un nombre sin extensión no se ejecuta como archivo sin extensión.
+export function resolveExecutable(command, { platform = process.platform, env = process.env } = {}) {
+  if (platform !== 'win32') return command;
+  const hasExt = path.extname(command) !== '';
+  const extensions = hasExt ? [''] : (env.PATHEXT ?? '.COM;.EXE;.BAT;.CMD').split(';').filter(Boolean);
+  const bases = /[\\/]/.test(command) ? [command]
+    : (env.PATH ?? env.Path ?? '').split(';').filter(Boolean).map(dir => path.win32.join(dir, command));
+  for (const base of bases) for (const ext of extensions) if (existsSync(base + ext)) return base + ext;
+  return command;
+}
+
+// Un shim .cmd/.bat solo puede ejecutarse a través de cmd.exe. Cada argumento va entre comillas y
+// se rechazan los caracteres que cmd o el parser del programa destino reinterpretan aun entre comillas.
+const CMD_UNSAFE = /["%!\r\n]|\\$/;
+export function buildSpawn(argv, options = {}) {
+  const file = resolveExecutable(argv[0], options);
+  if (!/\.(cmd|bat)$/i.test(file)) return { file, args: argv.slice(1), options: {} };
+  if (argv.slice(1).some(arg => CMD_UNSAFE.test(arg))) {
+    throw new Error('argumento no admitido con un shim .cmd/.bat (contiene ", %, !, salto de línea o termina en \\); usa el ejecutable .exe o pasa el texto en un archivo');
+  }
+  const line = [file, ...argv.slice(1)].map(arg => `"${arg}"`).join(' ');
+  return { file: (options.env ?? process.env).ComSpec ?? 'cmd.exe', args: ['/d', '/s', '/c', `"${line}"`], options: { windowsVerbatimArguments: true } };
+}
 
 const readStore = async file => JSON.parse(await readFile(file, 'utf8').catch(() => '{}'));
 
-// Confianza = (ruta absoluta del gate, SHA-256 exacto). Vive fuera del repositorio para que el
-// propio repositorio no pueda declararse confiable; cualquier edición del gate exige revisar de nuevo.
-export async function trustStatus(store, configPath, hash) {
+// Confianza = ruta absoluta del gate + SHA-256 exacto + (por defecto) huella de la revisión del
+// repositorio. Vive fuera del repositorio para que este no pueda declararse confiable. Con alcance
+// "revision", cambiar package.json, un script o un test invalida la confianza aunque el gate no cambie.
+export async function trustStatus(store, configPath, hash, revision) {
   const entry = (await readStore(store))[configPath];
-  if (!entry) return 'UNTRUSTED';
-  return entry.sha256 === hash ? 'TRUSTED' : 'CHANGED';
+  if (!entry) return { status: 'UNTRUSTED', scope: null };
+  const scope = entry.scope ?? 'commands';
+  if (entry.sha256 !== hash) return { status: 'CHANGED', scope };
+  if (scope === 'revision' && entry.revision !== revision) return { status: 'REVISION_CHANGED', scope };
+  return { status: 'TRUSTED', scope };
 }
 
-export async function trustGate(store, configPath, hash, commands) {
+export async function trustGate(store, configPath, hash, commands, scope, revision) {
   const data = await readStore(store);
-  data[configPath] = { sha256: hash, trusted_at: new Date().toISOString(), commands: commands.map(item => item.run) };
+  data[configPath] = {
+    sha256: hash, scope, revision: scope === 'revision' ? revision : null,
+    trusted_at: new Date().toISOString(), commands: commands.map(item => item.run),
+  };
   await mkdir(path.dirname(store), { recursive: true });
   await writeFile(store, `${JSON.stringify(data, null, 2)}\n`);
 }
 
-export function renderPlan(configPath, hash, status, commands) {
+const SCOPE_LABEL = {
+  commands: 'solo comandos (no cubre cambios del repositorio)',
+  revision: 'comandos + revisión del repositorio',
+};
+
+export function renderPlan(configPath, hash, trust, commands, revision) {
   return [
     `Gate: ${configPath}`,
     `SHA-256: ${hash}`,
-    `Confianza: ${status}`,
+    `Revisión: ${revision ? revision.slice(0, 16) : 'sin git (la confianza solo cubre el archivo del gate)'}`,
+    `Confianza: ${trust.status} — alcance: ${SCOPE_LABEL[trust.scope] ?? 'sin confiar'}`,
     ...commands.map(item => {
       const risk = riskyReason(item.run);
       return `- ${item.name}: ${item.run}${risk ? `  ⚠ RIESGO (${risk})` : ''}`;
@@ -316,7 +416,7 @@ export function evaluateContext(sections, cases) {
 
 export function parseOptions(args) {
   const options = { positional: [] };
-  const flags = new Set(['--list', '--json', '--plan', '--trust']);
+  const flags = new Set(['--list', '--json', '--plan', '--trust', '--trust-commands', '--log-task']);
   const valued = new Set(['--mode', '--budget', '--out', '--root', '--config', '--limit', '--agent', '--task', '--ledger', '--cases']);
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -368,8 +468,9 @@ export async function main(args, {
       const limit = Number(options.limit ?? 12);
       if (!task || (mode && !MODE_MANUALS[mode]) || !(budget > 0) || !(limit > 0)) { err(USAGE); return 1; }
       const { sections } = await loadCorpus(root);
-      const { chosen, used } = selectWithinBudget(rank(sections, task, mode), budget, limit);
-      await emit(renderPack({ task, mode, budget, chosen, used, listOnly: options.list }));
+      const { topics, mandatory } = policySections(sections, task);
+      const { chosen, used, omitted } = selectWithinBudget(rank(sections, task, mode), budget, limit, mandatory);
+      await emit(renderPack({ task, mode, budget, chosen, used, omitted, topics, listOnly: options.list }));
       return 0;
     }
     if (command === 'index') {
@@ -381,23 +482,32 @@ export async function main(args, {
       await emit(`${JSON.stringify({ version, chars_per_token: CHARS_PER_TOKEN, sections: index.length, total_tokens: total, index }, null, 2)}\n`);
       return 0;
     }
-    const ledger = path.resolve(cwd, options.ledger ?? '.eos/runs.jsonl');
+    const ledger = options.ledger ? path.resolve(cwd, options.ledger) : defaultLedger(cwd);
     if (command === 'run') {
-      // El comando lo escribe quien invoca en la línea de órdenes; no se lee de archivos del repositorio.
+      // Sin shell: cada argumento llega intacto y ; & | $ ` no se reinterpretan.
       if (!options.agent || !options.command?.length) { err(USAGE); return 1; }
+      let spawn;
+      try { spawn = buildSpawn(options.command); }
+      catch (error) { err(`ERROR: ${error.message}\n`); return 1; }
       const began = Date.now();
-      const result = spawnSync(options.command.join(' '), { cwd, shell: true, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+      const result = spawnSync(spawn.file, spawn.args, { cwd, shell: false, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, ...spawn.options });
       const usage = extractUsage(result.stdout ?? '');
+      // La tarea puede ser confidencial: por defecto se guarda solo su huella; --log-task guarda el texto.
+      const task = options.task ?? null;
       const entry = {
         run_id: `run-${began.toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
-        ts: new Date(began).toISOString(), agent: options.agent, task: options.task ?? null,
+        ts: new Date(began).toISOString(), agent: options.agent,
+        task: options['log-task'] ? task : null,
+        task_sha256: task === null ? null : createHash('sha256').update(task).digest('hex').slice(0, 16),
         host_cmd: options.command[0], exit: result.status, status: result.status === 0 ? 'PASS' : 'FAIL',
         duration_ms: Date.now() - began, input_tokens: usage.input_tokens, output_tokens: usage.output_tokens,
         cache_read_tokens: usage.cache_read_tokens, cost_usd: usage.cost_usd,
       };
       await recordRun(ledger, entry);
       out(`${usage.result ?? result.stdout ?? ''}${(usage.result ?? result.stdout ?? '').endsWith('\n') ? '' : '\n'}`);
-      if (result.status !== 0 && result.stderr) err(`${summarizeFailure(result.stderr).join('\n')}\n`);
+      if (result.status !== 0 && (result.stderr || result.error)) {
+        err(`${summarizeFailure(`${result.stderr ?? ''}\n${result.error?.message ?? ''}`).join('\n')}\n`);
+      }
       err(`[eos run] ${entry.run_id} ${entry.agent} ${entry.status} ${(entry.duration_ms / 1000).toFixed(1)}s`
         + ` tokens ${entry.input_tokens ?? 'n/d'}→${entry.output_tokens ?? 'n/d'} costo ${entry.cost_usd ?? 'n/d'}\n`);
       return result.status === 0 ? 0 : 1;
@@ -409,15 +519,25 @@ export async function main(args, {
     if (command === 'eval-context') {
       const spec = JSON.parse(await readFile(path.resolve(cwd, options.cases ?? path.join(root, 'evals/context/cases.json')), 'utf8'));
       const { sections } = await loadCorpus(root);
-      const report = evaluateContext(sections, spec.cases);
-      const lines = report.results.map(item =>
-        `${item.recall10 === 1 ? 'OK  ' : item.recall10 > 0 ? 'PARC' : 'FALLO'} ${item.id}: R@5 ${item.recall5.toFixed(2)} R@10 ${item.recall10.toFixed(2)} RR ${item.rr.toFixed(2)} posiciones [${item.hits.join(', ')}]`);
-      const min = spec.thresholds ?? {};
-      const below = ['recall_at_10', 'mrr'].filter(key => min[key] !== undefined && report[key] < min[key]);
-      lines.push(`Recall@5 ${report.recall_at_5.toFixed(3)} | Recall@10 ${report.recall_at_10.toFixed(3)} | MRR ${report.mrr.toFixed(3)} | casos ${report.results.length}`);
-      lines.push(below.length ? `FAIL: bajo umbral en ${below.join(', ')}` : 'PASS: umbrales cumplidos');
+      // Formato por conjuntos {sets, thresholds: {set: {...}}}; un archivo antiguo {cases, thresholds} es "dev".
+      const sets = spec.sets ?? { dev: spec.cases };
+      const thresholds = spec.sets ? (spec.thresholds ?? {}) : { dev: spec.thresholds ?? {} };
+      const lines = [];
+      const failures = [];
+      for (const [name, cases] of Object.entries(sets)) {
+        const report = evaluateContext(sections, cases);
+        if (!options.json) {
+          lines.push(`== ${name}`, ...report.results.map(item =>
+            `${item.recall10 === 1 ? 'OK  ' : item.recall10 > 0 ? 'PARC' : 'FALLO'} ${item.id}: R@5 ${item.recall5.toFixed(2)} R@10 ${item.recall10.toFixed(2)} RR ${item.rr.toFixed(2)} posiciones [${item.hits.join(', ')}]`));
+        }
+        const min = thresholds[name] ?? {};
+        const below = ['recall_at_10', 'mrr'].filter(key => min[key] !== undefined && report[key] < min[key]);
+        failures.push(...below.map(key => `${name}.${key}`));
+        lines.push(`${name}: Recall@5 ${report.recall_at_5.toFixed(3)} | Recall@10 ${report.recall_at_10.toFixed(3)} | MRR ${report.mrr.toFixed(3)} | casos ${report.results.length}${Object.keys(min).length ? '' : ' | sin umbral'}`);
+      }
+      lines.push(failures.length ? `FAIL: bajo umbral en ${failures.join(', ')}` : 'PASS: umbrales cumplidos');
       out(`${lines.join('\n')}\n`);
-      return below.length ? 1 : 0;
+      return failures.length ? 1 : 0;
     }
     const configPath = path.resolve(cwd, options.config ?? 'eos.gate.json');
     let raw;
@@ -428,29 +548,35 @@ export async function main(args, {
       ? config.commands.filter(item => typeof item?.name === 'string' && typeof item?.run === 'string' && item.run) : [];
     if (!commands.length) { err(`eos.gate.json sin comandos válidos: ${configPath}\n`); return 1; }
     const hash = createHash('sha256').update(raw).digest('hex');
-    const status = await trustStatus(store, configPath, hash);
-    if (options.plan) { out(renderPlan(configPath, hash, status, commands)); return 0; }
-    if (options.trust) {
+    const revision = revisionFingerprint(path.dirname(configPath));
+    const trust = await trustStatus(store, configPath, hash, revision);
+    if (options.plan) { out(renderPlan(configPath, hash, trust, commands, revision)); return 0; }
+    if (options.trust || options['trust-commands']) {
       const risky = commands.filter(item => riskyReason(item.run));
       if (risky.length) {
-        err(`${renderPlan(configPath, hash, status, commands)}No se confía un gate con comandos de riesgo (${risky.map(item => item.name).join(', ')}). Ejecútalos manualmente o retíralos del gate.\n`);
+        err(`${renderPlan(configPath, hash, trust, commands, revision)}No se confía un gate con comandos de riesgo (${risky.map(item => item.name).join(', ')}). Ejecútalos manualmente o retíralos del gate.\n`);
         return 1;
       }
-      await trustGate(store, configPath, hash, commands);
-      out(`${renderPlan(configPath, hash, 'TRUSTED', commands)}Confianza registrada en ${store}. No se ejecutó ningún comando.\n`);
+      const scope = options['trust-commands'] ? 'commands' : 'revision';
+      await trustGate(store, configPath, hash, commands, scope, revision);
+      out(`${renderPlan(configPath, hash, { status: 'TRUSTED', scope }, commands, revision)}Confianza registrada en ${store}. No se ejecutó ningún comando.\n`);
       return 0;
     }
-    if (status !== 'TRUSTED') {
-      const reason = status === 'CHANGED' ? 'el gate cambió desde que se confió' : 'el gate no ha sido revisado';
-      const plan = renderPlan(configPath, hash, status, commands);
+    if (trust.status !== 'TRUSTED') {
+      const reason = {
+        CHANGED: 'el gate cambió desde que se confió',
+        REVISION_CHANGED: 'el repositorio cambió desde que se confió (código, scripts o manifiestos que el gate ejecuta)',
+        UNTRUSTED: 'el gate no ha sido revisado',
+      }[trust.status];
+      const plan = renderPlan(configPath, hash, trust, commands, revision);
       if (options.json) {
         out(`\`\`\`eos-result\n${JSON.stringify({
           agent: 'eos-gate', status: 'BLOCKED', summary: `Gate bloqueado: ${reason}`, files: [],
-          checks: commands.map(item => ({ cmd: item.run, result: 'NOT_RUN', note: status })),
+          checks: commands.map(item => ({ cmd: item.run, result: 'NOT_RUN', note: trust.status })),
           findings: [], next: [],
-          approval_needed: [`Revisar ${configPath} y ejecutar: node <eos.mjs> gate --trust`],
+          approval_needed: [`Revisar ${configPath} y los cambios del repositorio; luego: node <eos.mjs> gate --trust`],
         }, null, 2)}\n\`\`\`\n`);
-      } else out(`${plan}BLOCKED: ${reason}. Revisa los comandos y, si son correctos, ejecuta \`gate --trust\` (no ejecuta nada).\n`);
+      } else out(`${plan}BLOCKED: ${reason}. Revisa comandos y cambios y, si son correctos, ejecuta \`gate --trust\` (no ejecuta nada).\n`);
       return 2;
     }
     const results = runGate(commands, path.dirname(configPath), Number(config.timeout_ms ?? 600000));
