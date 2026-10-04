@@ -72,8 +72,10 @@ dev-funcy-agents-03-10-26/
 ├─ templates/                    Registros reutilizables (ADR, EXEC-PLAN, INCIDENT-RECORD, …)
 ├─ scripts/
 │  ├─ validate-library.mjs       Validador sin dependencias
-│  └─ install-agents.mjs         Instalador para Claude Code / Codex
-└─ tests/                        Pruebas del validador (22) y del instalador (9)
+│  ├─ install-agents.mjs         Instalador para Claude Code / Codex
+│  └─ eos.mjs                    CLI de contexto (context, index) y verificación (gate)
+├─ eos.gate.json                 Comandos que ejecuta `eos.mjs gate` en esta biblioteca
+└─ tests/                        Pruebas del validador (22), del instalador (9) y del CLI (14)
 ```
 
 ## Guía por host, paso a paso
@@ -106,6 +108,23 @@ node scripts/install-agents.mjs --host codex --target ../mi-proyecto
 ```
 
 El instalador copia una instantánea de la biblioteca en `.eos/`, coloca agentes y skills en el lugar que cada host espera (`.claude/` para Claude Code, `.agents/` para Codex), reescribe los enlaces internos para que apunten a `.eos/`, añade un bloque EOS delimitado al final del `AGENTS.md` del destino y registra lo creado en `.eos/install-manifest.json`. **Nunca sobrescribe un archivo existente**: lo reporta como omitido. Ejecutarlo dos veces es seguro (idempotente).
+
+### Ahorro de tokens en el proyecto instalado
+
+El CLI viaja en `.eos/scripts/eos.mjs`. No usa modelos, red ni dependencias.
+
+```bash
+# qué secciones de constitución y manuales cargar para esta tarea (solo la lista)
+node .eos/scripts/eos.mjs context "corregir login y sesiones" --mode AUDIT --list
+
+# el paquete completo dentro de un presupuesto, a un archivo
+node .eos/scripts/eos.mjs context "corregir login y sesiones" --mode AUDIT --budget 6000 --out .eos/context.md
+
+# verificación con solo fallos resumidos (lee eos.gate.json del proyecto)
+node .eos/scripts/eos.mjs gate --json
+```
+
+`eos.gate.json` del proyecto destino define sus comandos, por ejemplo `{"commands":[{"name":"tests","run":"npm test"},{"name":"lint","run":"npm run lint"}]}`. Los comandos se ejecutan con la shell del sistema en la carpeta del archivo: trátalo como un script del proyecto y revísalo como tal. La selección de `context` es léxica (BM25 con stemming ligero), estima tokens por tamaño (unos 3.7 caracteres por token) y puede omitir una sección relevante redactada con otras palabras; si sospechas un hueco, amplía la consulta o el presupuesto.
 
 Para desinstalar, elimina los archivos listados en `.eos/install-manifest.json` y el bloque entre `<!-- EOS:BEGIN -->` y `<!-- EOS:END -->` de tu `AGENTS.md`.
 
@@ -207,8 +226,11 @@ Requisito de las herramientas: **Node.js 24 LTS**, sin paquetes externos. No se 
 node scripts/validate-library.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs
+node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/eos.test.mjs
 git diff --check
 ```
+
+O todo junto con salida compacta: `node scripts/eos.mjs gate`.
 
 El validador revisa [library.json](library.json), existencia de documentos, firma editorial, frontmatter de los 13 agentes, versión del plugin, enlaces Markdown locales en prosa, cierre de bloques de código, SHA-256 de las cuatro fuentes y los pisos de líneas y palabras por módulo. Imprime las medidas de cada módulo cuando todos los controles pasan. No valida semánticamente contratos, no certifica legislación, no comprueba anchors ni enlaces externos y no prueba la seguridad de una aplicación. Las pruebas unitarias, de integración y de CLI cubren el validador; la cobertura no se extiende al texto ni a productos futuros. Consulta [VERIFICATION.md](docs/VERIFICATION.md).
 

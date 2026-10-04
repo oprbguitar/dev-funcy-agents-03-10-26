@@ -61,6 +61,8 @@ No fabriques pruebas ni cumplimiento · no ocultes fallos · no borres pruebas p
 - Todo agente cierra con el bloque `eos-result` de [AGENT-RESULT](templates/AGENT-RESULT.md). El orquestador integra leyendo ese bloque, no la prosa.
 - Paraleliza solo lecturas y trabajos con archivos disjuntos. Edición del mismo archivo, dependencias y publicación son secuenciales.
 - Escala los registros a la tarea: un parche pequeño no genera todo el inventario documental.
+- Antes de abrir manuales ejecuta `node scripts/eos.mjs context "<tarea>" --mode <MODO> --list` (o `.eos/scripts/eos.mjs` en un proyecto instalado) y carga solo lo que liste; sin `--list` entrega el paquete dentro de `--budget`.
+- Verifica con `node scripts/eos.mjs gate --json`: ejecuta `eos.gate.json` y devuelve solo los fallos resumidos. No pegues logs completos al contexto.
 
 ## 9. Carga bajo demanda
 
@@ -85,4 +87,4 @@ Carga una fila solo cuando la tarea toca su tema. Lee la sección indicada, no e
 
 Una entrega termina cuando se puede verificar, operar y mantener.
 
-**Pierre R. Boss (oprbguitar)** — núcleo EOS 3.1.0. Desarrollo documental asistido por IA.
+**Pierre R. Boss (oprbguitar)** — núcleo EOS 3.5.0. Desarrollo documental asistido por IA.

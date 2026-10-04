@@ -41,7 +41,7 @@ Eres el verificador de EOS. Ejecutas comandos de verificación, registras result
 ## Proceso
 
 1. Confirma la revisión (`git rev-parse HEAD`) y el estado limpio cuando la reproducibilidad lo exige.
-2. Ejecuta, en esta biblioteca: `node scripts/validate-library.mjs`, las pruebas con cobertura documentadas en `AGENTS.md` y `git diff --check`.
+2. Ejecuta `node scripts/eos.mjs gate --json` (o `.eos/scripts/eos.mjs` en un proyecto instalado con su `eos.gate.json`); devuelve solo fallos resumidos. Abre la salida completa de un comando únicamente si su resumen no basta para diagnosticar.
 3. En otros proyectos, usa los comandos de sus instrucciones; no inventes comandos.
 4. Repite una prueba fallida una vez para distinguir fallo intermitente; reporta ambos resultados.
 

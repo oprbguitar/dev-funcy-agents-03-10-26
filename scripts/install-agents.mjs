@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const HOSTS = new Set(['claude', 'codex', 'all']);
 const BEGIN = '<!-- EOS:BEGIN -->';
 // Archivos auxiliares enlazados por la documentación que no figuran en library.json.
-const SNAPSHOT_EXTRAS = ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', 'docs/sources/source-index.json'];
+const SNAPSHOT_EXTRAS = ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', 'docs/sources/source-index.json', 'scripts/eos.mjs'];
 const END = '<!-- EOS:END -->';
 
 const toPosix = value => value.split(path.sep).join('/');
@@ -48,6 +48,10 @@ const eosBlock = version => [
   '- Roles: `.eos/agents/README.md`; cada entrega cierra con el bloque `eos-result` de `.eos/templates/AGENT-RESULT.md`.',
   '- Procedimientos por modo (INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT): `.eos/skills/`.',
   '- Plantillas de registro: `.eos/templates/`, incluida `EXEC-PLAN.md` para trabajo largo.',
+  '',
+  'Ahorro de contexto (sin modelo, sin red):',
+  '- `node .eos/scripts/eos.mjs context "<tarea>" --mode <MODO> --list` muestra qué secciones cargar; sin `--list` entrega el paquete dentro del presupuesto (`--budget`, 8000 tokens por defecto).',
+  '- `node .eos/scripts/eos.mjs gate --json` ejecuta los comandos de `eos.gate.json` del proyecto y devuelve solo fallos resumidos como bloque `eos-result`.',
   '',
   'Antes de cambiar código: inspecciona el repositorio, detecta el modo, respeta cambios ajenos y entrega evidencia verificable.',
   END,

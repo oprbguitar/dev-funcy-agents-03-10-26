@@ -10,4 +10,4 @@ Claude Code: las reglas de este repositorio viven en una sola fuente para todos 
 
 - Los subagentes de [agents/](agents/README.md) y las skills de [skills/](skills/README.md) están disponibles como plugin `eos-agents` mediante [.claude-plugin/plugin.json](.claude-plugin/plugin.json).
 - Usa subagentes reales solo cuando el host los ofrezca; si ejecutas varios roles tú mismo, decláralo en el reporte.
-- Antes de entregar ejecuta los comandos de verificación de `AGENTS.md` (validador, dos suites de pruebas con cobertura y `git diff --check`).
+- Antes de entregar ejecuta `node scripts/eos.mjs gate` (validador, tres suites de pruebas con cobertura y `git diff --check`; solo muestra fallos resumidos).
