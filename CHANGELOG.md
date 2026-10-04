@@ -2,6 +2,28 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 3.0.0 — 2026-10-03
+
+### Sistema de agentes clonable
+
+- Completa los doce módulos mayores sobre el piso de 1,001 líneas de contenido y 12,000 palabras: añade CAPABILITY-PROFILER y las Partes II de AGENT-ORCHESTRATION, INCIDENT-RESPONSE, STORAGE-DATA y MIGRATION-HANDOFF; amplía PRIME-DIRECTIVE, SECURITY-FABRIC, AI-GATEWAY, ENGINEERING-QUALITY y PAYMENTS.
+- Añade trece agentes especializados en `agents/` con descripción de activación, herramientas mínimas, proceso, estándares, formato común de entrega y casos límite.
+- Expone agentes y skills como plugin de Claude Code (`.claude-plugin/plugin.json` y `marketplace.json`) y añade `CLAUDE.md`, que importa `AGENTS.md` como fuente única.
+- Añade `scripts/install-agents.mjs` para instalar el sistema en otros proyectos (Claude Code en `.claude/`, Codex en `.agents/`) con instantánea `.eos/`, reescritura de enlaces, simulación y política de no sobrescritura.
+- Añade la plantilla EXEC-PLAN para trabajo largo y la incorpora a manuales, skills y agentes.
+- Incorpora patrones de los principales sistemas de agentes (procedimientos por rol, grafos con puntos de control, transferencias con guardrails, sandboxes paralelos, subagentes en archivo, instrucciones por directorio y planes ejecutables) sin dependencias externas.
+- Amplía el validador con verificación de frontmatter de agentes y de la versión del plugin; añade pruebas del instalador al CI. Firma de Pierre R. Boss (oprbguitar) en cabeceras de scripts, pruebas, workflow y definiciones de agentes.
+
+### Especificaciones extensas por módulo
+
+- Incorpora PRIME-DIRECTIVE y CAPABILITY-PROFILER como módulos propios, enlazados desde la constitución y la guía de navegación.
+- Reescribe los diez manuales de dominio para desarrollar decisiones, contratos, estados, invariantes, efectos concurrentes, recuperación, aceptación y casos de ingeniería.
+- Establece el requisito del propietario sobre cada módulo mayor: superar 1,000 líneas de contenido. Añade un piso editorial de 12,000 palabras y revisión técnica del dominio.
+- Conserva identificadores de cláusula dentro de los módulos para referenciar decisiones y resultados sin trasladar toda la biblioteca a cada contexto.
+- Amplía el validador y sus pruebas para rechazar módulos cortos, perfiles inválidos y archivos ausentes; excluye líneas estructurales del conteo.
+- Añade informe de profundidad reproducible y aclara que el mínimo editorial no certifica calidad, cumplimiento legal ni implementación de sistemas.
+- Mantiene la firma editorial del propietario, la transparencia sobre asistencia de IA y los bytes originales de las cuatro conversaciones fuente.
+
 ## 2.0.0 — 2026-10-03
 
 ### Biblioteca de instrucciones operativas

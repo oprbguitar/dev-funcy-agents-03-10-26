@@ -5,6 +5,7 @@
 | Campo | Valor confirmado o decisión de esta edición |
 |---|---|
 | Producto | Biblioteca de instrucciones de ingeniería EOS |
+| Edición | 3.0.0: doce especificaciones mayores de ingeniería |
 | Propietario editorial | Pierre R. Boss / oprbguitar |
 | Repositorio | `oprbguitar/dev-funcy-agents-03-10-26` |
 | Modo de este trabajo | ADOPT: conservar y ampliar una constitución existente |
@@ -22,6 +23,8 @@
 | IA del producto | DORMANT: documentación del puerto; no runtime, modelos ni claves |
 | Seguridad operacional | Manuales propuestos; sin servicios de defensa desplegados |
 | Administración UI | Propuesta por producto; no frontend en este alcance |
+| Sistema de agentes | 13 definiciones en `agents/`, plugin Claude Code, instalador para Claude/Codex; sin procesos ni permisos propios |
+| Hosts declarados | Claude Code (plugin, subagentes, skills), Codex (AGENTS.md, `.agents/skills`), lectura manual en otros hosts |
 | Automatizaciones y scouts | Procedimientos documentados; sin tareas programadas creadas |
 | Costos nuevos | No se solicita contratar servicios ni ejecutar jobs de pago |
 | Evidencia de esta edición | Tests, enlaces locales, hashes, revisión y Git remoto |
@@ -36,3 +39,8 @@ No se fijan SLO, concurrencia, RTO o RPO de una aplicación inexistente. Cada pr
 4. Distinguir política propuesta, implementación y verificación.
 5. No introducir secretos, servicios de pago ni cambios de visibilidad.
 6. Validar el código de soporte y demostrar publicación Git.
+7. Superar 1,000 líneas de contenido en cada módulo mayor, según la aclaración expresa del propietario en esta conversación: «Each major instruction module».
+8. Cumplir el piso editorial de 12,000 palabras por módulo sin envolver frases ni repetir instrucciones para rellenar el documento.
+9. Desarrollar contratos, invariantes, concurrencia, escenarios de fallo y decisiones con evidencia, sujetos a revisión específica del dominio.
+
+Los límites numéricos son requisitos documentales de esta edición. Se registran por módulo en [DEPTH-REPORT.md](DEPTH-REPORT.md), y su verificación se reproduce con [VERIFICATION.md](VERIFICATION.md). No asignan una garantía a una implementación futura ni obligan a cargar todos los módulos simultáneamente en un modelo.

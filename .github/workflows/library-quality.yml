@@ -1,3 +1,5 @@
+# Verificación continua de la biblioteca y del sistema de agentes EOS.
+# Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo asistido por IA.
 name: EOS Library Quality
 
 on:
@@ -29,5 +31,7 @@ jobs:
         run: node scripts/validate-library.mjs
       - name: Test validator with coverage gates
         run: node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs
+      - name: Test agent installer with coverage gates
+        run: node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs
       - name: Check patch whitespace
         run: git show --format= --check HEAD

@@ -6,7 +6,7 @@
 
 La biblioteca utiliza Node.js 24 y su test runner, filesystem, crypto y child_process de la biblioteca estándar. No instala paquetes npm ni módulos Python. Por eso no existe un lockfile que auditar con npm/pip; si se agregan dependencias, debe incorporarse una auditoría real además de revisar origen y licencia.
 
-El programa `scripts/validate-library.mjs` lee, sin modificar, el root elegido explícitamente o el repositorio que contiene el script. Valida forma del manifiesto, documentos registrados, duplicados, firma editorial, cierre de bloques backtick/tilde, enlaces locales en prosa y SHA-256 de fuentes. Rechaza rutas de manifiesto y enlaces que escapen lexicamente del repositorio. No imprime bytes fuente ni valores de secretos.
+El programa `scripts/validate-library.mjs` lee, sin modificar, el root elegido explícitamente o el repositorio que contiene el script. Valida forma del manifiesto, documentos registrados, duplicados, firma editorial, cierre de bloques backtick/tilde, enlaces locales en prosa, SHA-256 de fuentes y pisos documentales de los módulos. Rechaza rutas de manifiesto y enlaces que escapen lexicamente del repositorio. No imprime bytes fuente ni valores de secretos.
 
 ## Reproducción
 
@@ -15,6 +15,7 @@ Desde la raíz del repositorio:
 ```powershell
 node scripts/validate-library.mjs
 node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs
+node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs
 git diff --check
 ```
 
@@ -34,8 +35,23 @@ node scripts/validate-library.mjs --root 'C:\ruta\a\copia EOS'
 | Integración | Lectura de archivos reales, manifiesto, firma y source hash |
 | CLI E2E | Ejecución del proceso, stdout/stderr y exit codes PASS/FAIL |
 | Negativas | Documento ausente, firma ausente, enlace roto, codificación inválida, path externo, archivo fuente modificado/ausente y manifiesto inválido |
+| Agentes y plugin | Frontmatter de subagentes, coincidencia `name`/archivo, descripción, registro en `documents` y versión de `.claude-plugin/plugin.json` igual a `library.json` |
+| Instalador | Instantánea `.eos/`, copias para Claude Code y Codex, reescritura de enlaces, no sobrescritura, bloque idempotente en `AGENTS.md`/`CLAUDE.md`, simulación, rechazo del origen y CLI |
+| Profundidad | Líneas estructurales excluidas, piso de palabras independiente, perfiles inválidos, módulo no registrado/ausente y reporte de medidas |
 
-El ciclo inicial RED falló porque el módulo del validador aún no existía. Tras implementarlo pasaron 12 pruebas. La primera medición sobre `scripts/validate-library.mjs` fue 100% líneas, 96% ramas y 92.86% funciones; la salida más reciente de tests/CI es la autoridad para cualquier medición posterior. No se atribuye esa cobertura a los manuales, proveedores o productos futuros.
+La edición 2.0 partió de un ciclo RED por ausencia del validador y alcanzó doce pruebas. La edición 3.0 añadió primero cinco pruebas de profundidad que fallaron antes de implementar el control, y después verificó su paso a GREEN. La salida más reciente de tests/CI es la autoridad para el número total de pruebas y la cobertura de líneas, ramas y funciones. El gate exige al menos 80% en cada categoría del código de soporte. No se atribuye esa cobertura a los manuales, proveedores o productos futuros.
+
+La revisión del sistema de agentes añadió cinco pruebas de agentes y plugin al validador (22 en total) y nueve pruebas del instalador; todas fallaron antes de implementar cada control. La cobertura medida el 2026-10-03 fue 100% de líneas en ambos scripts, con 95.6% y 95.5% de ramas.
+
+## Cómo se mide la extensión
+
+`library.json.module_requirements` identifica los doce módulos y sus pisos. Cada perfil debe apuntar a un documento registrado y contener enteros positivos seguros para `min_content_lines` y `min_words`. El validador no infiere qué archivo es un módulo: cambiar ese registro requiere revisar expresamente el contrato de profundidad y el inventario del propietario.
+
+Para cada módulo, el algoritmo separa líneas LF/CRLF y recorta espacios extremos. Descarta líneas vacías; títulos Markdown ATX de uno a seis `#`; marcadores iniciales backtick/tilde; líneas hechas únicamente de llaves, corchetes, comas o espacios; separadores `-`, `*` y `_`; y divisores de tabla de la forma `|---|---|`. Cuenta las líneas restantes, incluidos requisitos y contenido útil de ejemplos. Las palabras son tokens separados por whitespace de esas mismas líneas. No usa estimaciones de tokens de un proveedor ni conteos de palabras de un procesador de texto.
+
+El algoritmo es deliberadamente mecánico, no un parser Markdown completo. No identifica automáticamente relleno, repeticiones semánticas, premisas incorrectas, párrafos envueltos, etiquetas de cláusula vacías o coherencia entre módulos. Esos aspectos requieren revisión editorial y técnica. El piso adicional de palabras ayuda a rechazar listas demasiado breves, pero tampoco acredita profundidad por sí solo.
+
+El [informe de profundidad](DEPTH-REPORT.md) es una medición de esta revisión documental. Después de editar módulos, la salida actual del validador prevalece sobre una tabla histórica; actualiza el informe antes de publicar una nueva edición.
 
 ## Revisión que sigue siendo humana o específica del producto
 
@@ -50,6 +66,6 @@ El ciclo inicial RED falló porque el módulo del validador aún no existía. Tr
 
 ## Gate antes de publicación
 
-Confirma que los cuatro antecedentes conservan sus bytes, todos los documentos están registrados, las firmas y links cumplen el alcance, tests y coverage pasan y no existe material privado fuera de la autorización. Revisa el diff completo con especialistas disponibles. Registra fallos corregidos y límites; conserva visibilidad y estado ajeno.
+Confirma que los cuatro antecedentes conservan sus bytes, todos los documentos están registrados, los doce módulos superan sus pisos, las firmas y links cumplen el alcance, tests y coverage pasan y no existe material privado fuera de la autorización. Revisa contratos, invariantes y escenarios con especialistas disponibles. Registra fallos corregidos y límites; conserva visibilidad y estado ajeno.
 
 La publicación se verifica con commit local, ref remoto y checks reales. Un workflow escrito no se reporta como aprobado hasta que GitHub haya ejecutado sus jobs. Las mediciones locales y el resultado remoto se distinguen en la entrega.

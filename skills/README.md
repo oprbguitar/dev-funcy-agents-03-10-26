@@ -82,6 +82,14 @@ Una implementación demuestra comportamiento y regresión.
 Una release identifica commit, artefacto y entorno verificados.
 Un incidente demuestra recuperación y controles de salida.
 
+## Agentes que ejecutan las skills
+
+Cada skill puede ejecutarla el orquestador directamente o repartirla entre los [agentes EOS](../agents/README.md).
+INIT y MIGRATE suelen activar planner, architect, tdd-guide, implementer y revisores.
+ADOPT empieza con migration-archaeologist y tdd-guide; AUDIT usa solo revisores en lectura.
+RELEASE usa qa-verifier y release-manager; INCIDENT usa incident-commander.
+En Claude Code estas skills se cargan desde el plugin `eos-agents`; en Codex se instalan en `.agents/skills/`.
+
 ## Fallos y continuidad
 
 Continúa las tareas independientes cuando falte una entrada secundaria.
