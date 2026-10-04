@@ -2,7 +2,7 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Edición verificada: 4.0.0 (2026-10-04).
+Edición verificada: 4.1.0 (2026-10-04).
 
 ## Herramientas y scope
 
@@ -46,7 +46,8 @@ node scripts/validate-library.mjs --root 'C:\ruta\a\copia EOS'
 | Profundidad | Líneas estructurales excluidas, piso de palabras independiente, perfiles inválidos, módulo no registrado/ausente y reporte de medidas |
 | Versiones | `version_refs`, entrada más reciente del CHANGELOG y marketplace contra `library.json` |
 | Actualización | Hashes por archivo, reemplazo solo de intactos, conflictos con `.eos-new`, instalaciones antiguas sin hashes, retirados y bloque renovado |
-| CLI eos | Stemming, secciones y fragmentos, BM25 con bonus de encabezado y modo, presupuesto, gate bloqueado/confiado/cambiado/riesgoso, uso de Claude y Codex, ledger y evaluación de recuperación |
+| CLI eos | Stemming, secciones y fragmentos, BM25 con bonus de encabezado y modo, router de política y obligatorias omitidas, presupuesto, gate bloqueado/confiado/cambiado/riesgoso y confianza por revisión git, `run` sin shell con metacaracteres hostiles y shims `.cmd`, ledger fuera del repositorio con huella de tarea, uso de Claude y Codex, evaluación por conjuntos |
+| Actualización transaccional | Fallo inyectado a mitad de la escritura, restauración completa, manifiesto intacto, respaldo, `.gitignore` y archivos legacy informados |
 
 La edición 2.0 partió de un ciclo RED por ausencia del validador y alcanzó doce pruebas. La edición 3.0 añadió primero cinco pruebas de profundidad que fallaron antes de implementar el control, y después verificó su paso a GREEN. La salida más reciente de tests/CI es la autoridad para el número total de pruebas y la cobertura de líneas, ramas y funciones. El gate exige al menos 80% en cada categoría del código de soporte. No se atribuye esa cobertura a los manuales, proveedores o productos futuros.
 
@@ -71,8 +72,11 @@ El [informe de profundidad](DEPTH-REPORT.md) es una medición de esta revisión 
 - La calidad normativa, contradicciones y adecuación de ejemplos se revisan por dominio. No son certificadas por un test de estructura.
 - Las fuentes legales/técnicas tienen su fecha y alcance de consulta en cada manual. No se garantiza frescura automática.
 - No se prueba un sistema web, login, pago, WAF, backup o modelo real con estos tests.
-- `eval-context` mide 15 casos con secciones esperadas elegidas desde los encabezados. El 2026-10-04 dio Recall@5 0.633, Recall@10 0.767 y MRR 0.718; los dos casos de sinónimos sin raíz común fallan por diseño léxico. Un umbral aprobado no garantiza recuperación en tareas no representadas.
-- La lista de riesgos de `gate` es un freno, no un sandbox: un comando confiado conserva los permisos del usuario que lo ejecuta.
+- `eval-context` separa tres conjuntos. **dev** (15 casos) es el único usado para ajustar parámetros: Recall@10 0.767, MRR 0.718. **holdout** (20 casos de temas no usados en el ajuste): Recall@10 0.950, MRR 0.890; es optimista porque sus consultas se redactaron conociendo los encabezados. **adversarial** (10 casos con errores ortográficos, Spanglish, inglés y paráfrasis): Recall@10 0.600, MRR 0.509, sin umbral para no ocultar el límite léxico. CI exige dev ≥ 0.70/0.65 y holdout ≥ 0.85/0.75. 45 casos no demuestran generalización; la meta pendiente es 100–200.
+- El router de política garantiza las secciones constitucionales por tema solo cuando la tarea menciona vocabulario del tema; una tarea sin esas palabras no las activa.
+- La lista de riesgos de `gate` es un freno, no un sandbox: un comando confiado conserva los permisos del usuario que lo ejecuta. La huella de revisión cubre archivos versionados y no ignorados; no cubre dependencias instaladas ignoradas (`node_modules/`), variables de entorno ni herramientas globales.
+- `run` no usa shell; las pruebas adversariales cubren `;`, `&`, `|`, `$()`, backticks, redirecciones y comillas en argumentos, y en Windows el paso por shims `.cmd`.
+- La actualización transaccional se prueba con un fallo inyectado a mitad de la escritura; no protege contra un corte de energía durante la restauración.
 - `run` mide solo lo que el host reporta; no verifica facturación del proveedor.
 - La detección de secretos exige revisar material completo y diff; una búsqueda de patrones no garantiza ausencia universal de información sensible.
 

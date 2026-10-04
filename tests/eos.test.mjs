@@ -11,6 +11,7 @@ import {
   stem, terms, estimateTokens, splitSections, rank, selectWithinBudget, renderPack,
   summarizeFailure, runGate, renderGate, parseOptions, main,
   riskyReason, defaultTrustStore, extractUsage, summarizeRuns, evaluateContext,
+  resolveExecutable, buildSpawn, revisionFingerprint, defaultLedger, eosHome, policySections, POLICY_RULES, CONSTITUTION,
 } from '../scripts/eos.mjs';
 
 const signature = 'Pierre R. Boss (oprbguitar)';
@@ -273,47 +274,194 @@ test('extracts usage from Claude JSON and Codex JSONL without inventing missing 
   assert.equal(extractUsage('[1,2]').input_tokens, null);
 });
 
-test('run records a ledger entry and runs summarizes by agent', () => fixture(async root => {
-  const json = JSON.stringify({ result: 'respuesta', total_cost_usd: 0.5, usage: { input_tokens: 7, output_tokens: 3 } });
-  const ok = capture();
-  assert.equal(await main(['run', '--agent', 'eos-planner', '--task', 'plan', '--',
-    'node', '-e', `"process.stdout.write(JSON.stringify(${JSON.stringify(JSON.parse(json)).replace(/"/g, '\\"')}))"`], { cwd: root, ...ok }), 0);
-  assert.equal(ok.stdout, 'respuesta\n');
-  assert.match(ok.stderr, /\[eos run\] run-\S+ eos-planner PASS [\d.]+s tokens 7→3 costo 0\.5/);
+const printArgv = ['node', '-e', 'process.stdout.write(JSON.stringify(process.argv.slice(1)))'];
+const usageJson = ['node', '-e', 'process.stdout.write(JSON.stringify({result:"respuesta",total_cost_usd:0.5,usage:{input_tokens:7,output_tokens:3}}))'];
 
-  const plain = capture();
-  assert.equal(await main(['run', '--agent', 'eos-qa-verifier', '--ledger', 'otro/runs.jsonl', '--', 'node -e "console.log(1)"'], { cwd: root, ...plain }), 0);
-  assert.match(plain.stderr, /tokens n\/d→n\/d costo n\/d/);
+test('run executes without a shell: metacharacters and spaces arrive as literal arguments', () => fixture(async root => {
+  const hostile = ['a b; echo HACK', 'x & echo HACK2', '$(echo HACK3)', '`echo HACK4`', 'y | z > salida.txt', "c'd\"e"];
+  const io = capture();
+  assert.equal(await main(['run', '--agent', 'eos-qa-verifier', '--ledger', 'l.jsonl', '--', ...printArgv, ...hostile], { cwd: root, ...io }), 0);
+  assert.deepEqual(JSON.parse(io.stdout), hostile);
+  assert.equal(await readFile(path.join(root, 'salida.txt'), 'utf8').catch(() => null), null);
 
-  const fail = capture();
-  assert.equal(await main(['run', '--agent', 'eos-planner', '--', 'node -e "console.error(\'Error: x\'); process.exit(4)"'], { cwd: root, ...fail }), 1);
-  assert.match(fail.stderr, /Error: x[\s\S]*FAIL/);
+  const cli = spawnSync(process.execPath, [script, 'run', '--agent', 'x', '--ledger', path.join(root, 'cli.jsonl'), '--', ...printArgv, 'Planifica OAuth según EOS', 'a;b'], { cwd: root, encoding: 'utf8' });
+  assert.equal(cli.status, 0);
+  assert.deepEqual(JSON.parse(cli.stdout), ['Planifica OAuth según EOS', 'a;b']);
+}));
 
-  const silent = capture();
-  assert.equal(await main(['run', '--agent', 'eos-planner', '--', 'node -e "process.exit(5)"'], { cwd: root, ...silent }), 1);
+test('leaves executables to the OS outside Windows', () => {
+  assert.equal(resolveExecutable('tool', { platform: 'linux', env: {} }), 'tool');
+  assert.deepEqual(buildSpawn(['node', 'a;b'], { platform: 'linux' }), { file: 'node', args: ['a;b'], options: {} });
+});
 
-  const lines = (await readFile(path.join(root, '.eos/runs.jsonl'), 'utf8')).trim().split('\n').map(line => JSON.parse(line));
-  assert.equal(lines.length, 3);
-  assert.equal(lines[0].input_tokens, 7);
-  assert.equal(lines[1].status, 'FAIL');
+test('resolves Windows executables through PATHEXT and quotes .cmd shims, rejecting unsafe characters', { skip: process.platform !== 'win32' }, async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'eos-bin-'));
+  try {
+    await writeFile(path.join(dir, 'tool.cmd'), '@echo off\n');
+    await writeFile(path.join(dir, 'bin.exe'), '');
+    await writeFile(path.join(dir, 'tool'), '#!/bin/sh\n');
+    const env = { PATH: `C:\\nada;${dir}`, PATHEXT: '.EXE;.CMD', ComSpec: 'C:\\Windows\\cmd.exe' };
+    assert.equal(resolveExecutable('tool', { platform: 'win32', env }), path.win32.join(dir, 'tool.CMD'));
+    assert.equal(resolveExecutable('bin', { platform: 'win32', env }), path.win32.join(dir, 'bin.EXE'));
+    assert.equal(resolveExecutable('falta', { platform: 'win32', env }), 'falta');
+    assert.equal(resolveExecutable(path.join(dir, 'tool.cmd'), { platform: 'win32', env: { ...env, PATHEXT: undefined } }), path.join(dir, 'tool.cmd'));
+    assert.equal(resolveExecutable('tool', { platform: 'linux', env }), 'tool');
+    assert.equal(resolveExecutable('tool', { platform: 'win32', env: { Path: dir } }), path.win32.join(dir, 'tool.CMD'));
+    assert.equal(resolveExecutable('tool', { platform: 'win32', env: {} }), 'tool');
 
-  const summary = capture();
-  assert.equal(await main(['runs'], { cwd: root, ...summary }), 0);
-  assert.match(summary.stdout, /eos-planner \| 3 \| 1\/3 \| 7 \| 3 \| 0\.5000 \| [\d.]+s/);
+    const shim = buildSpawn(['tool', 'a b', 'x & y'], { platform: 'win32', env });
+    assert.equal(shim.file, 'C:\\Windows\\cmd.exe');
+    assert.deepEqual(shim.args.slice(0, 3), ['/d', '/s', '/c']);
+    assert.equal(shim.args[3], `""${path.win32.join(dir, 'tool.CMD')}" "a b" "x & y""`);
+    assert.equal(shim.options.windowsVerbatimArguments, true);
+    assert.equal(buildSpawn(['tool'], { platform: 'win32', env: { PATH: dir } }).file, 'cmd.exe');
+    for (const bad of ['100%PATH%', 'di "hola"', 'uno!dos', 'línea\nnueva', 'C:\\ruta\\'])
+      assert.throws(() => buildSpawn(['tool', bad], { platform: 'win32', env }), /no admitido con un shim/, bad);
+    assert.deepEqual(buildSpawn(['bin', '50%'], { platform: 'win32', env }), { file: path.win32.join(dir, 'bin.EXE'), args: ['50%'], options: {} });
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('a real .cmd shim receives metacharacters literally on Windows', { skip: process.platform !== 'win32' }, () => fixture(async root => {
+  await writeFile(path.join(root, 'shim.cmd'), '@node -e "process.stdout.write(JSON.stringify(process.argv.slice(1)))" %*\r\n');
+  const io = capture();
+  assert.equal(await main(['run', '--agent', 'x', '--ledger', 'l.jsonl', '--', path.join(root, 'shim.cmd'), 'a b & echo HACK | y > z', 'c^d'], { cwd: root, ...io }), 0);
+  assert.deepEqual(JSON.parse(io.stdout), ['a b & echo HACK | y > z', 'c^d']);
+  assert.equal(await readFile(path.join(root, 'z'), 'utf8').catch(() => null), null);
+  const bad = capture();
+  assert.equal(await main(['run', '--agent', 'x', '--ledger', 'l.jsonl', '--', path.join(root, 'shim.cmd'), '100%PATH%'], { cwd: root, ...bad }), 1);
+  assert.match(bad.stderr, /^ERROR: argumento no admitido/);
+}));
+
+test('run keeps the ledger outside the repository and stores only a task fingerprint by default', () => fixture(async root => {
+  const home = path.join(root, '..', `${path.basename(root)}-home`);
+  const saved = process.env.EOS_HOME;
+  process.env.EOS_HOME = home;
+  try {
+    const ok = capture();
+    assert.equal(await main(['run', '--agent', 'eos-planner', '--task', 'contrato confidencial cliente X', '--', ...usageJson], { cwd: root, ...ok }), 0);
+    assert.equal(ok.stdout, 'respuesta\n');
+    assert.match(ok.stderr, /\[eos run\] run-\S+ eos-planner PASS [\d.]+s tokens 7→3 costo 0\.5/);
+    const ledger = defaultLedger(root);
+    assert.ok(ledger.startsWith(home));
+    assert.match(path.basename(ledger), new RegExp(`^${path.basename(root).replace(/[^a-z0-9_-]+/gi, '_')}-[a-f\\d]{10}\\.jsonl$`));
+    const [entry] = (await readFile(ledger, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+    assert.equal(entry.task, null);
+    assert.match(entry.task_sha256, /^[a-f\d]{16}$/);
+    assert.doesNotMatch(await readFile(ledger, 'utf8'), /confidencial/);
+
+    assert.equal(await main(['run', '--agent', 'eos-planner', '--task', 'tarea pública', '--log-task', '--', ...usageJson], { cwd: root, ...capture() }), 0);
+    const fail = capture();
+    assert.equal(await main(['run', '--agent', 'eos-planner', '--', 'node', '-e', 'console.error("Error: x"); process.exit(4)'], { cwd: root, ...fail }), 1);
+    assert.match(fail.stderr, /Error: x[\s\S]*FAIL/);
+    assert.equal(await main(['run', '--agent', 'eos-planner', '--', 'node', '-e', 'process.exit(5)'], { cwd: root, ...capture() }), 1);
+    const missing = capture();
+    assert.equal(await main(['run', '--agent', 'eos-planner', '--', 'no-existe-este-binario-eos'], { cwd: root, ...missing }), 1);
+    assert.match(missing.stderr, /ENOENT|no-existe/);
+
+    const lines = (await readFile(ledger, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+    assert.equal(lines.length, 5);
+    assert.equal(lines[1].task, 'tarea pública');
+    assert.equal(lines[2].task_sha256, null);
+
+    const summary = capture();
+    assert.equal(await main(['runs'], { cwd: root, ...summary }), 0);
+    assert.match(summary.stdout, /eos-planner \| 5 \| 2\/5 \| 14 \| 6 \| 1\.0000 \| [\d.]+s/);
+    assert.equal(await readFile(path.join(root, '.eos/runs.jsonl'), 'utf8').catch(() => null), null);
+  } finally {
+    if (saved === undefined) delete process.env.EOS_HOME; else process.env.EOS_HOME = saved;
+    await rm(home, { recursive: true, force: true });
+  }
   const other = capture();
+  await main(['run', '--agent', 'eos-qa-verifier', '--ledger', 'otro/runs.jsonl', '--', 'node', '-e', 'console.log(1)'], { cwd: root, ...capture() });
   await main(['runs', '--ledger', 'otro/runs.jsonl'], { cwd: root, ...other });
   assert.match(other.stdout, /eos-qa-verifier \| 1 \| 1\/1 \| n\/d \| n\/d \| 0\.0000/);
   const none = capture();
   await main(['runs', '--ledger', 'nada.jsonl'], { cwd: root, ...none });
   assert.match(none.stdout, /\(sin corridas\)/);
   assert.match(summarizeRuns('no json\n'), /\(sin corridas\)/);
-
-  for (const args of [['run', '--', 'node -v'], ['run', '--agent', 'x']]) {
+  for (const args of [['run', '--', 'node', '-v'], ['run', '--agent', 'x']]) {
     const bad = capture();
     assert.equal(await main(args, { cwd: root, ...bad }), 1);
     assert.match(bad.stderr, /Uso:/);
   }
+  const saved2 = process.env.EOS_HOME;
+  delete process.env.EOS_HOME;
+  try { assert.match(eosHome(), /[\\/]\.eos$/); } finally { if (saved2 !== undefined) process.env.EOS_HOME = saved2; }
 }));
+
+test('gate trust bound to the repository revision blocks when executed code changes', () => fixture(async root => {
+  const store = path.join(root, '..', `${path.basename(root)}-rev-trust.json`);
+  const io = () => Object.assign(capture(), { cwd: root, store });
+  const git = (...args) => spawnSync('git', ['-c', 'user.name=EOS', '-c', 'user.email=eos@example.invalid', '-c', 'commit.gpgsign=false', ...args], { cwd: root, encoding: 'utf8' });
+  try {
+    git('init', '-q');
+    await writeFile(path.join(root, 'package.json'), '{"scripts":{"test":"node -e 0"}}\n');
+    await writeFile(path.join(root, 'eos.gate.json'), JSON.stringify({ commands: [{ name: 'tests', run: 'node -e "process.exit(0)"' }] }));
+    git('add', '-A');
+    git('commit', '-q', '-m', 'base');
+    assert.match(revisionFingerprint(root), /^[a-f\d]{64}$/);
+
+    const trust = io();
+    assert.equal(await main(['gate', '--trust'], trust), 0);
+    assert.match(trust.stdout, /alcance: comandos \+ revisión del repositorio/);
+    assert.equal(await main(['gate'], io()), 0);
+
+    await writeFile(path.join(root, 'package.json'), '{"scripts":{"test":"node -e \\"require(\'fs\').writeFileSync(\'pwn\',\'x\')\\""}}\n');
+    const blocked = io();
+    assert.equal(await main(['gate'], blocked), 2);
+    assert.match(blocked.stdout, /REVISION_CHANGED[\s\S]*el repositorio cambió desde que se confió/);
+
+    git('checkout', '-q', '--', 'package.json');
+    assert.equal(await main(['gate'], io()), 0);
+    await writeFile(path.join(root, 'nuevo-script.mjs'), 'console.log(1)\n');
+    assert.equal(await main(['gate'], io()), 2);
+    await rm(path.join(root, 'nuevo-script.mjs'));
+    await writeFile(path.join(root, 'ilegible'), 'x');
+    const fingerprint = revisionFingerprint(root);
+    assert.match(fingerprint, /^[a-f\d]{64}$/);
+    await rm(path.join(root, 'ilegible'));
+
+    await writeFile(path.join(root, 'package.json'), '{"scripts":{"test":"node -e 1"}}\n');
+    const commandsOnly = io();
+    assert.equal(await main(['gate', '--trust-commands'], commandsOnly), 0);
+    assert.match(commandsOnly.stdout, /alcance: solo comandos \(no cubre cambios del repositorio\)/);
+    await writeFile(path.join(root, 'otro.txt'), 'cambio\n');
+    assert.equal(await main(['gate'], io()), 0);
+    const plan = io();
+    await main(['gate', '--plan'], plan);
+    assert.match(plan.stdout, /Revisión: [a-f\d]{16}\n/);
+  } finally {
+    await rm(store, { force: true });
+  }
+}));
+
+test('policy router adds mandatory constitution sections by topic before relevance results', () => {
+  const constitution = [33, 34, 16, 88, 42].map(number => ({
+    file: CONSTITUTION, heading: `${number}. Sección ${number}`, start: number, end: number, text: `texto ${number} ${'x'.repeat(40)}`,
+  }));
+  const sections = [...constitution, { file: CONSTITUTION, heading: '4.11 Integration Architect', start: 1, end: 1, text: 'pago' }];
+  const payments = policySections(sections, 'corregir el webhook de cobros');
+  assert.deepEqual(payments.topics, ['pagos']);
+  assert.deepEqual(payments.mandatory.map(section => section.heading), ['33. Sección 33', '34. Sección 34']);
+  assert.ok(payments.mandatory.every(section => section.mandatory));
+  assert.deepEqual(policySections(sections, 'renovar tokens comprometidos tras la brecha').topics, ['seguridad', 'incidente']);
+  assert.deepEqual(policySections(sections, 'mejorar la tipografía').topics, []);
+  assert.ok(POLICY_RULES.length >= 8);
+
+  const relevant = [{ file: 'm.md', start: 1, tokens: 5, score: 3 }, { ...payments.mandatory[0], score: 2, mandatory: false }];
+  const picked = selectWithinBudget(relevant, 100, 1, payments.mandatory);
+  assert.equal(picked.chosen.filter(section => section.file === CONSTITUTION).length, 2);
+  assert.equal(picked.chosen.length, 3);
+  const tight = selectWithinBudget([], payments.mandatory[0].tokens, 5, payments.mandatory);
+  assert.equal(tight.chosen.length, 1);
+  assert.equal(tight.omitted.length, 1);
+  const pack = renderPack({ task: 't', budget: 1, chosen: tight.chosen, used: 1, omitted: tight.omitted, topics: ['pagos'], listOnly: true });
+  assert.match(pack, /Temas de política: pagos/);
+  assert.match(pack, /\(~\d+ tokens, obligatoria\)/);
+  assert.match(pack, /OMITIDA POR PRESUPUESTO \(obligatoria\)/);
+});
 
 test('evaluates context retrieval with recall, reciprocal rank and thresholds', () => fixture(async root => {
   const { sections } = await import('../scripts/eos.mjs').then(module => module.loadCorpus(root));
@@ -338,7 +486,7 @@ test('evaluates context retrieval with recall, reciprocal rank and thresholds', 
   await writeFile(path.join(root, 'strict.json'), JSON.stringify({ ...cases, thresholds: { recall_at_10: 0.9, mrr: 0.9 } }));
   const fail = capture();
   assert.equal(await main(['eval-context', '--root', root, '--cases', 'strict.json'], { cwd: root, ...fail }), 1);
-  assert.match(fail.stdout, /FAIL: bajo umbral en recall_at_10, mrr/);
+  assert.match(fail.stdout, /FAIL: bajo umbral en dev.recall_at_10, dev.mrr/);
   await writeFile(path.join(root, 'loose.json'), JSON.stringify({ cases: cases.cases }));
   assert.equal(await main(['eval-context', '--root', root, '--cases', 'loose.json'], { cwd: root, ...capture() }), 0);
 }));

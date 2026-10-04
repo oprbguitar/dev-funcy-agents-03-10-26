@@ -1,9 +1,11 @@
 // Instalador del sistema de agentes EOS en otro proyecto.
 // Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo asistido por IA.
 // Copia una instantánea de la biblioteca a <destino>/.eos y, según el host, agentes y skills
-// a .claude/ (Claude Code) o .agents/ (Codex). Nunca sobrescribe archivos existentes,
-// no descarga código, no ejecuta comandos externos y no toca permisos del host.
-import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
+// a .claude/ (Claude Code) o .agents/ (Codex). La instalación nunca sobrescribe archivos
+// existentes. Con --update reemplaza solo archivos que EOS instaló y nadie modificó (SHA-256
+// del manifiesto de instalación), de forma transaccional: planifica, respalda, aplica, verifica
+// y revierte todo ante un error. No descarga código, no ejecuta comandos y no toca permisos.
+import { readFile, writeFile, mkdir, stat, rm, cp } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -54,7 +56,7 @@ const eosBlock = version => [
   'Ahorro de contexto (sin modelo, sin red):',
   '- `node .eos/scripts/eos.mjs context "<tarea>" --mode <MODO> --list` muestra qué secciones cargar; sin `--list` entrega el paquete dentro del presupuesto (`--budget`, 8000 tokens por defecto).',
   '- `node .eos/scripts/eos.mjs gate --json` ejecuta los comandos de `eos.gate.json` y devuelve solo fallos resumidos; exige revisión previa (`gate --plan`, luego `gate --trust` por el responsable).',
-  '- `node .eos/scripts/eos.mjs run --agent <rol> -- <comando del host>` registra tokens y costo reales en `.eos/runs.jsonl`; `runs` los resume.',
+  '- `node .eos/scripts/eos.mjs run --agent <rol> -- <comando del host>` ejecuta sin shell y registra tokens y costo reales en `~/.eos/runs/` (fuera del repositorio; la tarea solo como huella salvo `--log-task`); `runs` los resume.',
   '',
   'Antes de cambiar código: inspecciona el repositorio, detecta el modo, respeta cambios ajenos y entrega evidencia verificable.',
   END,
@@ -63,7 +65,12 @@ const eosBlock = version => [
 
 const claudeBlock = [BEGIN, '<!-- Reglas EOS de Pierre R. Boss (oprbguitar) vía AGENTS.md -->', '@AGENTS.md', END, ''].join('\n');
 
-export async function installAgents({ source, target, host = 'all', dryRun = false, update = false }) {
+// Artefactos locales de EOS que no deben versionarse: paquetes de contexto, respaldos y propuestas.
+const gitignoreBlock = [`# ${BEGIN}`, '# EOS — Pierre R. Boss (oprbguitar): artefactos locales', '.eos/context*.md',
+  '.eos/runs*.jsonl', '.eos/.update-backup/', '*.eos-new', `# ${END}`, ''].join('\n');
+const BACKUP = '.eos/.update-backup';
+
+export async function installAgents({ source, target, host = 'all', dryRun = false, update = false, hooks = {} }) {
   if (!HOSTS.has(host)) throw new Error(`host inválido: ${host}; usa claude, codex o all`);
   const libraryRoot = path.resolve(source);
   const destRoot = path.resolve(target);
@@ -82,12 +89,11 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
   const updated = [];
   const unchanged = [];
   const conflicts = [];
+  const legacy = [];
   const desired = new Set();
-  const write = async (destFile, content) => {
-    if (dryRun) return;
-    await mkdir(path.dirname(destFile), { recursive: true });
-    await writeFile(destFile, content);
-  };
+  // Fase 1: solo planifica. Ninguna escritura ocurre hasta conocer el plan completo.
+  const pending = [];
+  const write = async (destFile, content) => { pending.push({ destFile, content }); };
   // Instalación: nunca sobrescribe. Actualización: reemplaza solo lo que EOS escribió y nadie editó;
   // una edición local queda intacta y la versión nueva se deja al lado como <archivo>.eos-new.
   const put = async (destFile, content) => {
@@ -99,9 +105,16 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
     if (!update) { skipped.push(relative); return; }
     const currentHash = sha256(current);
     if (currentHash === hash) { unchanged.push(relative); files[relative] = hash; return; }
-    const untouched = recorded[relative] ? recorded[relative] === currentHash
-      : !previous.files && relative.startsWith('.eos/');
-    if (untouched) { updated.push(relative); files[relative] = hash; await write(destFile, content); return; }
+    // Sin hash previo (instalación 3.x) se asume que .eos/ pertenece a EOS; queda respaldado y se informa.
+    const assumed = !recorded[relative] && !previous.files && relative.startsWith('.eos/');
+    const untouched = recorded[relative] ? recorded[relative] === currentHash : assumed;
+    if (untouched) {
+      updated.push(relative);
+      if (assumed) legacy.push(relative);
+      files[relative] = hash;
+      await write(destFile, content);
+      return;
+    }
     conflicts.push(relative);
     await write(`${destFile}.eos-new`, content);
   };
@@ -109,9 +122,11 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
     const relative = toPosix(path.relative(destRoot, destFile));
     const current = await readFile(destFile, 'utf8').catch(() => null);
     if (current !== null && alreadyPresent(current)) {
-      const begin = current.indexOf(BEGIN);
-      const finish = current.indexOf(END, begin);
-      if (!update || begin < 0 || finish < 0) { skipped.push(relative); return; }
+      const marker = current.indexOf(BEGIN);
+      const finish = current.indexOf(END, marker);
+      if (!update || marker < 0 || finish < 0) { skipped.push(relative); return; }
+      // Reemplaza desde el inicio de la línea del marcador: en .gitignore el marcador va tras "# ".
+      const begin = current.lastIndexOf('\n', marker) + 1;
       const next = current.slice(0, begin) + block.trimEnd() + current.slice(finish + END.length);
       if (next === current) { unchanged.push(relative); return; }
       updated.push(relative);
@@ -153,24 +168,56 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
     await placeBlock(path.join(destRoot, 'CLAUDE.md'), claudeBlock,
       text => text.includes(BEGIN) || text.includes('@AGENTS.md'));
   }
+  await placeBlock(path.join(destRoot, '.gitignore'), gitignoreBlock, text => text.includes(BEGIN));
   // Retirados: instalados antes y ausentes de esta versión. Solo se informan; borrar es decisión humana.
+  const managed = new Set(['AGENTS.md', 'CLAUDE.md', '.gitignore']);
   const removed = update
     ? [...new Set([...(previous.created ?? []), ...Object.keys(recorded)])]
-      .filter(relative => !desired.has(relative) && relative !== 'AGENTS.md' && relative !== 'CLAUDE.md')
+      .filter(relative => !desired.has(relative) && !managed.has(relative))
     : [];
 
-  if (!dryRun && (created.length || update)) {
-    await writeFile(record, JSON.stringify({
-      tool: 'scripts/install-agents.mjs',
-      owner: manifest.owner,
-      version: manifest.version,
-      host,
-      installed_at: new Date().toISOString(),
-      created: [...new Set([...(previous.created ?? []), ...created])],
-      files,
-    }, null, 2) + '\n');
+  if (!dryRun) {
+    await applyTransaction(destRoot, pending, hooks);
+    if (created.length || update) {
+      await writeFile(record, JSON.stringify({
+        tool: 'scripts/install-agents.mjs',
+        owner: manifest.owner,
+        version: manifest.version,
+        host,
+        installed_at: new Date().toISOString(),
+        created: [...new Set([...(previous.created ?? []), ...created])],
+        files,
+      }, null, 2) + '\n');
+    }
   }
-  return { created, skipped, updated, unchanged, conflicts, removed, dryRun };
+  return { created, skipped, updated, unchanged, conflicts, removed, legacy, dryRun };
+}
+
+// Fase 2: respalda lo que se va a reemplazar en .eos/.update-backup/, escribe, verifica el hash de
+// cada archivo y, ante cualquier error, restaura los respaldos y borra lo recién creado. El
+// manifiesto se escribe solo después, así una actualización fallida no deja una versión híbrida.
+async function applyTransaction(destRoot, pending, hooks) {
+  const backupRoot = path.join(destRoot, BACKUP);
+  const applied = [];
+  if (pending.length) await rm(backupRoot, { recursive: true, force: true });
+  try {
+    for (const [index, { destFile, content }] of pending.entries()) {
+      const relative = toPosix(path.relative(destRoot, destFile));
+      const existed = await exists(destFile);
+      if (existed) await cp(destFile, path.join(backupRoot, relative), { force: true });
+      applied.push({ destFile, relative, existed });
+      await hooks.beforeWrite?.(relative, index);
+      await mkdir(path.dirname(destFile), { recursive: true });
+      await writeFile(destFile, content);
+      if (sha256(await readFile(destFile)) !== sha256(content)) throw new Error(`verificación fallida: ${relative}`);
+    }
+  } catch (error) {
+    for (const { destFile, relative, existed } of applied.reverse()) {
+      if (existed) await cp(path.join(backupRoot, relative), destFile, { force: true });
+      else await rm(destFile, { force: true });
+    }
+    throw new Error(`Actualización revertida sin cambios: ${error.message}`);
+  }
 }
 
 export function parseArgs(args) {
@@ -205,6 +252,7 @@ async function main(args) {
       for (const file of result.created) process.stdout.write('  + ' + file + '\n');
       for (const file of result.updated) process.stdout.write('  ~ ' + file + ' (actualizado)\n');
       for (const file of result.conflicts) process.stdout.write('  ! ' + file + ' (modificado localmente; propuesta en ' + file + '.eos-new)\n');
+      if (result.legacy.length) process.stdout.write('  Aviso: ' + result.legacy.length + ' archivos de .eos/ sin hash previo se asumieron de EOS; la versión anterior queda en ' + BACKUP + '/\n');
       for (const file of result.removed) process.stdout.write('  - ' + file + ' (ya no forma parte de EOS; revísalo y bórralo si corresponde)\n');
       return;
     }
