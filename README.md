@@ -1,6 +1,6 @@
 # Pierre R. Boss — Engineering Operating System
 
-**EOS · Edición de especificaciones de ingeniería 4.1.0 · 4 de octubre de 2026 · Perú**
+**EOS · Edición de especificaciones de ingeniería 4.2.0 · 9 de octubre de 2026 · Perú**
 
 > Quiero software que pueda entender, verificar, proteger, mantener y entregar. Quiero que cada decisión tenga una razón, cada permiso un límite y cada resultado una prueba. La IA debe ampliar mi capacidad de trabajo sin quitarme el control del sistema.
 >
@@ -22,7 +22,7 @@ git clone https://github.com/oprbguitar/dev-funcy-agents-03-10-26.git
 
 | Host | Cómo usarlo | Qué obtienes |
 |---|---|---|
-| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 6 skills |
+| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 7 skills |
 | Claude Code (como plugin) | `/plugin marketplace add oprbguitar/dev-funcy-agents-03-10-26` y luego instala `eos-agents` | Subagentes `eos-*` y skills en cualquier proyecto |
 | Claude Code (copia local) | `node scripts/install-agents.mjs --host claude --target <proyecto>` | `.claude/agents/`, `.claude/skills/`, `.eos/` y bloque en `AGENTS.md`/`CLAUDE.md` |
 | Codex | `node scripts/install-agents.mjs --host codex --target <proyecto>` | Bloque EOS en `AGENTS.md`, skills en `.agents/skills/`, roles en `.agents/eos-agents/` |
@@ -60,7 +60,7 @@ dev-funcy-agents-03-10-26/
 │  ├─ plugin.json                Plugin eos-agents para Claude Code
 │  └─ marketplace.json           Marketplace para `/plugin marketplace add`
 ├─ agents/                       13 definiciones de subagentes + README
-├─ skills/                       6 skills de modo: INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT
+├─ skills/                       7 skills: seis modos y STRATEGY para dirección recurrente
 ├─ docs/
 │  ├─ manuals/                   12 módulos mayores de especificación
 │  ├─ sources/                   4 conversaciones fuente (bytes intactos + SHA-256) y trazabilidad
@@ -86,7 +86,7 @@ dev-funcy-agents-03-10-26/
 1. Clona el repositorio y ábrelo en el Code tab.
 2. [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md); Claude lee las reglas EOS al iniciar.
 3. Pide un modo, por ejemplo: «Aplica EOS en MODE=AUDIT y entrégame hallazgos por severidad».
-4. Los 13 subagentes de [agents/](agents/README.md) y las 6 skills quedan disponibles para el orquestador.
+4. Los 13 subagentes de [agents/](agents/README.md) y las 7 skills quedan disponibles para el orquestador.
 
 ### Claude Code como plugin en cualquier proyecto
 
@@ -146,7 +146,7 @@ node .eos/scripts/eos.mjs runs
 
 `run` ejecuta el comando **sin shell**: cada argumento llega literal, así que `;`, `&`, `|`, `# Pierre R. Boss — Engineering Operating System
 
-**EOS · Edición de especificaciones de ingeniería 4.1.0 · 4 de octubre de 2026 · Perú**
+**EOS · Edición de especificaciones de ingeniería 4.2.0 · 9 de octubre de 2026 · Perú**
 
 > Quiero software que pueda entender, verificar, proteger, mantener y entregar. Quiero que cada decisión tenga una razón, cada permiso un límite y cada resultado una prueba. La IA debe ampliar mi capacidad de trabajo sin quitarme el control del sistema.
 >
@@ -168,7 +168,7 @@ git clone https://github.com/oprbguitar/dev-funcy-agents-03-10-26.git
 
 | Host | Cómo usarlo | Qué obtienes |
 |---|---|---|
-| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 6 skills |
+| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 7 skills |
 | Claude Code (como plugin) | `/plugin marketplace add oprbguitar/dev-funcy-agents-03-10-26` y luego instala `eos-agents` | Subagentes `eos-*` y skills en cualquier proyecto |
 | Claude Code (copia local) | `node scripts/install-agents.mjs --host claude --target <proyecto>` | `.claude/agents/`, `.claude/skills/`, `.eos/` y bloque en `AGENTS.md`/`CLAUDE.md` |
 | Codex | `node scripts/install-agents.mjs --host codex --target <proyecto>` | Bloque EOS en `AGENTS.md`, skills en `.agents/skills/`, roles en `.agents/eos-agents/` |
@@ -206,7 +206,7 @@ dev-funcy-agents-03-10-26/
 │  ├─ plugin.json                Plugin eos-agents para Claude Code
 │  └─ marketplace.json           Marketplace para `/plugin marketplace add`
 ├─ agents/                       13 definiciones de subagentes + README
-├─ skills/                       6 skills de modo: INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT
+├─ skills/                       7 skills: seis modos y STRATEGY para dirección recurrente
 ├─ docs/
 │  ├─ manuals/                   12 módulos mayores de especificación
 │  ├─ sources/                   4 conversaciones fuente (bytes intactos + SHA-256) y trazabilidad
@@ -232,7 +232,7 @@ dev-funcy-agents-03-10-26/
 1. Clona el repositorio y ábrelo en el Code tab.
 2. [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md); Claude lee las reglas EOS al iniciar.
 3. Pide un modo, por ejemplo: «Aplica EOS en MODE=AUDIT y entrégame hallazgos por severidad».
-4. Los 13 subagentes de [agents/](agents/README.md) y las 6 skills quedan disponibles para el orquestador.
+4. Los 13 subagentes de [agents/](agents/README.md) y las 7 skills quedan disponibles para el orquestador.
 
 ### Claude Code como plugin en cualquier proyecto
 
@@ -365,7 +365,7 @@ La constitución sirve de entrada y autoridad común. Las skills, prompts y plan
 Ejemplo de petición adaptada:
 
 ```text
-Aplica EOS 4.1.0 en MODE=ADOPT a este repositorio.
+Aplica EOS 4.2.0 en MODE=ADOPT a este repositorio.
 Objetivo: documentar y corregir el fallo de sesión que describo.
 Alcance: autenticación web y pruebas relacionadas.
 No cambies pagos, base de datos ni infraestructura.
