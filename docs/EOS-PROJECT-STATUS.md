@@ -30,7 +30,7 @@ No hay migración de datos ni dependencias nuevas. Antes de publicación se pued
 
 ## Evidencia y límites
 
-Estado de la ampliación: VERIFIED dentro del alcance de biblioteca; publicación preparada en rama revisable. Consultar la ref remota y checks de GitHub para su estado posterior al commit.
+Estado de la ampliación: VERIFIED dentro del alcance de biblioteca; publicada en rama revisable mediante [PR #7](https://github.com/oprbguitar/dev-funcy-agents-03-10-26/pull/7). La integración a `main` queda pendiente de revisión y fusión. La visibilidad sigue privada.
 
 | Comprobación local | Resultado | Evidencia |
 |---|---|---|
@@ -53,3 +53,7 @@ Fuentes jurídicas: ver [registro Perú](reference/PRIVACY-PERU-REGISTRY.md). Li
 Seguir [README](../README.md) para instalar. Los proyectos receptores crean su estado desde [PROJECT-STATUS](../templates/PROJECT-STATUS.md) en su ubicación documental canónica y guardan decisiones específicas allí. La existencia de una skill nunca basta para declarar su control VERIFIED u OPERATING.
 
 Verificación integrada final: instalación real temporal `--host all` y actualización sin conflictos PASS; las diez skills están presentes para ambos hosts y el snapshot de84 documentos supera el validador. El gate de biblioteca se copia únicamente como referencia en `.eos/`; el producto necesita su gate propio revisado. Render Markdown de GitHub PASS: conserva picture, GIF, PNG, media de reducción de movimiento y detalles desplegables. Imagen estática inspeccionada. Revisión independiente: P2 del stemming corregido y regresión añadida; sin bloqueantes en segunda revisión.
+
+## Publicación verificada
+
+Commit de implementación `fbc5b862dc0e45ca078c72b7619a8cecdf368506`: SHA local igual a ref remota `feat/eos-4.3-lifecycle-governance`. [CI de push](https://github.com/oprbguitar/dev-funcy-agents-03-10-26/actions/runs/39169682169) completado en Linux y Windows con resultado SUCCESS. Este registro posterior solo documenta ese hito; los checks del PR muestran la verificación de la revisión más reciente, incluida esta actualización documental. No se fusionó `main` ni se desplegó una aplicación.
