@@ -69,3 +69,20 @@ Aceptación real por responsable competente: PENDIENTE.
 Registrar `null` y medir antes de dimensionar infraestructura.
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
+
+## Admisión transversal por finalidad y canal
+
+| Dimensión | Valor observado / objetivo | Estado, razón y evidencia | Responsable / revisión |
+|---|---|---|---|
+| Distribución: web pública/interna, desktop/SO/arquitectura, móvil, híbrida/offline, CLI, biblioteca | PENDIENTE | PENDIENTE | PENDIENTE |
+| Países de operación, usuarios, entidad y sector | PENDIENTE | No presumir Perú universal | PENDIENTE |
+| Datos personales/sensibles/menores y sujetos | PENDIENTE | Inventario por finalidad | PENDIENTE |
+| Roles, habilitación, aviso, derechos y retención | PENDIENTE | Enlace a decisión revisada | PENDIENTE |
+| Terceros/IA/analytics, destinos y transferencias | PENDIENTE | IA OFF hasta admisión | PENDIENTE |
+| Cookies, consentimiento, contratos y términos | PENDIENTE | Aplicabilidad; no banner automático | PENDIENTE |
+| Marca/propietario/arquitectura y tokens/accesibilidad | PENDIENTE | Derechos y fuentes | PENDIENTE |
+| Landing, audiencia, propuesta y captación | PENDIENTE | INIT web público/comercial: diseño por defecto | PENDIENTE |
+| Marketing, canales, presupuesto y medición | PENDIENTE | No medido no es cero | PENDIENTE |
+| Entrega por canal, instalación, update y recuperación | PENDIENTE | Pruebas separadas | PENDIENTE |
+
+Estados de capacidad: PRESENT, ASSESSED, DORMANT, PLANNED, IMPLEMENTED, VERIFIED, OPERATING, NOT_APPLICABLE, BLOCKED, DEGRADED o RETIRED. Cada no aplicabilidad lleva razón; bloqueos llevan dependencia y trabajo independiente. No confundir estado con resultado de check. Documentación viva canónica: `docs/EOS-PROJECT-STATUS.md` del destino ([plantilla](PROJECT-STATUS.md)); el perfil permanece como fuente del contexto.

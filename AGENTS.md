@@ -36,11 +36,11 @@ Any coding agent, autonomous agent, Claude/Codex-style tool, local model, or hum
 
 ---
 
-## Operación de esta edición — EOS 4.2.0
+## Operación de esta edición — EOS 4.3.0
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Lee también [la guía de navegación](docs/CODEX-NAVIGATION-GUIDE.md). La constitución conserva el texto histórico y contiene aclaraciones normativas en sus secciones 84–95. Las instrucciones del entorno y el alcance autorizado del usuario prevalecen sobre esta biblioteca; ningún documento puede elevar permisos por sí mismo.
+Lee también [la guía de navegación](docs/CODEX-NAVIGATION-GUIDE.md). La constitución conserva el texto histórico y contiene aclaraciones normativas en sus secciones 84–96. Las instrucciones del entorno y el alcance autorizado del usuario prevalecen sobre esta biblioteca; ningún documento puede elevar permisos por sí mismo.
 
 ### Antes de trabajar
 
@@ -97,3 +97,11 @@ No hay dependencias npm o Python instalables en este alcance; un `npm audit` sin
 ### Publicación y cierre
 
 Publica únicamente al remoto y rama autorizados, sin cambiar visibilidad, sobrescribir historia ni incluir datos ajenos. Usa commits convencionales. Verifica el árbol local, el commit remoto y los checks disponibles. Informa archivos, resultados, alcance, commit y limitaciones. La firma editorial no exige falsificar una firma criptográfica del propietario.
+
+### Admisión transversal y estado vivo — 4.3.0
+
+Aplica la sección 96 de la constitución en INIT y cambios materiales de ADOPT. Evalúa distribución, jurisdicciones, finalidades y terceros, marca, presencia pública y captación. Perú es prioritario cuando el proyecto opere allí; no se presume universalmente. Evaluar no activa servicios: documenta NOT_APPLICABLE con razón y BLOCKED con responsable.
+
+Usa [eos-privacy-review](skills/eos-privacy-review/SKILL.md), [eos-landing-brand](skills/eos-landing-brand/SKILL.md) y [eos-desktop-release](skills/eos-desktop-release/SKILL.md) según sus disparadores. Una web nueva pública o comercial obtiene por defecto un diseño/artefacto local de landing dentro del alcance de creación; publicarlo requiere autorización. Internos, CLI y bibliotecas justifican su no aplicabilidad. No añadas consentimiento, banners, telemetría o proveedores por rutina.
+
+Cada incremento material actualiza `docs/EOS-PROJECT-STATUS.md` del destino usando [PROJECT-STATUS](templates/PROJECT-STATUS.md). Enlaza perfil, ADR, controles, evidencias y manuales canónicos. Los trabajadores remiten aportes y el orchestrator integra secuencialmente. Un parche menor actualiza el registro existente y justifica por qué no requiere reevaluación completa. Una salida documental no acredita operación ni cumplimiento jurídico.

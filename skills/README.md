@@ -25,6 +25,9 @@ Combinar modos exige explicar la transición y conservar límites previos.
 | Cambio de plataforma | [MIGRATE](eos-migrate/SKILL.md) | Equivalencia y transición |
 | Entrega de versión | [RELEASE](eos-release/SKILL.md) | Artefacto exacto y verificación |
 | Servicio afectado | [INCIDENT](eos-incident/SKILL.md) | Contención y recuperación acotadas |
+| Datos, cookies, proveedores o jurisdicción | [PRIVACY REVIEW](eos-privacy-review/SKILL.md) | Aplicabilidad por finalidad, controles y evidencia |
+| UI, identidad o producto web comercial | [LANDING BRAND](eos-landing-brand/SKILL.md) | Marca, tokens, blueprint y marketing verificable |
+| Distribución nativa, offline o híbrida | [DESKTOP RELEASE](eos-desktop-release/SKILL.md) | Instalación, datos locales, firma, actualización y recuperación |
 
 ## Entradas mínimas
 

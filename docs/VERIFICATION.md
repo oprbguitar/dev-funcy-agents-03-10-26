@@ -2,10 +2,9 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Edición documentada: 4.2.0 (2026-10-09).
+Edición documentada: 4.3.0 (2026-10-18).
 
-En esta actualización documental, la validación estructural de la biblioteca pasó.
-No se ejecutaron las suites de pruebas ni se midió cobertura de los scripts.
+En la edición 4.3.0 se ejecutaron las tres suites de soporte con sus gates de cobertura. Resultados locales del 2026-10-18 (Windows, Node v24.14.0): 73 pruebas PASS, cero fallos; validador 25, instalador 19, CLI 29. No se atribuye cobertura al texto de los manuales.
 
 ## Herramientas y scope
 
@@ -88,3 +87,19 @@ El [informe de profundidad](DEPTH-REPORT.md) es una medición de esta revisión 
 Confirma que los cuatro antecedentes conservan sus bytes, todos los documentos están registrados, los doce módulos superan sus pisos, las firmas y links cumplen el alcance, tests y coverage pasan y no existe material privado fuera de la autorización. Revisa contratos, invariantes y escenarios con especialistas disponibles. Registra fallos corregidos y límites; conserva visibilidad y estado ajeno.
 
 La publicación se verifica con commit local, ref remoto y checks reales. Un workflow escrito no se reporta como aprobado hasta que GitHub haya ejecutado sus jobs. Las mediciones locales y el resultado remoto se distinguen en la entrega.
+
+## Evidencia local de la ampliación 4.3.0
+
+| Suite | Pruebas PASS | Líneas | Ramas | Funciones |
+|---|---:|---:|---:|---:|
+| Validador | 25 | 100% | 95.21% | 93.10% |
+| Instalador | 19 | 100% | 93.57% | 100% |
+| CLI EOS | 29 | 100% | 96.13% | 98.20% |
+
+TDD de la ampliación: primero tres fallos por ausencia del routing96/evaluación de políticas y copia de licencia/assets; después implementación GREEN. Una regresión adicional comprobó la inclusión de subsecciones96 y exclusión de encabezados de roles que parezcan números constitucionales.
+
+`eval-context` supera los umbrales por conjunto: dev Recall@10=0.767/MRR=0.717, holdout0.950/0.890; adversarial0.600/0.509 sin umbral exigido. Persisten casos individuales fuera del top10: no es recuperación perfecta. lifecycle_policy tiene16 casos A–P con Recall@10=1.000 y MRR=1.000; lifecycle_manuals4 casos con Recall@10=1.000/MRR=0.813. Los A–P verifican recuperación obligatoria de políticas (sección96 y contrato hijo), no decisiones jurídicas automáticas, tráfico, consentimiento ni aplicaciones de escritorio funcionando.
+
+La verificación estructural registra84 documentos,4 fuentes históricas intactas y13 agentes. El instalador incluye las diez skills por catálogo, licencia, alcance y assets del README. La revisión y estado remoto se registran en [EOS-PROJECT-STATUS](EOS-PROJECT-STATUS.md); un resultado local no significa CI remoto aprobado.
+
+Verificación integrada final: instalación real temporal `--host all` y actualización sin conflictos PASS; las diez skills están presentes para ambos hosts y el snapshot de84 documentos supera el validador. El gate de biblioteca se copia únicamente como referencia en `.eos/`; el producto necesita su gate propio revisado. Render Markdown de GitHub PASS: conserva picture, GIF, PNG, media de reducción de movimiento y detalles desplegables. Imagen estática inspeccionada. Revisión independiente: P2 del stemming corregido y regresión añadida; sin bloqueantes en segunda revisión.

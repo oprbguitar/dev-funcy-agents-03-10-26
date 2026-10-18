@@ -13,7 +13,8 @@ import { fileURLToPath } from 'node:url';
 const HOSTS = new Set(['claude', 'codex', 'all']);
 const BEGIN = '<!-- EOS:BEGIN -->';
 // Archivos auxiliares enlazados por la documentación que no figuran en library.json.
-const SNAPSHOT_EXTRAS = ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', 'docs/sources/source-index.json', 'scripts/eos.mjs'];
+const SNAPSHOT_EXTRAS = ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', 'docs/sources/source-index.json', 'scripts/eos.mjs', 'eos.gate.json',
+  'LICENSE', 'LICENSE-SCOPE.md', 'docs/assets/eos-strategy-flow.gif', 'docs/assets/eos-strategy-flow.png'];
 const END = '<!-- EOS:END -->';
 
 const toPosix = value => value.split(path.sep).join('/');
@@ -51,10 +52,12 @@ const eosBlock = version => [
   '- Constitución `.eos/EOS_MASTER_SYSTEM_INSTRUCTION.md` y manuales `.eos/docs/manuals/`: solo por secciones, nunca completos por rutina.',
   '- Roles: `.eos/agents/README.md`; cada entrega cierra con el bloque `eos-result` de `.eos/templates/AGENT-RESULT.md`.',
   '- Procedimientos por modo (INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT): `.eos/skills/`.',
+  '- Estrategia antes del backlog: `.eos/skills/eos-strategy/SKILL.md`; privacidad, landing/marca y entrega escritorio se activan según el perfil, sin presumir un runtime.',
   '- Plantillas de registro: `.eos/templates/`, incluida `EXEC-PLAN.md` para trabajo largo.',
   '',
   'Ahorro de contexto (sin modelo, sin red):',
   '- `node .eos/scripts/eos.mjs context "<tarea>" --mode <MODO> --list` muestra qué secciones cargar; sin `--list` entrega el paquete dentro del presupuesto (`--budget`, 8000 tokens por defecto).',
+  '- `.eos/eos.gate.json` es referencia de la biblioteca; el gate del producto se define y revisa en la raíz del proyecto receptor. La copia no activa ni autoriza comandos.',
   '- `node .eos/scripts/eos.mjs gate --json` ejecuta los comandos de `eos.gate.json` y devuelve solo fallos resumidos; exige revisión previa (`gate --plan`, luego `gate --trust` por el responsable).',
   '- `node .eos/scripts/eos.mjs run --agent <rol> -- <comando del host>` ejecuta sin shell y registra tokens y costo reales en `~/.eos/runs/` (fuera del repositorio; la tarea solo como huella salvo `--log-task`); `runs` los resume.',
   '',

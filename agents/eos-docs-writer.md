@@ -66,3 +66,9 @@ Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-R
 
 - La documentación contradice el código: corrige la documentación o reporta el defecto del código al orquestador.
 - Archivos fuente históricos (`docs/sources/*.txt`): nunca se modifican; las correcciones van en trazabilidad.
+
+## Documento vivo y guía del receptor
+
+Mantén `docs/EOS-PROJECT-STATUS.md` del destino desde [PROJECT-STATUS](../templates/PROJECT-STATUS.md) cuando exista desarrollo material. Si ya hay un estado canónico equivalente, declara su relación y conserva una única fuente viva. Reutiliza perfil, ADR, privacidad, diseño y runbooks por enlaces. Actualiza objetivo, baseline, revisión, alcance implementado, integraciones activas/dormant, evidencias y siguiente paso en cada hito; conserva trazabilidad mediante diff.
+
+La guía del receptor cubre clonar, configurar sin secretos, ejecutar, probar, instalar/desplegar según canal autorizado y restaurar. Distingue guía externa de producto y operación interna. Si una instrucción no se ejecutó, marca NOT_RUN con razón. No escribas políticas como aprobadas ni un instalador como disponible cuando solo existe el diseño. Entrega aportes al orchestrator si otro colaborador posee el estado canónico; evita edición concurrente.

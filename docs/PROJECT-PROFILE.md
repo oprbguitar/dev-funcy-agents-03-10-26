@@ -5,7 +5,7 @@
 | Campo | Valor confirmado o decisión de esta edición |
 |---|---|
 | Producto | Biblioteca de instrucciones de ingeniería EOS |
-| Edición | 4.2.0: doce especificaciones mayores (pisos congelados), núcleo EOS-CORE, CLI `eos.mjs` endurecido y séptima skill EOS para estrategia recurrente de producto/operación |
+| Edición | 4.3.0: doce especificaciones mayores (pisos congelados), núcleo EOS-CORE, CLI `eos.mjs` endurecido y diez skills, con estrategia, privacidad, marca/landing y entrega de escritorio |
 | Propietario editorial | Pierre R. Boss / oprbguitar |
 | Repositorio | `oprbguitar/dev-funcy-agents-03-10-26` |
 | Modo de este trabajo | ADOPT: conservar y ampliar una constitución existente |
@@ -16,7 +16,7 @@
 | Persistencia | Git, Markdown, JSON, adjuntos fuente de texto |
 | Publicación autorizada | Subir esta ampliación al repositorio indicado por el propietario |
 | Visibilidad observada al iniciar | Privada; no se autoriza cambiarla |
-| Dependencias de herramientas | Biblioteca estándar de Node.js; sin paquetes npm |
+| Dependencias de herramientas | Biblioteca estándar de Node.js; sin paquetes npm; nuevas referencias y registros condicionales |
 | Herramientas ejecutables | `validate-library.mjs`, `install-agents.mjs` (instalar y `--update`), `eos.mjs` |
 | Aplicación desplegada | No aplica a esta biblioteca |
 | Datos de usuarios finales | No se requiere recolectarlos |

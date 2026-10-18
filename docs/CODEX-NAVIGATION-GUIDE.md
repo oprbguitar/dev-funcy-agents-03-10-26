@@ -40,3 +40,9 @@ No agregues un archivo a `commands/` para duplicar una skill. Si una integració
 Una revisión recibe objetivo, diff completo del alcance, archivos, tests y resultados, riesgos, fuente de cada regla alterada y operaciones externas autorizadas. El revisor emite hallazgos con ubicación y consecuencia. El informe distingue errores corregidos, riesgos aceptados con vencimiento y verificaciones pendientes.
 
 Para otro repositorio, referencia una versión o commit EOS e integra sus reglas con el `AGENTS.md` del destino. Conserva la documentación en la ubicación que ya usa ese proyecto. No copies los antecedentes históricos salvo necesidad de trazabilidad. No conviertas EOS en un servicio que deba ejecutar la aplicación.
+
+## Admisión transversal y documentación viva — 4.3.0
+
+La sección 96 de la constitución extiende el historial sin reemplazarlo. INIT y cambios materiales de ADOPT evalúan datos/jurisdicciones, marca/landing/marketing y distribución; activan solo capacidades pertinentes. Navega por [privacy](../skills/eos-privacy-review/SKILL.md), [landing/brand](../skills/eos-landing-brand/SKILL.md) y [desktop](../skills/eos-desktop-release/SKILL.md), conservando los doce manuales como fuentes de dominio.
+
+El destino mantiene `docs/EOS-PROJECT-STATUS.md` con [esta plantilla](../templates/PROJECT-STATUS.md), actualizado en cada hito material. Es el índice vivo de decisiones y evidencia; perfil y manuales existentes conservan autoridad temática. Los agentes envían aportes y el orchestrator integra secuencialmente. Redactar un aviso o guía no equivale a poner el control en operación.

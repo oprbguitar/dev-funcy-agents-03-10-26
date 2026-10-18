@@ -1,12 +1,23 @@
 {
   "owner": "Pierre R. Boss (oprbguitar)",
-  "description": "Recuperación de eos context por conjunto. dev: único conjunto usado para ajustar parámetros (HEADING_BONUS). holdout: temas no vistos, nunca usados para ajustar. adversarial: errores ortográficos, Spanglish, inglés, paráfrasis y consultas ambiguas; se reporta sin umbral para no maquillar el límite léxico. Las secciones esperadas se eligieron leyendo encabezados del índice, no la salida del ranking.",
+  "description": "Recuperación de eos context por conjunto. dev: único conjunto usado para ajustar parámetros (HEADING_BONUS). holdout: temas no vistos, nunca usados para ajustar. adversarial: errores ortográficos, Spanglish, inglés, paráfrasis y consultas ambiguas; se reporta sin umbral para no maquillar el límite léxico. Las secciones esperadas se eligieron leyendo encabezados del índice, no la salida del ranking. lifecycle_policy: casos A-P de la ampliación transversal; evalúan la recuperación real de instrucciones obligatorias (policySections antes de BM25), no consentimiento, tráfico ni instaladores de aplicaciones inexistentes. Los escenarios y resultados normativos esperados pertenecen al contrato documental, no son evidencia de runtime.",
   "thresholds": {
     "dev": {
       "recall_at_10": 0.7,
       "mrr": 0.65
     },
-    "holdout": { "recall_at_10": 0.85, "mrr": 0.75 }
+    "holdout": {
+      "recall_at_10": 0.85,
+      "mrr": 0.75
+    },
+    "lifecycle_policy": {
+      "recall_at_10": 1,
+      "mrr": 1
+    },
+    "lifecycle_manuals": {
+      "recall_at_10": 1,
+      "mrr": 0.5
+    }
   },
   "sets": {
     "dev": [
@@ -558,6 +569,310 @@
           {
             "file": "docs/manuals/INCIDENT-RESPONSE.md",
             "heading": "Playbook de cobro duplicado"
+          }
+        ]
+      }
+    ],
+    "lifecycle_policy": [
+      {
+        "id": "lifecycle-A",
+        "query": "Landing estática sin analytics: evaluar cookies sin CMP ornamental y registrar tráfico pendiente de verificar",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-B",
+        "query": "Landing con Meta Pixel ads: consentimiento requerido antes del pixel y retiro de preferencias",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-C",
+        "query": "SaaS comercial peruano con registro: privacidad roles contratos derechos y cookies según finalidad",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-D",
+        "query": "Desktop offline de gestión personal: sin cookies web, política proporcional instalación backup uninstall",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.4 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-E",
+        "query": "Desktop sincronizada nube: datos local nube proveedores telemetría y updater seguro",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.4 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-F",
+        "query": "Chatbot de documentos privados: privacidad proveedor IA OFF y base legal antes de enviar documentos",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-G",
+        "query": "App biometría reconocimiento: privacidad sensible evaluación reforzada y revisión competente",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-H",
+        "query": "ERP clientes trabajadores: datos roles retención derechos y marketing separado",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-I",
+        "query": "Portal legal para clientes: privacidad expedientes confidencialidad y claims comerciales limitados",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-J",
+        "query": "Web vende suscripciones: contratos precios cobros consumo y privacidad",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-K",
+        "query": "Template CC BY-NC para SaaS comercial: licencias bloquear incorporación y buscar MIT o diseño original",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.3 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-L",
+        "query": "App administrativa interna: landing comercial NOT_APPLICABLE documentado sin exposición pública",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.3 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-M",
+        "query": "Producto ofrecido a usuarios UE: GDPR ePrivacy territorial condicionado y revisión jurídica",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-N",
+        "query": "Banner consentimiento rechazado: app principal funciona sin publicidad opcional",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.2 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-O",
+        "query": "Cambio normativa o proveedor: documentación viva versionada y reabrir análisis privacidad",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.5 "
+          }
+        ]
+      },
+      {
+        "id": "lifecycle-P",
+        "query": "Producto con diseño empresarial propio: marca colores contrastados variantes documentación y claims",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96. Transversal"
+          },
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "96.3 "
+          }
+        ]
+      }
+    ],
+    "lifecycle_manuals": [
+      {
+        "id": "privacy-procedure",
+        "query": "cookies consentimiento preferencias",
+        "mode": "ADOPT",
+        "expected": [
+          {
+            "file": "docs/manuals/COMPLIANCE-IP-PRODUCT.md",
+            "heading": "16.3 Contrato de preferencias"
+          }
+        ]
+      },
+      {
+        "id": "desktop-update",
+        "query": "desktop instalador updater",
+        "mode": "ADOPT",
+        "expected": [
+          {
+            "file": "docs/manuals/UPDATES-RELIABILITY.md",
+            "heading": "Updater Windows y cambio atómico"
+          }
+        ]
+      },
+      {
+        "id": "living-handbook",
+        "query": "documentación viva handbook",
+        "mode": "ADOPT",
+        "expected": [
+          {
+            "file": "docs/manuals/PRIME-DIRECTIVE.md",
+            "heading": "Documentación viva y fuente única"
+          }
+        ]
+      },
+      {
+        "id": "brand-ownership",
+        "query": "marca dominio titularidad identidad",
+        "mode": "AUDIT",
+        "expected": [
+          {
+            "file": "docs/manuals/COMPLIANCE-IP-PRODUCT.md",
+            "heading": "CIP-CF-11"
           }
         ]
       }

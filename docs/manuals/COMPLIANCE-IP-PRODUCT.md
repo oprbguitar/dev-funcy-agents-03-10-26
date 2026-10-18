@@ -1186,6 +1186,66 @@
 - CIP-AX-0149: El agente debe reabrir ante cambio comunicación externa bloqueada sin permiso explícito; la aceptación exige evidencia fechada, responsable identificable, dato preservado, límite operativo, falla ensayada, criterio de bloqueo y handoff verificable.
 - CIP-AX-0150: El agente debe entregar handoff comunicación externa bloqueada sin permiso explícito; la aceptación exige evidencia fechada, responsable identificable, dato preservado, límite operativo, falla ensayada, criterio de bloqueo y handoff verificable.
 
+## 16. Procedimiento operativo de privacidad, cookies y documentos
+
+**Ampliación documental:** 2026-10-18. Aplica este procedimiento a los requisitos de §§1–4 y §8 sin duplicar el manual ni activar tratamientos. El [registro Perú](../reference/PRIVACY-PERU-REGISTRY.md) conserva fuentes y límites de verificación; [eos-privacy-review](../../skills/eos-privacy-review/SKILL.md) es la entrada operativa del flujo.
+
+### 16.1 Decidir desde evidencia
+
+1. Identifica responsable, servicio, países, población y entorno. Documenta qué hechos conectan una jurisdicción: establecimiento, oferta, seguimiento u otro supuesto verificado. Perú es prioritario cuando hay conexión pertinente; GDPR requiere su análisis territorial. Para tecnologías en terminales de la UE considera también ePrivacy/norma nacional; la pregunta no termina al descartar datos personales GDPR.
+2. Reconstruye cada flujo desde captura hasta eliminación en [DATA-FLOW-REGISTER](../../templates/DATA-FLOW-REGISTER.md). Incluye logs de hosting/CDN, fuentes, embeds, SDK, píxeles, caché, service workers, backups, soporte, prompts e inferencias. La ausencia de cookies no acredita ausencia de tratamiento. Dato público no significa reutilización irrestricta.
+3. Por finalidad, registra base o excepción propuesta y requisitos de información en [PRIVACY-ASSESSMENT](../../templates/PRIVACY-ASSESSMENT.md). Distingue fuente obligatoria, contrato y decisión interna; no importe bases UE al derecho peruano por analogía automática. Marca interpretación `LEGAL_REVIEW_REQUIRED` y formula la pregunta concreta.
+4. Evalúa proveedores y accesos remotos en [PROCESSOR-AND-TRANSFER-REGISTER](../../templates/PROCESSOR-AND-TRANSFER-REGISTER.md). Comprueba entidad, rol, región efectiva, subencargados, retención, entrenamiento IA, garantías y salida. Cambiar de modelo, plan o proveedor reabre esta evaluación antes del primer envío afectado.
+5. Resuelve interfaz y documentos desde inventario probado. [COOKIE-DECISION](../../templates/COOKIE-DECISION.md) y [LEGAL-DOCUMENT-CHECKLIST](../../templates/LEGAL-DOCUMENT-CHECKLIST.md) registran por qué corresponde un aviso, contrato, consentimiento, gestor o ninguno para ese alcance.
+
+### 16.2 Matriz técnica de decisión
+
+Estas son decisiones de ingeniería propuestas, subordinadas a la evaluación jurídica concreta; no excepciones legales universales.
+
+| Caso observado | Decisión candidata | Evidencia necesaria y fallo seguro |
+|---|---|---|
+| Sitio estático sin tecnologías sujetas al gestor | `NO_COOKIE_BANNER` | Revisar red/storage y hosting/CDN; evaluar aviso por logs separadamente |
+| Elementos necesarios de autenticación/seguridad | `NOTICE_ONLY` si regla/excepción verificada | Necesidad por elemento y finalidad; no agrupar marketing como esencial |
+| Analytics/píxeles con elección previa exigible | `CONSENT_MANAGER_REQUIRED` | Opcionales OFF antes de decisión válida; verificar scripts indirectos |
+| Jurisdicción, proveedor o tratamiento sin resolver | `LEGAL_REVIEW_REQUIRED` | Función opcional afectada OFF; dueño y pregunta jurídica; esenciales evaluadas aparte |
+| Formulario de contacto | Aviso y base adecuada | Marketing separado, no premarcado; sin checkbox si no hay necesidad justificada |
+| Registro/contrato | Aviso y aceptación contractual cuando proceda | No reutilizar aceptación de términos como consentimiento de newsletter |
+| Desktop sin tráfico externo observado | Evaluar datos locales y permisos | Sin banner web automático; revisar updates, backup, fallos y sincronización |
+| IA externa, biometría, menores, salud o perfilado | Revisión reforzada condicionada | Clasificar datos y riesgo; autorización existente debe cubrir activación y destino |
+
+### 16.3 Contrato de preferencias, cuando procede
+
+Categorías por proveedor y finalidad: `strictly_necessary`, `preferences`, `analytics`, `marketing`, `other`. Estado por finalidad: `unknown | granted | denied | partially_granted | withdrawn | expired`. No activar finalidades opcionales sin habilitación válida. Aceptar, rechazar, configurar y retirar deben ser comprensibles y accesibles; sin publicidad premarcada ni consentimiento por scroll cuando se exige acción afirmativa.
+
+Guardar evidencia mínima de versión de aviso/regla, finalidades, decisión, fecha y UI de origen, con retención justificada y acceso restringido. No registrar identidad/IP por costumbre. Mantener las preferencias al navegar y recargar; sincronizar cuenta/navegador solo si hay necesidad y reglas claras. Ante fallo del gestor o almacenamiento, opcionales OFF y esenciales disponibles según evaluación. Un cambio material de finalidad requiere revisar la decisión; no solicitar de nuevo por cada visita.
+
+El retiro detiene nuevas capturas afectadas; no afirma borrar retrospectivamente copias de terceros. Asigna proceso de solicitud/eliminación y documenta límites. La app desktop aplica el mismo análisis a telemetría/crash reporting/sync/IA; el permiso OS es una capa técnica distinta.
+
+### 16.4 Derechos, retención e incidentes operables
+
+- Derechos: canal real, validación proporcional del solicitante, localización por sistemas/proveedores, protección de terceros, respuesta, evidencia mínima y plazo trazado a fuente vigente. No exigir más identidad de la necesaria ni publicar solicitudes en issues.
+- Retención: categoría/finalidad, evento inicial, plazo/fuente, purga activa y backup, conservación obligatoria/legal hold y dueño. Una restauración debe evitar reintroducir datos que correspondía suprimir; ensayar reconciliación o tombstones sin retener contenido innecesario.
+- Bancos, oficial/responsable y evaluación de impacto: registrar disparador, fuente/artículo, versión, transición, evaluación y revisor. No declarar esas figuras obligatorias para toda aplicación. La existencia de una directiva posterior exige leer sus supuestos antes de cerrar aplicabilidad.
+- Incidentes: registrar hora de conocimiento y evidencia, categorías/población, riesgo, supuestos de notificación, autoridad/personas/destinatarios y plazos específicos verificados. Mantener reloj de evaluación aunque el análisis esté incompleto; preparar contenido, responsables y canal. EOS no envía notificaciones ni impone un plazo universal sin base.
+
+### 16.5 Documentos y puertas de entrega
+
+La biblioteca es parametrizada: identidad, jurisdicción/sector, partes, finalidad, alcance, versión, alternativa, limitación y revisión competente por cláusula. Selecciona aviso/política, términos, EULA, servicios, encargado/DPA, confidencialidad, retención, SLA, campañas, licencias/atribuciones y Libro de Reclamaciones solo tras justificar su pertinencia. No copiar textos de competidores ni inventar entidad, RUC, contacto, garantías o derechos sobre terceros.
+
+Mantén estados `DRAFT | LEGAL_REVIEW_REQUIRED | REVIEWED_FOR_DEFINED_SCOPE | PUBLISHED` separados del estado técnico y de la vigencia normativa. Solo publica dentro de autorización concreta; una revisión de ingeniería no aprueba un compromiso legal. Cada promesa de privacidad, seguridad, IA, soporte o disponibilidad debe enlazar capacidad comprobada, alcance y límites.
+
+| Prueba de aceptación | Resultado requerido para el alcance aprobado |
+|---|---|
+| Arranque limpio y `marketing=unknown` | Sin píxel, SDK ni petición opcional afectada |
+| `analytics=denied`, recarga y navegación | Sin reactivación ni solicitudes al proveedor afectado |
+| Retiro y fallo CMP | Detener nuevas capturas; opcionales OFF en fallo |
+| Nuevo proveedor IA/finalidad | Evaluación actualizada antes de habilitar envío |
+| Formulario sin datos personales | Sin aceptación irrelevante impuesta |
+| Derechos y supresión | Solo datos del solicitante, retención/backup y límites verificables |
+| Claims públicos | Ningún “100% cumple” ni promesa sin evidencia |
+
+Usa datos sintéticos. Cada resultado conserva entorno, versión, fecha, pasos/comando, artefacto y limitación; `NOT_RUN` es distinto de `PASS`. Una puerta técnica aprobada habilita únicamente el alcance verificado y nunca certifica cumplimiento. Reabre ante cambios de fuente, contrato, finalidad, SDK, región, usuarios, incidente o proveedor.
+
 ## Firma editorial
 
 **Pierre R. Boss (oprbguitar)** — dirección editorial EOS 3.0.0. Desarrollo documental asistido por IA.

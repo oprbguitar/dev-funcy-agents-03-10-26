@@ -69,6 +69,20 @@ Conserva el resultado en `PROJECT-PROFILE`, `TASK-PACKET`, ADR o la ubicación e
 
 Si dos opciones de negocio siguen siendo materialmente distintas, presenta alternativas con evidencia, costo, riesgo y reversibilidad y solicita la decisión del responsable. Puedes recomendar una opción; no asumir que eres CEO del negocio ni hablar en nombre de una persona, empresa o equipo.
 
+## Go-to-market, identidad y aprendizaje continuo
+
+En la admisión y cada hito relevante evalúa mercado, marca, landing y captación; profundiza solo si modifican el resultado. Usa [eos-landing-brand](../eos-landing-brand/SKILL.md) cuando exista presencia pública o cambio visual. En web nueva pública/comercial el brief y diseño/artefacto de landing empiezan por defecto en `PLANNED` dentro del alcance autorizado. Interna, CLI y biblioteca sin presencia pública justifican `NOT_APPLICABLE`; escritorio comercial evalúa sitio de descarga separado sin inferir alojamiento.
+
+Consolida en la documentación existente del producto: mercado/audiencia (segmentos, Jobs-to-be-Done y alternativas con fuentes/fechas), propuesta de valor (claim → capacidad real), landing brief, plan de canales (recursos, presupuesto estimado y límites de datos) y log de experimentos solo cuando se ejecuten. Para MVP pequeño pueden ser capítulos del handbook canónico. Distingue comprador, usuario, pagador y operador; registra posicionamiento, idioma, barreras de confianza y oferta/precio aprobados. No confundas firma editorial con marca pública ni disponibilidad de dominio con derechos sobre marca.
+
+Define recorrido descubrimiento → comprensión → demostración/contacto → lead con habilitación → seguimiento autorizado → alta/venta → activación → soporte/retención. Elige canal por evidencia y capacidad real: SEO/contenido, alianzas, búsqueda, redes o venta directa son candidatos, no campañas aprobadas. Consulta [guía oficial de SEO](https://developers.google.com/search/docs/fundamentals/seo-starter-guide?hl=es) al implementar; no prometas posiciones. Toda investigación competitiva distingue fuente, observación, hipótesis y fecha.
+
+Antes de instrumentar medición, mapea finalidad, datos, cookies/SDK, terceros, países, retención y controles de retiro cuando correspondan. Evita identificadores o texto personal en eventos y campos de formulario innecesarios. Si falta medición legítima aprobada, usa investigación cualitativa o proxies agregados y declara límites. Cookieless no significa ausencia de tratamiento. No actives publicidad opcional por defecto ni condiciones el servicio a ella.
+
+Un experimento usa [GROWTH-EXPERIMENT](../../templates/GROWTH-EXPERIMENT.md): hipótesis falsable, intervención/control, fórmula de métrica, línea base medida o pendiente, ventana/muestra, incertidumbre, coste estimado separado del observado, guardrails, criterio de parada y rollback. Sin datos suficientes, el resultado es inconcluso; no fabriques CAC, conversión, ingresos o ganador. Revalida estrategia con evidencia al finalizar cada ciclo; registra dueño, prioridad y capacidad operativa de una sola persona cuando proceda.
+
+Los agentes preparan mensajes, assets y configuración. Publicar, enviar campañas, contratar, comprar dominios o gastar requiere autorización A3 concreta. Una instrucción de preparar marketing no autoriza seguimiento comercial. Reutiliza permisos expresos vigentes dentro de sus límites y deriva privacidad/cumplimiento cuando cambien tratamiento, proveedor, país o audiencia vulnerable.
+
 ## Transferencia y límites
 
 La recomendación estratégica distingue hechos, estimaciones, hipótesis y preguntas abiertas. Los agentes especialistas aportan análisis y entregables dentro de sus competencias; el responsable humano conserva decisiones de producto, contratación, cumplimiento, gasto y compromisos públicos. No transmitas datos sensibles a agentes o servicios no aprobados.

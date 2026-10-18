@@ -287,3 +287,42 @@ test('legacy updates report files assumed to belong to EOS and keep their previo
   const run = spawnSync(process.execPath, [script, '--source', source, '--target', target, '--host', 'claude', '--update', '--dry-run'], { encoding: 'utf8' });
   assert.match(run.stdout, /Aviso: 1 archivos de \.eos\/ sin hash previo/);
 }));
+
+test('discovers new lifecycle skills and installs licensed animation assets with safe updates', () => withDirs(async (source, target) => {
+  const manifestPath = path.join(source, 'library.json');
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  for (const name of ['eos-privacy-review', 'eos-landing-brand', 'eos-desktop-release']) {
+    await mkdir(path.join(source, 'skills', name), { recursive: true });
+    const file = `skills/${name}/SKILL.md`;
+    await writeFile(path.join(source, file), `---\nname: ${name}\ndescription: lifecycle\n---\n${signature}\n`);
+    manifest.documents.push(file);
+  }
+  await writeFile(manifestPath, JSON.stringify(manifest));
+  await mkdir(path.join(source, 'docs/assets'), { recursive: true });
+  await writeFile(path.join(source, 'LICENSE'), 'MIT v1');
+  await writeFile(path.join(source, 'docs/assets/eos-strategy-flow.gif'), '<svg>v1</svg>');
+  await installAgents({ source, target });
+  for (const name of ['eos-privacy-review', 'eos-landing-brand', 'eos-desktop-release']) {
+    assert.ok(await exists(path.join(target, '.agents/skills', name, 'SKILL.md')));
+    assert.ok(await exists(path.join(target, '.claude/skills', name, 'SKILL.md')));
+  }
+  assert.equal(await readFile(path.join(target, '.eos/LICENSE'), 'utf8'), 'MIT v1');
+  assert.equal(await readFile(path.join(target, '.eos/docs/assets/eos-strategy-flow.gif'), 'utf8'), '<svg>v1</svg>');
+  await writeFile(path.join(source, 'LICENSE'), 'MIT v2');
+  await writeFile(path.join(target, '.eos/docs/assets/eos-strategy-flow.gif'), '<svg>local</svg>');
+  await writeFile(path.join(source, 'docs/assets/eos-strategy-flow.gif'), '<svg>v2</svg>');
+  const updated = await installAgents({ source, target, update: true });
+  assert.ok(updated.updated.includes('.eos/LICENSE'));
+  assert.ok(updated.conflicts.includes('.eos/docs/assets/eos-strategy-flow.gif'));
+  assert.equal(await readFile(path.join(target, '.eos/docs/assets/eos-strategy-flow.gif'), 'utf8'), '<svg>local</svg>');
+  assert.equal(await readFile(path.join(target, '.eos/docs/assets/eos-strategy-flow.gif.eos-new'), 'utf8'), '<svg>v2</svg>');
+}));
+
+test('copies an optional library gate only inside the snapshot without activating a product gate', () => withDirs(async (source, target) => {
+  const gate = JSON.stringify({ checks: [{ name: 'library-reference', command: 'node library-only.mjs' }] });
+  await writeFile(path.join(source, 'eos.gate.json'), gate);
+  await installAgents({ source, target });
+  assert.equal(await readFile(path.join(target, '.eos/eos.gate.json'), 'utf8'), gate);
+  assert.equal(await exists(path.join(target, 'eos.gate.json')), false);
+  assert.match(await readFile(path.join(target, 'AGENTS.md'), 'utf8'), /referencia de la biblioteca/);
+}));

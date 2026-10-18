@@ -18,6 +18,16 @@ Copiar únicamente los formatos pertinentes.
 | Archivo | Evento que lo necesita |
 |---|---|
 | [PROJECT-PROFILE.md](PROJECT-PROFILE.md) | Inicio o adopción |
+| [PROJECT-STATUS.md](PROJECT-STATUS.md) | Estado canónico del proyecto, actualizado por hito |
+| [PRIVACY-ASSESSMENT.md](PRIVACY-ASSESSMENT.md) | Evaluación de datos y jurisdicciones por finalidad |
+| [DATA-FLOW-REGISTER.md](DATA-FLOW-REGISTER.md) | Captura, almacenamiento, destinos, conservación y derechos |
+| [COOKIE-DECISION.md](COOKIE-DECISION.md) | Decidir aviso/gestor y comprobar aceptación, rechazo y retiro |
+| [PROCESSOR-AND-TRANSFER-REGISTER.md](PROCESSOR-AND-TRANSFER-REGISTER.md) | Proveedores, subencargados, regiones y transferencias |
+| [LEGAL-DOCUMENT-CHECKLIST.md](LEGAL-DOCUMENT-CHECKLIST.md) | Documentos aplicables, borradores, revisión y aprobación |
+| [BRAND-BRIEF.md](BRAND-BRIEF.md) y [tokens ilustrativos](DESIGN-TOKENS.example.json) | Identidad, marca pública y sistema visual |
+| [LANDING-BRIEF.md](LANDING-BRIEF.md) | Producto web público/comercial o exclusión justificada |
+| [GROWTH-EXPERIMENT.md](GROWTH-EXPERIMENT.md) | Hipótesis comercial, medición lícita y decisión con resultados |
+| [DESKTOP-RELEASE-CHECKLIST.md](DESKTOP-RELEASE-CHECKLIST.md) | Distribución, updater, rollback y datos locales por plataforma |
 | [TASK-PACKET.md](TASK-PACKET.md) | Asignación y handoff |
 | [EXEC-PLAN.md](EXEC-PLAN.md) | Trabajo largo con varios hitos o agentes |
 | [AGENT-RESULT.md](AGENT-RESULT.md) | Cierre de cada entrega de agente para integración compacta |

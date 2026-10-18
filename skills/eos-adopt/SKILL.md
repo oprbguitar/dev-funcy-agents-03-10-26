@@ -101,3 +101,11 @@ autorización explícita aplicable; honra la ya concedida.
 No instalar herramientas globales ni alterar políticas para adoptar.
 
 **Firma editorial:** Pierre R. Boss · oprbguitar.
+
+## Admisión transversal incremental y estado vivo
+
+Después de la arqueología y antes del plan técnico, revisa solo los perfiles afectados por el cambio material: distribución, jurisdicciones/sector, datos/finalidades/terceros, marca y captación. Aplica sección 96 y [eos-privacy-review](../eos-privacy-review/SKILL.md), [eos-landing-brand](../eos-landing-brand/SKILL.md), [eos-desktop-release](../eos-desktop-release/SKILL.md) cuando corresponda. Conserva identidad, canales y decisiones vigentes salvo cambio autorizado. Un parche no autoriza añadir landing o infraestructura a un proyecto existente.
+
+Mantén `docs/EOS-PROJECT-STATUS.md` del destino con [PROJECT-STATUS](../../templates/PROJECT-STATUS.md) para desarrollo material. Si ya existe un registro equivalente, enlaza/migra con declaración explícita de fuente única. No sobrescribas sin rastro conclusiones históricas ni mantengas estados duplicados. Documenta baseline comprobada, incremento, revisión, evidencia, riesgos y próxima tarea en cada hito; un parche menor actualiza su registro existente justificando dominios no afectados.
+
+La aceptación incluye instrucciones reales por canal y decisiones afectadas con evidencia o NOT_APPLICABLE razonado. Lo no ejecutado permanece NOT_RUN; no declares cumplimiento, firma, consentimiento operativo o release por el mero hecho de documentarlos.

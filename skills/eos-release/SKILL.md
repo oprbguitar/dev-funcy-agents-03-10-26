@@ -70,6 +70,20 @@ No instales herramientas globales ni cambies políticas del host.
    Verifica commit remoto, artefacto o destino real correspondiente.
    Prueba funcionamiento y versión efectiva cuando aplique.
 
+## Gates independientes por canal
+
+Prepara una fila por canal con commit/artefacto, entorno, responsable, evidencia y `PASS | FAIL | NOT_RUN | NOT_APPLICABLE`. Un gate no hereda resultado de otro canal. Ausencia de producto ejecutable produce pruebas runtime `NOT_RUN`; un canal fuera del alcance admite `NOT_APPLICABLE` motivado.
+
+| Canal | Condición y evidencia mínima |
+|---|---|
+| Web estática | Build, assets, URL/DNS/HTTPS, cache/cabeceras, enlaces/CTA, accesibilidad y tráfico/almacenamiento según decisión de privacidad; rollback probado |
+| Web dinámica/API | Además auth/sesiones/aislamiento, configuración/secretos, migración, backup/restore y flujo crítico remoto |
+| Escritorio | [eos-desktop-release](../eos-desktop-release/SKILL.md): instalación por SO/arquitectura, artefacto/hash, firma/autenticidad, offline, updater/migración, datos locales y recuperación |
+| Híbrido/móvil | Compatibilidad cliente-servidor, reconexión/conflictos o permisos/store según modalidad; no inferir aprobación de tienda |
+| Contenido público/comercial/jurídico | Claims reales, derechos de assets, marca aprobada, obligaciones/avisos pertinentes y autorización de publicar esa versión |
+
+Comprobar una landing o push no certifica backend, escritorio ni campaña. Un instalador local correcto no demuestra URL de descarga pública íntegra. Revisa cambios en cookies, proveedores, contratos o audiencia antes de activar publicación. No conviertas borradores legales en instrumentos revisados por haber pasado tests. Conserva handbook y notas de operación actualizados en el mismo hito.
+
 ## Artefactos y aceptación
 
 - Commit y artefacto identificables.

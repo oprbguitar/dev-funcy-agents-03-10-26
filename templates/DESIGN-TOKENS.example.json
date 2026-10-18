@@ -1,0 +1,49 @@
+{
+  "_author": "Pierre R. Boss (oprbguitar)",
+  "_purpose": "Ejemplo ilustrativo; adaptar por negocio y verificar combinaciones en runtime",
+  "tokens_version": "0.1.0-proposal",
+  "status": "PLANNED",
+  "brand": {
+    "name": "PRODUCT_NAME_PENDING",
+    "sector": "PENDING",
+    "personality": ["PENDING"],
+    "parent_brand": { "public_name": null, "visibility": "off", "publication_approval": null }
+  },
+  "themes": {
+    "light": {
+      "primary": "#164A78",
+      "onPrimary": "#FFFFFF",
+      "secondary": "#437A99",
+      "onSecondary": "#FFFFFF",
+      "accent": "#E3A742",
+      "onAccent": "#172433",
+      "background": "#F8FAFC",
+      "surface": "#FFFFFF",
+      "text": "#172433",
+      "mutedText": "#475569",
+      "border": "#64748B",
+      "success": "#166534",
+      "onSuccess": "#FFFFFF",
+      "warning": "#854D0E",
+      "onWarning": "#FFFFFF",
+      "danger": "#B42318",
+      "onDanger": "#FFFFFF",
+      "focus": "#215DC7",
+      "overlay": "#172433CC"
+    }
+  },
+  "typography": {
+    "body": "Source Sans 3, Arial, sans-serif",
+    "heading": "Source Serif 4, Georgia, serif",
+    "font_assets_license_review": "PENDING",
+    "sizeRem": [0.875, 1, 1.125, 1.5, 2, 3],
+    "lineHeight": { "body": 1.5, "heading": 1.2 }
+  },
+  "spacingRem": [0, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4],
+  "radiusRem": { "control": 0.25, "panel": 0.5 },
+  "shadow": { "raised": "0 2px 8px #1724331A" },
+  "breakpointsPx": [360, 768, 1280, 1600],
+  "motion": { "durationMs": [0, 120, 200], "easing": "ease-out", "reducedMotion": "disable-nonessential" },
+  "component_states": ["default", "hover", "active", "focus-visible", "disabled", "loading", "selected", "empty", "error", "success", "offline"],
+  "a11y": { "target": "WCAG_2_2_AA", "test_required": true, "contrast_result": "NOT_RUN", "runtime_result": "NOT_RUN" }
+}

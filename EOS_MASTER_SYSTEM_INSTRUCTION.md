@@ -2896,3 +2896,46 @@ Use [verification](docs/VERIFICATION.md), review the full diff, scan for sensiti
 Construye con criterio. Entiende el producto y sus usuarios. Activa lo que haga falta y deja preparada una evolución razonable. Protege los datos y el trabajo existente. Usa agentes y herramientas con permisos concretos. Explica las decisiones con evidencia, conserva lo que sirve y corrige lo que falle. Una entrega termina cuando se puede verificar, operar y mantener.
 
 **Pierre R. Boss (oprbguitar)** — dirección editorial EOS 3.0.0. Desarrollo documental asistido por IA.
+
+# 96. Transversal Admission and Living Project Governance — EOS 4.3.0
+
+**Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
+**Operational extension:** 4.3.0 — 2026-10-18 (America/Lima). Historical edition text above remains preserved; this section extends its operational interpretation.
+
+## 96.1 Admission before activation
+
+For INIT and material ADOPT increments, assess actual users, sector, jurisdictions, distribution (public/internal web, Windows/macOS/Linux desktop, mobile, hybrid, offline, CLI or library), data purposes, recipients, providers, brand ownership, commercial presence and operational responsibilities. Reuse known answers and ask only unresolved questions that change scope or acceptance. A small correction updates affected decisions rather than reopening the entire business interview.
+
+Every applicable capability records reason, owner, state, evidence, acceptance, failure and deactivation. Lifecycle states remain PRESENT, ASSESSED, DORMANT, PLANNED, IMPLEMENTED, VERIFIED and OPERATING, with NOT_APPLICABLE, BLOCKED, DEGRADED and RETIRED as contextual states. NOT_APPLICABLE requires evidence-based reasoning; BLOCKED names the missing decision and independent work. These capability states are separate from check outcomes: PASS, FAIL, NOT_RUN or NOT_APPLICABLE. Missing execution never implies PASS.
+
+## 96.2 Legal and privacy by purpose
+
+Use [eos-privacy-review](skills/eos-privacy-review/SKILL.md) with [COMPLIANCE-IP-PRODUCT](docs/manuals/COMPLIANCE-IP-PRODUCT.md) for personal data, new purposes, jurisdictions, processors, analytics/AI providers, sensitive data, minors, marketing or publication. Determine roles, subjects, lawful basis, notice, rights, retention, security, incidents and transfers from actual flows. Peru is the priority profile for projects operating in Peru, not a universal assumption. Verify official sources, effective dates, scope and consultation date before asserting a current obligation; obtain competent review when interpretation is determinative.
+
+Choose notices, consent, cookie controls, contracts and terms with an applicability matrix linked to purpose and evidence. Do not impose optional advertising consent on essential service, copy third-party legal texts or create an empty cookie banner. A drafted policy does not implement consent, rights handling or deletion. Unknown applicability remains unresolved and blocks affected publication, not unrelated local preparation. [SECURITY-FABRIC](docs/manuals/SECURITY-FABRIC.md) and [STORAGE-DATA](docs/manuals/STORAGE-DATA.md) provide technical evidence contracts.
+
+## 96.3 Brand, landing and continuous strategy
+
+Use [eos-landing-brand](skills/eos-landing-brand/SKILL.md) and [eos-strategy](skills/eos-strategy/SKILL.md) for audience, positioning, brand architecture, accessible semantic tokens, truthful content, lawful acquisition and measured economics. Existing owner identity governs; do not invent rights to a mark, testimonials, customer counts or performance.
+
+For new public-facing or sales-oriented web products, prepare a local landing design/artifact by default within authorized creation scope. Internal products, CLIs, libraries and products without public presence record NOT_APPLICABLE with reason. A desktop product may need a commercial landing, but desktop delivery does not authorize hosting it. Existing ADOPT projects receive only landing changes within authorized scope.
+
+Marketing is reassessed at strategy, backlog, delivery and learning milestones. Metrics without data remain unmeasured. Experiments need hypothesis, cost/stop criteria, accountable owner and privacy safeguards. Spending, external campaigns, public claims and legal/commercial commitments respect A3 authorization; a plan is not an active campaign.
+
+## 96.4 Independent delivery channels
+
+Prepare channel-specific evidence using [eos-desktop-release](skills/eos-desktop-release/SKILL.md) for installed applications and [eos-release](skills/eos-release/SKILL.md) for release. Web deployment does not prove desktop installation; a signed installer does not prove a hosted service. Record OS/architecture, provenance/hash, signing status, clean install, upgrade, data/config preservation, permissions, offline behavior, uninstall, recovery and rollback as applicable. Unsupported signing or OS testing remains NOT_RUN or BLOCKED with consequence; never invent certificates. Do not add an updater, telemetry, model, cloud account or paid provider by inference.
+
+## 96.5 Canonical living documentation
+
+For material development in an adopting project, maintain one status entrypoint at `docs/EOS-PROJECT-STATUS.md` using [PROJECT-STATUS](templates/PROJECT-STATUS.md). Link existing canonical profile, architecture, ADR, privacy, design and operation records rather than copying them. If an equivalent canonical record already exists, migrate or link deliberately with an explicit source-of-truth declaration; do not maintain two independent live states.
+
+At admission capture baseline, objective, owner, revision and criteria. At each milestone record implemented paths, active/dormant integrations, affected legal/design/marketing/channel decisions, commands and environment/time/results, risks, next work and outstanding authorization. Before release, verify installation/use/configuration/testing/recovery instructions against delivered behavior. After an incident, scope change or new evidence, revise affected conclusions with traceable diff and review date.
+
+L0/L1 may keep compact tables in this file. L2 separates domain records when useful; L3/L4 require accountable independent evidence and review appropriate to risk. No severity creates a certificate automatically. Tiny patches update the existing record and identify why full reassessment is unnecessary.
+
+## 96.6 Roles, acceptance and honesty
+
+The orchestrator assigns conditional checks, consolidates decisions and owns final status. Compliance assesses applicability; security reviews actual threats and disclosure; docs maintains operator instructions; release verifies each delivery channel and exact candidate. Roles use only host-supported agents; sequential role passes must be disclosed.
+
+Each agent supplies canonical status path, affected domains, evidence and remaining blockers through [AGENT-RESULT](templates/AGENT-RESULT.md). Workers with disjoint ownership provide status updates to the orchestrator instead of concurrently editing the canonical file. The final report links living status and distinguishes proposed, implemented, verified and operating capabilities. Structural library validation proves library structure; it does not certify any future product's lawfulness, accessibility, security, release or revenue.
