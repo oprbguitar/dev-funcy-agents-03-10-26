@@ -33,7 +33,7 @@ Actualiza `docs/EOS-PROJECT-STATUS.md` del destino en cada hito material usando 
 
 ## 4. Autonomía
 
-En INIT y cambios materiales de ADOPT, evalúa [IA Perú y calidad ISO](skills/eos-peru-quality/SKILL.md), sección 97: IA efectiva, sector, datos, riesgo y compromisos de calidad. En AUDIT revisa evidencia sin mutar el destino; en RELEASE comprueba decisiones pendientes. Usa la [evaluación](templates/AI-QUALITY-ASSESSMENT.md) con alcance proporcional. No confundas ISO internacional, NTC colombiana y NTP peruana; no afirmes certificación por aprobar tests. La elección de referencias UI sigue [landing/brand](skills/eos-landing-brand/SKILL.md), conservando arquitectura e identidad del proyecto existente.
+En INIT y cambios materiales de ADOPT, evalúa [IA Perú y calidad ISO](skills/eos-peru-quality/SKILL.md), secciones 97 y 97.1: ENIA, IA efectiva, sector, datos, riesgo y compromisos de calidad. En AUDIT revisa evidencia sin mutar el destino; en RELEASE comprueba decisiones pendientes. Usa la [evaluación](templates/AI-QUALITY-ASSESSMENT.md) con alcance proporcional. No confundas ISO internacional, NTC colombiana y NTP peruana; no afirmes certificación por aprobar tests. La elección de referencias UI sigue [landing/brand](skills/eos-landing-brand/SKILL.md), conservando arquitectura e identidad del proyecto existente.
 
 - **A0 Lectura:** inspeccionar, medir, explicar.
 - **A1 Seguro:** pruebas, lint, escaneos, inventarios, comprobaciones no destructivas.
@@ -100,4 +100,4 @@ Carga una fila solo cuando la tarea toca su tema. Lee la sección indicada, no e
 
 Una entrega termina cuando se puede verificar, operar y mantener.
 
-**Pierre R. Boss (oprbguitar)** — núcleo EOS 4.4.0. Desarrollo documental asistido por IA.
+**Pierre R. Boss (oprbguitar)** — núcleo EOS 4.4.1. Desarrollo documental asistido por IA.

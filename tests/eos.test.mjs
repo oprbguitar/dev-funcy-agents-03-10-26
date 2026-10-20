@@ -556,7 +556,7 @@ test('recognizes named living-status documents without treating every project as
 test('routes Peruvian AI and ISO quality assessments without converting a software test into legal approval', () => {
   const sections = [{ file: CONSTITUTION, heading: '97. IA Perú y calidad', start: 1, end: 4, text: 'Decisión humana con evidencia.' }];
   for (const query of ['IA en Perú', 'inteligencia artificial peruana', 'ISO 9001', 'ISO/IEC 27701:2025',
-    'NTP 42001', 'Ley 31814', 'DS 115-2025-PCM', 'evaluación de calidad del software']) {
+    'NTP 42001', 'Ley 31814', 'DS 115-2025-PCM', 'evaluación de calidad del software', 'ENIA', 'RM 152-2026-PCM']) {
     const result = policySections(sections, query);
     assert.ok(result.topics.includes('ia-calidad-peru'), query);
     assert.equal(result.mandatory[0]?.heading, '97. IA Perú y calidad', query);
@@ -575,3 +575,10 @@ test('CLI includes the human-assessment contract for ISO requests in an adopted 
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /97\. IA Perú y calidad.*obligatoria/);
 }));
+
+test('ENIA routing preserves the detailed strategy contract under section 97', () => {
+  const sections = ['97. IA Perú y calidad', '97.1 ENIA y evidencia', '96.1 Admisión', '4.11 Integration Architect']
+    .map((heading, index) => ({ file: CONSTITUTION, heading, start: index + 1, end: index + 1, text: heading }));
+  assert.deepEqual(policySections(sections, 'ENIA').mandatory.map(section => section.heading),
+    ['97. IA Perú y calidad', '97.1 ENIA y evidencia']);
+});

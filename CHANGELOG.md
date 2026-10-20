@@ -2,6 +2,13 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 4.4.1 — 2026-10-19
+
+- Analiza el anexo ENIA 2026–2030 aportado, con referencias de página, identidad/hash, ejes, acciones, metas acumuladas, responsables y límites de verificación.
+- Separa alineamiento público y referencia privada; integra decisiones de gobierno/datos, formación, recursos y seguimiento en estrategia y evaluación de IA.
+- Amplía análisis local de los PDF de calidad y privacidad mediante síntesis propia, con referencias y controles de revisión; conserva los PDF fuera de Git y la diferencia NTC/NTP.
+- Reconoce ENIA y RM 152-2026-PCM en el router con regresión RED/GREEN; actualiza README y evidencia.
+
 ## 4.4.0 — 2026-10-19
 
 - Integra una skill de IA Perú y calidad: aplicabilidad humana, fuentes primarias, ISO 9001/27701 y NTP 42001 según actor, finalidad y riesgo; sin prometer certificación.

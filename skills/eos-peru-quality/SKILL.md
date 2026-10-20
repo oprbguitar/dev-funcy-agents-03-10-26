@@ -35,6 +35,22 @@ No habilita proveedores, modelos, telemetría, servicios ni compromisos público
 
 Entrega decisión por control con responsable, evidencia, fecha/vencimiento y estado; brechas accionables; límites de verificación; decisión humana pendiente y alcance de RELEASE. Reutiliza [EXCEPTION](../../templates/EXCEPTION.md): una excepción interna no deroga una ley ni modifica un contrato.
 
-En un parche menor bastan filas afectadas y razón de no reevaluar el resto. Si no existe IA activa, registra la evidencia de OFF y conserva calidad general; no generes un expediente completo de IA ficticio. Para ISO, una ficha pública verifica identidad/estado, no conformidad de cláusulas: texto autorizado y revisión competente quedan pendientes cuando sean necesarios. Nunca publiques copias de normas ni afirmaciones de certificación sin prueba.
+En un parche menor bastan filas afectadas y razón de no reevaluar el resto. Si no existe IA activa, registra la evidencia de OFF y conserva calidad general; no generes un expediente completo de IA ficticio. Para ISO, una ficha pública verifica identidad/estado; las referencias locales selectivas no sustituyen acceso autorizado, revisión de requisitos completos ni auditoría de conformidad. Nunca publiques copias de normas ni afirmaciones de certificación sin prueba.
 
 Cierra con [AGENT-RESULT](../../templates/AGENT-RESULT.md), señalando qué está documentado, implementado, verificado y operativo por separado.
+
+
+## ENIA y preparación institucional
+
+Consulta [ENIA 2026–2030](../../docs/reference/ENIA-2026-2030.md) por páginas y la resolución aprobatoria antes de decidir alcance. Registra eje, objetivo y acción pertinentes, actor responsable, situación actual, evidencia y brecha. Para entidad pública comprendida revisa el Plan de Acción de IA (horizonte mínimo de tres años), diagnóstico organizativo/técnico/presupuestal, articulación con planes institucionales y de gobierno de datos, validación por CGTD y aprobación por autoridad competente según RM 152-2026-PCM. No asigna esos roles un agente ni se presume creada una unidad administrativa.
+
+En privados registra referencia voluntaria justificada o requisito de otra fuente/contrato; no traslades por rutina el procedimiento institucional público. Las metas nacionales de 2026–2030 son acumuladas y no demuestran servicios ya disponibles ni ejecución del presupuesto. El proyecto define métricas propias con línea base, unidad, denominador, periodo, dueño y fuente; una celda vacía del anexo no significa cero. Distingue seguimiento trimestral interno/anual oficial de ENIA, avance semestral del tablero y revisión estratégica bienal, de la cadencia operativa del producto.
+
+Evalúa formación demostrable del operador y revisor, accesibilidad/inclusión, gobernanza de datos, sostenibilidad de cómputo local/remoto, interoperabilidad requerida, mecanismos de participación/reclamos y respuesta a incidentes. Conserva alternativa determinista y operación degradada. La referencia a una plataforma, financiamiento o lineamiento previsto no autoriza conectarse, gastar, transferir datos ni afirmar que ya funciona. No automatiza reportes institucionales sin encargo y autorización.
+
+
+## Precisiones de calidad y privacidad de las copias revisadas
+
+Usa las referencias selectivas de [AI-PERU-QUALITY](../../docs/reference/AI-PERU-QUALITY.md) sin reproducir normas. Identifica rol por tratamiento e instrucciones del cliente cuando actúes como encargado; evalúa subencargados y cambios contractuales antes de habilitar flujos. Separa daño a personas y al negocio, declaración de aplicabilidad de controles y decisión jurídica; enlaza tratamiento y aceptación humana del riesgo residual.
+
+Prueba retención/eliminación de temporales, cachés, contextos e índices que realmente contengan datos personales. Distingue verificar requisitos de validar uso previsto; registra ambos resultados y su muestra. Evalúa proveedores con criterios y desempeño real, controla cambios de modelo/prompt/datos/herramientas y aísla salidas no conformes para impedir entrega o reutilización accidental. Separa contención/corrección de causa raíz y verifica eficacia. Define revisión de dirección/auditoría proporcional con alcance, responsables y límites de objetividad; una segunda respuesta de IA no crea independencia humana.

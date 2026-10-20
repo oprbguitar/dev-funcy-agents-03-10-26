@@ -1,6 +1,6 @@
 # Pierre R. Boss — Engineering Operating System
 
-**EOS · Edición de especificaciones de ingeniería 4.4.0 · 19 de octubre de 2026 · Perú**
+**EOS · Edición de especificaciones de ingeniería 4.4.1 · 19 de octubre de 2026 · Perú**
 
 🧭 **Tu copiloto tiene mapa, frenos y bitácora. El volante sigue siendo tuyo.**
 
@@ -21,7 +21,7 @@ node scripts/install-agents.mjs --host codex --target "../mi-proyecto" --dry-run
 3. **Abre tu proyecto en el agente y dale una misión.** Copia este inicio:
 
 ```text
-Aplica EOS 4.4.0 en MODE=ADOPT a este proyecto.
+Aplica EOS 4.4.1 en MODE=ADOPT a este proyecto.
 Lee AGENTS.md y .eos/EOS-CORE.md, inspecciona antes de editar y conserva mi trabajo.
 Objetivo: [describe el cambio]. Primera entrega útil: [resultado observable].
 Evalúa jurisdicción, datos, marca, landing, marketing y canal web/escritorio;
@@ -40,10 +40,12 @@ EOS incorpora [PERU QUALITY](skills/eos-peru-quality/SKILL.md) para proyectos nu
 
 ISO 9001 orienta la gestión de calidad; ISO/IEC 27701, la gestión de privacidad; la NTP-ISO/IEC 42001 se evalúa para gestión de IA según el ámbito aplicable. Una ISO internacional y una NTC colombiana no prueban adopción NTP por INACAL. Los PDF aportados se conservan fuera del repositorio: aquí se publican procedimientos propios, referencias y límites, sin reproducir las normas completas ni afirmar certificación.
 
+El análisis de la [ENIA 2026–2030](docs/reference/ENIA-2026-2030.md) añade cuatro ejes, acciones, metas y seguimiento con páginas del anexo. Separa alineamiento público de referencia privada y conecta formación, gobierno de datos, recursos y participación con cada proyecto. La skill y la evaluación permiten registrar ese alineamiento; las metas nacionales no se convierten en KPI del producto ni prueban plataformas o fondos operativos.
+
 El [catálogo UI/UX y landing](docs/reference/LANDING-REPOSITORY-RESEARCH.md) integra los 25 candidatos aportados. Se eligen por tarea, audiencia, arquitectura, accesibilidad, rendimiento y licencia del commit. En INIT sirven para comparar alternativas; en ADOPT se parte del diseño y componentes existentes y se propone una mejora acotada. No se instalan todas las bibliotecas ni se trasladan efectos visuales por rutina. Pierre Design Director gobierna la dirección visual y las pruebas del producto destino.
 
 ```text
-Aplica EOS 4.4.0 en MODE=ADOPT a este proyecto.
+Aplica EOS 4.4.1 en MODE=ADOPT a este proyecto.
 Evalúa eos-peru-quality: conexión con Perú, IA efectiva, datos y calidad ISO pertinente.
 Completa AI-QUALITY-ASSESSMENT en la documentación del proyecto con responsables y evidencia.
 Si cambia la UI, usa eos-landing-brand y compara referencias compatibles del catálogo.
@@ -137,7 +139,7 @@ Las áreas se revisan en cada admisión, pero se activan solo cuando aportan al 
 ### Cómo se ve en una petición
 
 ```text
-Aplica EOS 4.4.0 en MODE=INIT para esta herramienta.
+Aplica EOS 4.4.1 en MODE=INIT para esta herramienta.
 Objetivo: reducir el tiempo para completar el proceso descrito.
 Primero inspecciona el repositorio y resume qué sabes de usuarios, alcance y restricciones.
 Haz las preguntas estratégicas pendientes que sí cambiarían la solución.
@@ -377,7 +379,7 @@ La constitución sirve de entrada y autoridad común. Las skills, prompts y plan
 Ejemplo de petición adaptada:
 
 ```text
-Aplica EOS 4.4.0 en MODE=ADOPT a este repositorio.
+Aplica EOS 4.4.1 en MODE=ADOPT a este repositorio.
 Objetivo: documentar y corregir el fallo de sesión que describo.
 Alcance: autenticación web y pruebas relacionadas.
 No cambies pagos, base de datos ni infraestructura.

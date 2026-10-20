@@ -10,12 +10,12 @@ Consulta: **2026-10-19, Perú**. Alcance: integrar fuentes y prácticas verifica
 |---|---|---|
 | AI-PE-01 | [Ley 31814, Congreso](https://leyes.congreso.gob.pe/Documentos/2021_2026/ADLP/Texto_Consolidado/31814-TXM.pdf): publicación 2023-07-05; principios, objeto, definiciones y autoridad en arts. único preliminar y 1–4 | Texto consultado; no se afirma consolidación exhaustiva a la fecha ni revisión de toda norma complementaria |
 | AI-PE-02 | [DS 115-2025-PCM, publicación oficial alojada en Congreso](https://www3.congreso.gob.pe/Docs/DGP/DIDP/files/ds_115-2025-pcm.pdf), publicado 2025-09-09 | Texto oficial consultado: web y extracción en memoria, en particular páginas 8–10 del PDF. Diferenciar disposiciones del decreto y del reglamento; alcance/transición requieren decisión por proyecto |
-| Q-ISO-01 | [ISO 9001:2026, ficha ISO](https://www.iso.org/standard/9001) y [anuncio ISO del 2026-09-16](https://www.iso.org/news/2026/09/ISO9001-2026): edición 6, publicada 2026-09 | Identidad/estado verificados en fichas públicas; no se revisó texto completo ni se atribuyen controles a cláusulas no consultadas |
-| P-ISO-01 | [ISO/IEC 27701:2025, ficha ISO](https://www.iso.org/standard/27701): edición 2, publicada 2025-10; sistema de gestión de privacidad independiente | Identidad/estado y descripción pública verificados; matriz de cláusulas y conformidad quedan pendientes de texto autorizado y examen real |
+| Q-ISO-01 | [ISO 9001:2026, ficha ISO](https://www.iso.org/standard/9001) y [anuncio ISO del 2026-09-16](https://www.iso.org/news/2026/09/ISO9001-2026): edición 6, publicada 2026-09 | Identidad/estado verificados en fichas públicas; revisión local selectiva descrita abajo; no se revisó todo el texto ni se autentica la copia |
+| P-ISO-01 | [ISO/IEC 27701:2025, ficha ISO](https://www.iso.org/standard/27701): edición 2, publicada 2025-10; sistema de gestión de privacidad independiente | Identidad/estado y descripción pública verificados; revisión local selectiva descrita abajo; matriz integral y conformidad pendientes |
 
 Las dos ediciones ISO están publicadas en esta consulta: no tratarlas como borradores por documentación antigua. Tampoco inventar un periodo de transición de certificados. La adopción nacional, contrato o certificación puede exigir versión y calendario propios.
 
-El PDF aportado de ISO/IEC 27701 se identificó por portada/metadatos como edición 2025-10. El otro archivo se identifica como **NTC-ISO 9001:2026, norma técnica colombiana de ICONTEC**, y declara correspondencia IDT y fecha 2026-09-16. Estas observaciones no autentican las copias ni convierten NTC en NTP peruana. No se incorporan archivos ni extractos de las normas al repositorio. No se usaron sus textos íntegros para elaborar esta referencia.
+El PDF aportado de ISO/IEC 27701 se identificó por portada/metadatos como edición 2025-10. El otro archivo se identifica como **NTC-ISO 9001:2026, norma técnica colombiana de ICONTEC**, y declara correspondencia IDT y fecha 2026-09-16. Estas observaciones no autentican las copias ni convierten NTC en NTP peruana. No se incorporan archivos ni extractos de las normas al repositorio. La primera revisión se limitó a identidad; esta ampliación incorpora lectura selectiva de las secciones indicadas abajo, sin reproducir textos íntegros.
 
 ## Distinciones jurídicas que el flujo debe conservar
 
@@ -67,3 +67,35 @@ Para IA, agrega límites de autonomía/herramientas, protección ante instruccio
 **INCIDENT:** contener dentro de permisos, preservar referencias minimizadas, determinar personas/datos/decisiones afectados, coordinar responsable técnico y competente, evaluar comunicaciones y remediar causa raíz. Plazos y destinatarios se derivan de la fuente pertinente, no de un temporizador genérico. Usar [INCIDENT-RECORD](../../templates/INCIDENT-RECORD.md).
 
 Revisar fuentes antes de activación y ante cambios normativos, contractuales o de alcance. Un nuevo proveedor, modelo, dataset, sector, población afectada o uso decisorio reabre las filas relacionadas. Si la fuente no está disponible, conservar la limitación y asignar obtención/revisión; no completar con cláusulas plausibles de memoria.
+
+
+## ENIA incorporada desde el anexo aportado
+
+[ENIA 2026–2030](ENIA-2026-2030.md) conserva trazabilidad por página, ejes/objetivos, acciones, metas acumuladas y responsables. La [RM 152-2026-PCM en El Peruano](https://busquedas.elperuano.pe/dispositivo/NL/2511535-1) fue fechada el 29 de abril y publicada el 1 de mayo de 2026. Distinguir alcance público (art. 2.1) de referencia para privados y otros actores (art. 2.3). Para entidades públicas comprendidas, revisar alineamiento de planes, contenido/horizonte y aprobación del Plan de Acción de IA, gobierno de datos previo y OIA (arts. 4–6). La referencia privada no elimina obligaciones de otras normas.
+
+La ENIA sintetiza estándares e impacto en términos amplios en pp. 55–56; resolver el ámbito con su fuente normativa y las distinciones de AI-PE-02, sin extender obligaciones del capítulo público del reglamento a todos los privados. Los lineamientos o plataformas anunciados requieren comprobar aprobación/operación por separado. Las frecuencias de seguimiento institucional no fijan por sí solas la frecuencia de monitoreo técnico de cada producto.
+
+## Revisión selectiva de los PDF de privacidad y calidad
+
+Síntesis propia, realizada el 2026-10-19 sobre las copias aportadas. Las páginas siguientes son **posición PDF, empezando en 1**, no página impresa. Identificar un requisito en la copia no autentica edición, traducción o integridad frente al editor ni produce una auditoría de conformidad. No se publican PDF, capturas o texto extraído. Para adopción contractual/certificación confirmar edición y acceso autorizado.
+
+| Documento local | Identidad y revisión realizada | SHA-256 de bytes |
+|---|---|---|
+| ISO/IEC 27701:2025 | 72 páginas; leídas 1–7, 13–15, 18–26; búsqueda de ubicación en conjunto | `608cb46a02f871dbef0106681a833309bde9402901f289d77a0b43d091d40807` |
+| NTC-ISO 9001:2026, ICONTEC | 61 páginas; leídas 1–7, 25, 28–29, 32–35, 37–38, 40–42; traducción colombiana declarada, no NTP | `a0e5cb8a38b71b7c73b8c857ee50d33be05bdc36ef8c77c605be1414a8a60914` |
+
+La tabla anterior de prácticas internas sigue siendo temática. La siguiente añade referencias comprobadas solo para los temas examinados; no es una matriz completa ni transcripción de cláusulas.
+
+| Tema y referencia de la copia | Precisión operativa propia para EOS | Evidencia propuesta en el proyecto |
+|---|---|---|
+| ISO/IEC 27701, 6.1.2–6.1.3, pp. 13–15; anexo A, p. 21 | Evaluar daño a personas y al negocio por separado; mantener criterios comparables, tratamiento, controles incluidos/excluidos y aceptación del riesgo residual | Declaración de aplicabilidad de privacidad cuando corresponda, plan de tratamiento y dueño del riesgo; no confundir con decisión jurídica |
+| ISO/IEC 27701, A.1.2.7–A.1.2.9, p. 21; A.2.2.2–A.2.3.2, p. 23 | Determinar rol por tratamiento; un encargado conserva instrucciones del cliente y escala instrucciones posiblemente ilícitas | Registro canónico por flujo, contratos e instrucciones documentadas, soporte a derechos |
+| ISO/IEC 27701, A.2.5.2–A.2.5.9, p. 24 | Evaluar subencargados y sus cambios: servicio, países, aviso y objeción contractual; no todo proveedor es encargado | Inventario/contrato y decisión antes de habilitar modelos o herramientas con datos |
+| ISO/IEC 27701, A.1.4.6–A.1.4.9, pp. 22–23; A.2.4.2–A.2.4.3, p. 24 | Definir retención y eliminación verificable. Aplicación EOS: cachés, contextos de agentes, extracción, índices y pruebas con datos personales | Alcance, plazo, prueba y límites del borrado; no prometer eliminación física indemostrable |
+| ISO/IEC 27701, A.1.3.11, p. 22 | Detectar decisiones sobre personas basadas solo en tratamiento automatizado; evaluar obligaciones del país/caso | Fuente aplicable y mecanismos reales de atención; no importar GDPR automáticamente |
+| ISO/IEC 27701, 9.2–9.3, pp. 19–20; NTC-ISO 9001, 9.2.2–9.3.3, pp. 40–41 | Planificar auditoría y revisión de dirección con alcance, criterios, evidencia, objetividad y decisiones | Programa, hallazgos, seguimiento y recursos; declarar límites de independencia del equipo unipersonal |
+| NTC-ISO 9001, 8.3.2–8.3.5, pp. 32–33 | Separar verificación de requisitos y validación del uso previsto | Tests trazables más aceptación/ensayo de uso con personas o escenarios autorizados |
+| NTC-ISO 9001, 6.3, p. 25; 8.3.6–8.4.3, pp. 33–35; 8.5.6, p. 37 | Evaluar/reevaluar proveedores y controlar cambios. Aplicación EOS: modelo, prompt, dataset y herramienta | Criterios, desempeño, consecuencias, comunicación, autorizador y regresión posterior |
+| NTC-ISO 9001, 8.6–8.7, pp. 37–38; 10.2, p. 42; ISO/IEC 27701, 10.2, p. 20 | Contener salidas no conformes, evitar reutilización/entrega accidental y separar corrección de acción sobre causa raíz | Salida/versión afectada, aislamiento, autoridad de aceptación cuando sea admisible, nueva prueba y eficacia |
+
+La automatización puede comprobar estructura y recopilar evidencia; no aprobar por sí sola riesgo, excepciones legales o certificaciones. Reutilizar evaluación, registros de privacidad, incidentes y release; no duplicar expedientes. Estos controles complementan la ENIA y el reglamento, conservando su naturaleza legal/contractual/voluntaria propia.

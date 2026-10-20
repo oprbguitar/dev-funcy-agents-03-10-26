@@ -2,7 +2,7 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Edición documentada: 4.4.0 (2026-10-19). La evidencia histórica se conserva con su fecha y alcance.
+Edición documentada: 4.4.1 (2026-10-19). La evidencia histórica se conserva con su fecha y alcance.
 
 En la edición 4.3.0 se ejecutaron las tres suites de soporte con sus gates de cobertura. Resultados locales del 2026-10-18 (Windows, Node v24.14.0): 73 pruebas PASS, cero fallos; validador 25, instalador 19, CLI 29. No se atribuye cobertura al texto de los manuales.
 
@@ -114,3 +114,12 @@ Verificación integrada final: instalación real temporal `--host all` y actuali
 La revisión de PDF se limitó a identidad por portada/metadatos, sin publicación de archivos o extractos. Las fuentes legales/ISO y licencias consultadas se detallan en sus referencias, con pendientes. No hay frontend ni nuevos paquetes que construir o auditar en esta ampliación. No se ejecutó gate --trust: se invocaron directamente las verificaciones revisadas, sin crear confianza global.
 
 Revisión independiente de código y seguridad: sin hallazgos accionables pendientes. Corregida ruta de CLI en nueva skill; ejecución real desde raíz de un receptor temporal recupera sección97 como obligatoria. Escaneo de patrones de secretos en diff y archivos nuevos: sin coincidencias; no sustituye auditoría exhaustiva de productos.
+
+
+## Evidencia 4.4.1 — ENIA y lectura selectiva ISO
+
+2026-10-19: 76 pruebas PASS, 25 validador/19 instalador/32 CLI. Cobertura líneas/ramas/funciones: 100/95.21/93.10, 100/93.57/100 y 100/96.15/98.21. Regresiones nuevas RED antes de corregir: consultas ENIA/RM152 y recuperación del contrato 97.1; GREEN después. Corpus completo mantiene sus umbrales; Perú pasa con tres casos, R@10=1.000 y MRR=.208 informada. Validador de biblioteca: 88 documentos, cuatro fuentes históricas y 13 agentes.
+
+Análisis de ENIA y revisión selectiva ISO: páginas y hashes documentados en referencias; tabla ENIA p.69 renderizada e inspeccionada. No se publica texto extraído ni PDF. Los resultados comprueban coherencia de biblioteca/herramientas, no autenticidad de documentos o conformidad de una aplicación. El estado canónico conserva revisión y publicación de cada candidato por separado.
+
+Revisión independiente: sin hallazgos accionables; muestreo de alcance, metas y seguimiento ENIA e índices ISO coincide con copias locales. Instalación temporal real ambos hosts, snapshot de 88 documentos, actualización sin conflictos y CLI instalada que recupera ENIA/97.1 PASS.

@@ -2,7 +2,7 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Actualizado: 2026-10-19, America/Lima. La sección 4.4 al final es el estado vigente; los hitos 4.3 siguientes son antecedentes fechados. Modo ADOPT, criticidad L1. Base: `40cafdbd582cc1476a52f59b299a52a386dbd78a`. Rama: `feat/eos-4.3-lifecycle-governance`. Responsable de publicación: propietario; ejecución asistida por Codex. Autorización directa: implementar en el sistema, subir a GitHub y añadir licencia y README con guía usable. No incluye desplegar productos, campañas, gastos ni cambiar visibilidad.
+Actualizado: 2026-10-19, America/Lima. La sección 4.4.1 al final es el estado vigente; los hitos 4.3 siguientes son antecedentes fechados. Modo ADOPT, criticidad L1. Base: `40cafdbd582cc1476a52f59b299a52a386dbd78a`. Rama: `feat/eos-4.3-lifecycle-governance`. Responsable de publicación: propietario; ejecución asistida por Codex. Autorización directa: implementar en el sistema, subir a GitHub y añadir licencia y README con guía usable. No incluye desplegar productos, campañas, gastos ni cambiar visibilidad.
 
 ## Qué se conserva y qué cambia
 
@@ -59,7 +59,7 @@ Verificación integrada final: instalación real temporal `--host all` y actuali
 Commit de implementación `fbc5b862dc0e45ca078c72b7619a8cecdf368506`: SHA local igual a ref remota `feat/eos-4.3-lifecycle-governance`. [CI de push](https://github.com/oprbguitar/dev-funcy-agents-03-10-26/actions/runs/39169682169) completado en Linux y Windows con resultado SUCCESS. Este registro posterior solo documenta ese hito; los checks del PR muestran la verificación de la revisión más reciente, incluida esta actualización documental. No se fusionó `main` ni se desplegó una aplicación.
 
 
-## Estado vigente — 4.4.0, 2026-10-19
+## Antecedente — 4.4.0, 2026-10-19
 
 Modo ADOPT, L1 documental, base `b32aa646889bffd1e70fde6fa217ac2b23fcc8b4`, rama `feat/eos-4.4-peru-quality-ui`. Autorización directa del propietario: integrar referencias de IA Perú/ISO y UI/UX en el sistema local, actualizar README y subir a GitHub. Conserva visibilidad privada, fuentes históricas y trabajo anterior; no fusiona ramas, publica PDF ni despliega aplicaciones. Esta rama parte de la ampliación 4.3 ya publicada, aún no fusionada a main.
 
@@ -70,3 +70,14 @@ Verificación local Windows/Node24.14.0:75 pruebas PASS (25 validador,19 instala
 Límites: portadas/metadatos de PDF solo identificados, no autenticados; NTC colombiana no acredita NTP. Fichas ISO9001:2026 y27701:2025 verificadas, sin revisión de cláusulas completas ni certificación. DS115 revisado en disposiciones citadas, sin dictamen exhaustivo ni calendario universal. Fuentes/ref: [IA y calidad](reference/AI-PERU-QUALITY.md), [UI](reference/LANDING-REPOSITORY-RESEARCH.md). No se recibieron los XLSX/CSV/JSON enumerados dentro del README adjunto; no se inventaron ni se declara integrado ese catálogo exhaustivo. Las verificaciones pendientes se mantienen explícitas por fuente.
 
 Revisión independiente de código/seguridad: PASS, sin hallazgos accionables pendientes; se corrigió ruta CLI de la nueva skill y se comprobó desde raíz de receptor instalado. Publicación verificada: commit de implementación `3aa1d1aa7116fb09e6e3b3b5a5eddaadf9b515fe` coincide con la rama remota. [PR8](https://github.com/oprbguitar/dev-funcy-agents-03-10-26/pull/8) abierto contra rama4.3; depende de PR7 y no se fusionó ninguna rama. [CI del commit de implementación](https://github.com/oprbguitar/dev-funcy-agents-03-10-26/actions/runs/39364721479) SUCCESS en Ubuntu y Windows. Este registro posterior documenta ese commit; sus checks deben consultarse por separado. Recuperación: revertir los commits propios en rama nueva si se requiere; no reescribir historia ni revertir cambios ajenos. Para destinos usar --update --dry-run y resolver .eos-new conservando ediciones locales. Esta entrega modifica la biblioteca local; no instala automáticamente EOS en todos los demás proyectos ni altera skills globales.
+
+
+## Estado vigente — 4.4.1, análisis ENIA y ampliación ISO
+
+Fecha: 2026-10-19, America/Lima. Continuación ADOPT sobre la misma rama y PR #8; encargo del propietario: analizar el anexo ENIA aportado y extraer datos pertinentes también de los otros documentos. Autorización de integración y publicación anterior conservada. Fuentes completas permanecen locales; se publican síntesis propias, referencias y hashes, sin PDF ni datos privados.
+
+Entregables: [análisis ENIA](reference/ENIA-2026-2030.md), 81 páginas identificadas, cuatro ejes y 16 líneas de acción, metas seleccionadas con unidad/año/responsable/página; alcance público/privado y seguimiento diferenciados. [Calidad/privacidad](reference/AI-PERU-QUALITY.md) incorpora revisión selectiva de las copias ISO/IEC 27701 y NTC-ISO 9001, con páginas efectivamente leídas y límites de autenticidad. Se amplían estrategia, evaluación, skill IA, README y sección constitucional 97.1. No se crean servicios, modelos, agentes persistentes, reportes institucionales ni certificaciones.
+
+Verificación local: 76 pruebas PASS (25 validador, 19 instalador, 32 CLI). Cobertura líneas/ramas/funciones: validador 100/95.21/93.10; instalador 100/93.57/100; CLI 100/96.15/98.21. Dos regresiones RED/GREEN: ENIA/RM152 no se reconocían y el detalle 97.1 no se incluía; corregidos con pruebas. Evaluación de contexto PASS, conjunto Perú 3 casos R@10=1.000, MRR=.208; selección de instrucciones, no clasificación jurídica. Validador: 88 documentos, cuatro fuentes históricas intactas y 13 agentes. Revisión visual de tabla ENIA p.69 realizada; las metas son acumuladas y blancos no equivalen a cero.
+
+Límites: hash local no cotejado con bytes remotos. Ficha PCM y publicación El Peruano identificadas; apertura directa de ficha/CDN falló, texto aprobatorio accesible en El Peruano. Lectura ISO selectiva, sin autenticar las copias ni auditar todas sus cláusulas; la NTC sigue siendo colombiana. Los porcentajes de ENIA no son métricas medidas del producto. No se revisó estado actual de cada plataforma, guía o fondo citado, ni se los declara operativos. Revisión independiente de código/seguridad y muestreo de referencias PASS, sin hallazgos accionables; instalación temporal ambos hosts, snapshot 88 y CLI ENIA/97.1 PASS, actualización sin conflictos. Publicación del incremento pendiente de verificación; resultados 4.4.0 anteriores no se atribuyen al candidato 4.4.1.

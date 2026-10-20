@@ -91,3 +91,32 @@ Enlazar [MODEL-CARD](MODEL-CARD.md), [PRIVACY-ASSESSMENT](PRIVACY-ASSESSMENT.md)
 - Próxima revisión, responsable y actualización del estado vivo: PENDIENTE.
 
 La firma editorial no representa aprobación del caso, dictamen jurídico ni certificación ISO.
+
+
+## Alineamiento ENIA — completar solo lo pertinente
+
+- Fuente, página PDF, eje/objetivo/acción y razón de aplicabilidad: PENDIENTE.
+- Naturaleza: alineamiento público / referencia privada / obligación de otra fuente / NOT_APPLICABLE motivado: PENDIENTE.
+- Para entidad pública comprendida: Plan de Acción IA >= 3 años, diagnóstico, gobierno de datos previo, articulación PEI/POI/PMI/PGD, validación CGTD y aprobación competente; enlaces a evidencia, sin crear órganos ficticios: PENDIENTE.
+- OIA y responsables reales; límites de aprobación/autonomía: PENDIENTE.
+- Capacitación por función, ejercicio práctico y comprobación de competencia: PENDIENTE.
+- Inclusión/accesibilidad, personas afectadas, feedback y respuesta: PENDIENTE.
+- Infraestructura/cómputo, conectividad, interoperabilidad, costos autorizados y continuidad: PENDIENTE.
+- Meta nacional citada: unidad, periodo/acumulación y página; no prueba resultado del producto: PENDIENTE.
+- Métrica propia: fórmula, denominador, base medida, meta justificada, muestra, periodo, responsable y evidencia: PENDIENTE.
+- Seguimiento institucional pertinente y cadencia de producto diferenciados: PENDIENTE.
+- Dependencias anunciadas sin operación verificada (plataforma, fondo, lineamiento): PENDIENTE; desactivadas hasta evaluación/permiso aplicables.
+
+
+## Precisión de calidad/privacidad — referencias selectivas ISO
+
+- Riesgo sobre titulares y sobre organización, criterios comparables y dueño que acepta residual: PENDIENTE.
+- Declaración de aplicabilidad de controles de privacidad (si corresponde), incluidos/excluidos y razones; enlace al tratamiento, separada de aplicabilidad jurídica: PENDIENTE.
+- Rol por tratamiento e instrucciones documentadas del cliente si encargado; asistencia/escalamiento: PENDIENTE.
+- Evaluación/reevaluación de proveedor o subencargado, países, cambios/avisos/objeciones contractuales pertinentes: PENDIENTE.
+- Retención/eliminación de temporales, contextos, índices, cachés y pruebas con datos; evidencia y límites: PENDIENTE.
+- Decisiones exclusivamente automatizadas sobre personas, fundamento aplicable y mecanismo de atención: PENDIENTE.
+- Verificación de requisitos: método/resultado/versión; validación de uso previsto: escenario/muestra/aceptación: PENDIENTE.
+- Control de cambios: modelo/prompt/datos/herramienta, propósito, consecuencia, recursos, comunicación y aprobación: PENDIENTE.
+- Salida no conforme: versión afectada, aislamiento, corrección, aceptación admisible y autoridad, nueva prueba y prevención de repetición: PENDIENTE.
+- Auditoría/revisión de dirección: alcance, criterios, responsable/objetividad, frecuencia proporcional, recursos y acciones con eficacia: PENDIENTE.

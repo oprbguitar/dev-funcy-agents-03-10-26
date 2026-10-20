@@ -904,6 +904,18 @@
             "heading": "97. IA Perú"
           }
         ]
+      },
+      {
+        "id": "enia-strategy",
+        "query": "ENIA RM 152-2026-PCM",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "97. IA Perú"
+          }
+        ]
       }
     ]
   }
