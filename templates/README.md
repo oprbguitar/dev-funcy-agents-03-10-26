@@ -78,3 +78,8 @@ Los ejemplos hipotéticos no son evidencia.
 Declarar hechos y limitaciones del proyecto receptor.
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
+
+
+## IA y calidad
+
+[AI-QUALITY-ASSESSMENT](AI-QUALITY-ASSESSMENT.md) registra aplicabilidad, responsables, evidencias, riesgos, mejora continua y decisión de entrega. Enlaza privacidad, modelos y decisiones regulatorias existentes; no crea una certificación ni un segundo registro de estado.

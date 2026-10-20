@@ -46,3 +46,8 @@ Para otro repositorio, referencia una versión o commit EOS e integra sus reglas
 La sección 96 de la constitución extiende el historial sin reemplazarlo. INIT y cambios materiales de ADOPT evalúan datos/jurisdicciones, marca/landing/marketing y distribución; activan solo capacidades pertinentes. Navega por [privacy](../skills/eos-privacy-review/SKILL.md), [landing/brand](../skills/eos-landing-brand/SKILL.md) y [desktop](../skills/eos-desktop-release/SKILL.md), conservando los doce manuales como fuentes de dominio.
 
 El destino mantiene `docs/EOS-PROJECT-STATUS.md` con [esta plantilla](../templates/PROJECT-STATUS.md), actualizado en cada hito material. Es el índice vivo de decisiones y evidencia; perfil y manuales existentes conservan autoridad temática. Los agentes envían aportes y el orchestrator integra secuencialmente. Redactar un aviso o guía no equivale a poner el control en operación.
+
+
+## IA Perú y calidad — 4.4.0
+
+La sección 97 enlaza [eos-peru-quality](../skills/eos-peru-quality/SKILL.md), [fuentes](reference/AI-PERU-QUALITY.md) y [evaluación](../templates/AI-QUALITY-ASSESSMENT.md). Se activa por perfil y cambio material, sin convertir la selección de contexto en dictamen. Para mejoras visuales consulta la skill de landing y su catálogo contextual; no cargues las 25 referencias ni las normas íntegras al contexto.

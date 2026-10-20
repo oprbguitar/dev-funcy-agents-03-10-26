@@ -142,6 +142,7 @@ export function rank(sections, query, mode) {
 // obligación normativa no debe depender de que la consulta comparta vocabulario con ella.
 export const CONSTITUTION = 'EOS_MASTER_SYSTEM_INSTRUCTION.md';
 export const POLICY_RULES = [
+  { topic: 'ia-calidad-peru', match: /\b(iso\b|ntp\b|31814\b|115-202|152-202|enia\b|intelig|calidad)/, rawMatch: /\bia\b/, sections: [49, 89, 91, 97] },
   { topic: 'pagos', match: /\b(pag|cobr|payment|webhook|reembol|refund|factur|checkout|tarjet|card|ledger|concili)/, sections: [33, 34, 35, 36, 37, 90] },
   { topic: 'seguridad', match: /\b(segur|secur|login|sesion|session|auth|oauth|mfa|ddos|waf|bot|rate|csrf|secret|credenc|token|vulner|cve|ataqu)/, sections: [16, 21, 88] },
   { topic: 'ia', match: /\b(llm|model|prompt|embedd|agent|ollama|openai|claude|gpt|ia)\b/, sections: [11, 13, 14, 15, 89] },
@@ -163,7 +164,8 @@ export function policySections(sections, task) {
   const wanted = new Set(topics.flatMap(rule => rule.sections));
   const mandatory = sections.filter(section => section.file === CONSTITUTION
     && (wanted.has(Number(section.heading.match(/^(\d+)\.\s/)?.[1]))
-      || (wanted.has(96) && /^96\.\d+\s/.test(section.heading))))
+      || ([96, 97].some(number => wanted.has(number) && section.heading.startsWith(`${number}.`))
+        && /^(96|97)\.\d+\s/.test(section.heading))))
     .map(section => ({ ...section, mandatory: true, score: 0, tokens: estimateTokens(section.text) }))
     // La ampliación transversal se presenta primero para que no quede detrás de gates específicos.
     .sort((a, b) => Number(/^96\./.test(b.heading)) - Number(/^96\./.test(a.heading)));

@@ -1,6 +1,6 @@
 {
   "owner": "Pierre R. Boss (oprbguitar)",
-  "description": "Recuperación de eos context por conjunto. dev: único conjunto usado para ajustar parámetros (HEADING_BONUS). holdout: temas no vistos, nunca usados para ajustar. adversarial: errores ortográficos, Spanglish, inglés, paráfrasis y consultas ambiguas; se reporta sin umbral para no maquillar el límite léxico. Las secciones esperadas se eligieron leyendo encabezados del índice, no la salida del ranking. lifecycle_policy: casos A-P de la ampliación transversal; evalúan la recuperación real de instrucciones obligatorias (policySections antes de BM25), no consentimiento, tráfico ni instaladores de aplicaciones inexistentes. Los escenarios y resultados normativos esperados pertenecen al contrato documental, no son evidencia de runtime.",
+  "description": "Recuperación de eos context por conjunto. dev: único conjunto usado para ajustar parámetros (HEADING_BONUS). holdout: temas no vistos, nunca usados para ajustar. adversarial: errores ortográficos, Spanglish, inglés, paráfrasis y consultas ambiguas; se reporta sin umbral para no maquillar el límite léxico. Las secciones esperadas se eligieron leyendo encabezados del índice, no la salida del ranking. lifecycle_policy: casos A-P de la ampliación transversal; evalúan la recuperación real de instrucciones obligatorias (policySections antes de BM25), no consentimiento, tráfico ni instaladores de aplicaciones inexistentes. Los escenarios y resultados normativos esperados pertenecen al contrato documental, no son evidencia de runtime. peru_quality verifica inclusión obligatoria de la sección97 entre las políticas pertinentes, no que preceda controles constitucionales existentes; MRR se informa sin umbral.",
   "thresholds": {
     "dev": {
       "recall_at_10": 0.7,
@@ -17,6 +17,9 @@
     "lifecycle_manuals": {
       "recall_at_10": 1,
       "mrr": 0.5
+    },
+    "peru_quality": {
+      "recall_at_10": 1
     }
   },
   "sets": {
@@ -873,6 +876,44 @@
           {
             "file": "docs/manuals/COMPLIANCE-IP-PRODUCT.md",
             "heading": "CIP-CF-11"
+          }
+        ]
+      }
+    ],
+    "peru_quality": [
+      {
+        "id": "peru-ia",
+        "query": "IA en Perú Ley 31814",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "97. IA Perú"
+          }
+        ]
+      },
+      {
+        "id": "iso-quality",
+        "query": "ISO 9001 ISO IEC 27701 calidad del software",
+        "mode": "INIT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "97. IA Perú"
+          }
+        ]
+      },
+      {
+        "id": "enia-strategy",
+        "query": "ENIA RM 152-2026-PCM",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "97. IA Perú"
           }
         ]
       }

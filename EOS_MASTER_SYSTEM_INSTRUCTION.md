@@ -2939,3 +2939,23 @@ L0/L1 may keep compact tables in this file. L2 separates domain records when use
 The orchestrator assigns conditional checks, consolidates decisions and owns final status. Compliance assesses applicability; security reviews actual threats and disclosure; docs maintains operator instructions; release verifies each delivery channel and exact candidate. Roles use only host-supported agents; sequential role passes must be disclosed.
 
 Each agent supplies canonical status path, affected domains, evidence and remaining blockers through [AGENT-RESULT](templates/AGENT-RESULT.md). Workers with disjoint ownership provide status updates to the orchestrator instead of concurrently editing the canonical file. The final report links living status and distinguishes proposed, implemented, verified and operating capabilities. Structural library validation proves library structure; it does not certify any future product's lawfulness, accessibility, security, release or revenue.
+
+
+# 97. IA Perú y calidad de software — EOS 4.4.0
+
+**Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
+
+Ampliación operativa de 2026-10-19 (America/Lima); conserva las ediciones históricas. En INIT y cambios materiales de ADOPT, aplica [eos-peru-quality](skills/eos-peru-quality/SKILL.md) para determinar conexión con Perú, actor público/privado/mixto, uso efectivo de IA, datos, finalidad, riesgo y compromisos de calidad. AUDIT revisa sin alterar el destino; RELEASE revalida los controles afectados. La presencia del puerto IA OFF no acredita uso de IA ni activa todos los requisitos de gestión de IA.
+
+Usa la [evaluación canónica](templates/AI-QUALITY-ASSESSMENT.md) y la [guía de fuentes](docs/reference/AI-PERU-QUALITY.md). Registra fuente primaria, edición, artículo o alcance comprobado, fecha de consulta, supuesto, responsable competente, evidencia y siguiente revisión. Separa obligación legal, compromiso contractual, buena práctica voluntaria, no aplicable y pendiente. La clasificación de riesgo y la decisión jurídica no se resuelven por palabras clave ni por el router de contexto.
+
+Distingue ISO internacional, adopción NTP por INACAL y NTC colombiana; una portada o una edición nueva no acredita adopción nacional ni autenticidad de la copia. No publiques PDF, cláusulas o material protegido sin derechos verificados. EOS aporta procedimientos propios y referencias; pasar pruebas, instalar una skill o completar una plantilla no concede certificación ISO ni conformidad legal.
+
+Cada control aplicable declara responsable, implementación, prueba, evidencia, revisión y tratamiento del fallo. Los requisitos sin resolver bloquean la entrega afectada conforme a criticidad y obligación; una excepción interna no elimina una obligación legal. Conserva preparación local independiente, supervisión humana, mecanismos de suspensión de IA, incidentes, recuperación y acciones correctivas con verificación de eficacia.
+
+Para UI/UX y landing, aplica [eos-landing-brand](skills/eos-landing-brand/SKILL.md) y compara el [catálogo contextual](docs/reference/LANDING-REPOSITORY-RESEARCH.md). Estudiar un repositorio no autoriza copiarlo; verifica commit, licencia, assets, dependencias y compatibilidad. INIT compara opciones según requisitos. ADOPT inspecciona identidad, arquitectura, componentes y baseline antes de mejorar; no introduce una reescritura por preferencia estética. Pierre Design Director y sus tokens, responsive, estados, accesibilidad y reducción de movimiento gobiernan el producto receptor. Los 25 candidatos son referencias, no dependencias instaladas.
+
+
+## 97.1 ENIA como estrategia y evidencia — ampliación 4.4.1
+
+**Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.** Consulta [ENIA](docs/reference/ENIA-2026-2030.md) y su resolución aprobatoria para separar el alineamiento de entidades públicas comprendidas de la referencia voluntaria privada. Usa ejes/acciones como entradas de diagnóstico, capacitación, gobierno de datos, riesgos, recursos y participación, sin transformar metas nacionales acumuladas en resultados de producto. Verifica requisitos y aprobación institucionales cuando correspondan; no crea OIA, CGTD, presupuesto, reportes o servicios por inferencia. Mantén referencias de página y fuente, métricas propias y responsables reales en la evaluación. Una hoja de ruta no acredita que una plataforma o lineamiento previsto esté operativo.

@@ -53,6 +53,10 @@ Entrega una decisión justificada `NO_COOKIE_BANNER | NOTICE_ONLY | CONSENT_MANA
 
 Incluye derechos, retención/purga de backups, banco de datos, oficial/responsable e incidentes como preguntas condicionadas por fuente, supuestos y transitorios. No inventes plazos universales ni activación de proveedores. Ningún registro constituye certificación, asesoría jurídica o autorización para publicar, contratar o enviar datos.
 
+## IA Perú y calidad ISO
+
+Aplica [eos-peru-quality](../skills/eos-peru-quality/SKILL.md) y [AI-PERU-QUALITY](../docs/reference/AI-PERU-QUALITY.md) por hechos del proyecto. Diferencia actor público/privado, IA de producto/desarrollo, riesgo técnico y clasificación jurídica humana, ISO internacional y adopción NTP. No convierte una NTC colombiana en norma peruana ni atribuye certificación a pruebas. Entrega controles y evidencia mediante [AI-QUALITY-ASSESSMENT](../templates/AI-QUALITY-ASSESSMENT.md), con fuentes, fechas y decisiones pendientes.
+
 ## Formato de salida
 
 ```text

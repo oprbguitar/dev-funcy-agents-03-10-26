@@ -106,3 +106,8 @@ Reutiliza autorización expresa dentro de su alcance.
 Rollback sigue su política aprobada y conserva datos y efectos externos.
 
 **Firma editorial:** Pierre R. Boss · oprbguitar.
+
+
+## IA Perú y calidad de software
+
+Evalúa [eos-peru-quality](../eos-peru-quality/SKILL.md) según sección 97 de la constitución: sector y conexión con Perú, IA realmente utilizada, datos, riesgos y compromisos ISO/NTP. Conserva decisiones válidas y revisa solo el alcance afectado; registra NOT_APPLICABLE con razón. Usa [AI-QUALITY-ASSESSMENT](../../templates/AI-QUALITY-ASSESSMENT.md) y enlaza evidencia desde el estado canónico. AUDIT mantiene el destino en lectura; RELEASE comprueba responsables, decisiones pendientes, vigencia y evidencia del candidato. Una plantilla, test o instalación no certifica cumplimiento. No actives proveedores ni reescribas UI por este chequeo.
