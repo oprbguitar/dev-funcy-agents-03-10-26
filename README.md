@@ -1,6 +1,50 @@
 # Pierre R. Boss — Engineering Operating System
 
-**EOS · Edición de especificaciones de ingeniería 4.2.0 · 9 de octubre de 2026 · Perú**
+**EOS · Edición de especificaciones de ingeniería 4.3.0 · 18 de octubre de 2026 · Perú**
+
+🧭 **Tu copiloto tiene mapa, frenos y bitácora. El volante sigue siendo tuyo.**
+
+[Empezar](#despegue-en-tres-pasos) · [Instalar](#guía-por-host-paso-a-paso) · [Elegir skill](skills/README.md) · [Estado real](docs/EOS-PROJECT-STATUS.md) · [Licencia MIT](LICENSE) ([alcance](LICENSE-SCOPE.md))
+
+## Despegue en tres pasos
+
+Necesitas Git, Node.js 24 y acceso al repositorio privado. No hay `npm install`, Docker, Python, claves de API ni servicios de pago para instalar EOS. Los comandos siguientes se ejecutan en PowerShell, macOS o Linux; sustituye la ruta del proyecto por una carpeta existente.
+
+```powershell
+git clone https://github.com/oprbguitar/dev-funcy-agents-03-10-26.git
+cd dev-funcy-agents-03-10-26
+node scripts/install-agents.mjs --host codex --target "../mi-proyecto" --dry-run
+```
+
+1. **Mira el equipaje.** Revisa el plan de `--dry-run`: muestra qué archivos recibiría tu proyecto.
+2. **Instala.** Repite el último comando sin `--dry-run`. Usa `--host claude` para Claude Code o `--host all` para ambos.
+3. **Abre tu proyecto en el agente y dale una misión.** Copia este inicio:
+
+```text
+Aplica EOS 4.3.0 en MODE=ADOPT a este proyecto.
+Lee AGENTS.md y .eos/EOS-CORE.md, inspecciona antes de editar y conserva mi trabajo.
+Objetivo: [describe el cambio]. Primera entrega útil: [resultado observable].
+Evalúa jurisdicción, datos, marca, landing, marketing y canal web/escritorio;
+activa solo lo pertinente y justifica NOT_APPLICABLE.
+Verifica los cambios y actualiza docs/EOS-PROJECT-STATUS.md en cada hito.
+No publiques ni gastes sin una autorización aplicable.
+```
+
+**¿Proyecto nuevo?** Cambia `ADOPT` por `INIT`. **¿Solo revisar?** Usa `AUDIT`. Una instalación correcta crea `.eos/install-manifest.json`, el bloque EOS de `AGENTS.md` y las carpetas del host indicadas más abajo. EOS queda integrado al proyecto destino; clonar este repositorio por sí solo no lo instala en tus otros proyectos.
+
+## Qué trae la mochila 4.3 🎒
+
+| Capacidad | Actívala cuando… | Entrega concreta |
+|---|---|---|
+| [Privacidad y derecho](skills/eos-privacy-review/SKILL.md) | Cambien datos, finalidad, jurisdicción, cookies, IA o proveedores | Inventario, base por finalidad, decisiones y pruebas; revisión competente cuando corresponda |
+| [Marca y landing](skills/eos-landing-brand/SKILL.md) | Haya UI, producto web público o captación comercial | Brief, tokens, landing dentro del alcance y claims respaldados |
+| [Escritorio](skills/eos-desktop-release/SKILL.md) | Distribuyas Windows, macOS, Linux o híbrido | Instalación, almacenamiento, firma, actualización, desinstalación y recuperación |
+| [Estrategia y marketing](skills/eos-strategy/SKILL.md) | Definas oferta, canales, prioridades o experimentos | Hipótesis, presupuesto propuesto, señales reales y criterio de parada |
+| [Documento vivo](templates/PROJECT-STATUS.md) | Cada hito cambie el sistema | Estado, decisiones, evidencia, riesgos y siguiente paso en un registro canónico |
+
+Una web comercial empieza con un blueprint de landing; una herramienta interna puede justificar `NOT_APPLICABLE`. Una página sin tratamientos que requieran consentimiento no recibe un banner ornamental. Los controles de cookies y escritorio se verifican en el producto receptor: las pruebas de EOS comprueban sus herramientas e instrucciones, no esos runtimes futuros.
+
+La edición mantiene trece roles y amplía el catálogo a diez skills. Perú es un perfil prioritario cuando corresponde al proyecto; la [matriz normativa](docs/reference/PRIVACY-PERU-REGISTRY.md) distingue fuentes verificadas, aplicabilidad y pendientes. [Licencias de referencias](docs/reference/LANDING-REPOSITORY-RESEARCH.md) y [sistema de marca](docs/reference/BRAND-AND-COLOR-SYSTEM.md) explican qué se puede estudiar y qué debe revisarse antes de copiar.
 
 > Quiero software que pueda entender, verificar, proteger, mantener y entregar. Quiero que cada decisión tenga una razón, cada permiso un límite y cada resultado una prueba. La IA debe ampliar mi capacidad de trabajo sin quitarme el control del sistema.
 >
@@ -74,7 +118,7 @@ Las áreas se revisan en cada admisión, pero se activan solo cuando aportan al 
 ### Cómo se ve en una petición
 
 ```text
-Aplica EOS 4.2.0 en MODE=INIT para esta herramienta.
+Aplica EOS 4.3.0 en MODE=INIT para esta herramienta.
 Objetivo: reducir el tiempo para completar el proceso descrito.
 Primero inspecciona el repositorio y resume qué sabes de usuarios, alcance y restricciones.
 Haz las preguntas estratégicas pendientes que sí cambiarían la solución.
@@ -92,7 +136,7 @@ git clone https://github.com/oprbguitar/dev-funcy-agents-03-10-26.git
 
 | Host | Cómo usarlo | Qué obtienes |
 |---|---|---|
-| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 7 skills |
+| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 10 skills |
 | Claude Code (como plugin) | `/plugin marketplace add oprbguitar/dev-funcy-agents-03-10-26` y luego instala `eos-agents` | Subagentes `eos-*` y skills en cualquier proyecto |
 | Claude Code (copia local) | `node scripts/install-agents.mjs --host claude --target <proyecto>` | `.claude/agents/`, `.claude/skills/`, `.eos/` y bloque en `AGENTS.md`/`CLAUDE.md` |
 | Codex | `node scripts/install-agents.mjs --host codex --target <proyecto>` | Bloque EOS en `AGENTS.md`, skills en `.agents/skills/`, roles en `.agents/eos-agents/` |
@@ -130,7 +174,7 @@ dev-funcy-agents-03-10-26/
 │  ├─ plugin.json                Plugin eos-agents para Claude Code
 │  └─ marketplace.json           Marketplace para `/plugin marketplace add`
 ├─ agents/                       13 definiciones de subagentes + README
-├─ skills/                       7 skills: seis modos y STRATEGY para dirección recurrente
+├─ skills/                       10 skills: modos, estrategia, privacidad, marca/landing y escritorio
 ├─ docs/
 │  ├─ manuals/                   12 módulos mayores de especificación
 │  ├─ sources/                   4 conversaciones fuente (bytes intactos + SHA-256) y trazabilidad
@@ -145,18 +189,20 @@ dev-funcy-agents-03-10-26/
 │  ├─ install-agents.mjs         Instalador para Claude Code / Codex
 │  └─ eos.mjs                    CLI: context, index, gate (con confianza), run, runs, eval-context
 ├─ eos.gate.json                 Comandos que ejecuta `eos.mjs gate` en esta biblioteca
-├─ evals/context/cases.json      15 casos de recuperación con umbrales de Recall@10 y MRR
-└─ tests/                        Pruebas del validador (25), del instalador (14) y del CLI (18)
+├─ evals/context/cases.json      Casos de recuperación y decisiones A–P, con umbrales separados
+└─ tests/                        Pruebas del validador, del instalador y del CLI
 ```
 
 ## Guía por host, paso a paso
+
+La copia local es la ruta reproducible probada por el instalador EOS. Consulta también las guías oficiales de [skills de OpenAI](https://learn.chatgpt.com/docs/build-skills) y [plugins de Claude Code](https://code.claude.com/docs/en/plugins), revisadas el 18-10-2026. La autenticación de cada host y el acceso al repositorio privado se configuran en ese host; EOS no proporciona credenciales.
 
 ### Claude Code dentro de este repositorio
 
 1. Clona el repositorio y ábrelo en el Code tab.
 2. [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md); Claude lee las reglas EOS al iniciar.
 3. Pide un modo, por ejemplo: «Aplica EOS en MODE=AUDIT y entrégame hallazgos por severidad».
-4. Los 13 subagentes de [agents/](agents/README.md) y las 7 skills quedan disponibles para el orquestador.
+4. Los 13 subagentes de [agents/](agents/README.md) y las 10 skills quedan disponibles para el orquestador.
 
 ### Claude Code como plugin en cualquier proyecto
 
@@ -180,6 +226,38 @@ node scripts/install-agents.mjs --host codex --target ../mi-proyecto
 
 El instalador copia una instantánea de la biblioteca en `.eos/`, coloca agentes y skills en el lugar que cada host espera (`.claude/` para Claude Code, `.agents/` para Codex), reescribe los enlaces internos para que apunten a `.eos/`, añade un bloque EOS delimitado al final del `AGENTS.md` del destino y registra lo creado en `.eos/install-manifest.json`. **Nunca sobrescribe un archivo existente**: lo reporta como omitido. Ejecutarlo dos veces es seguro (idempotente).
 
+En Codex, las skills quedan en `.agents/skills/` y los roles Markdown en `.agents/eos-agents/`. Estos roles se leen como instrucciones: el instalador no crea configuraciones TOML de subagentes ni activa permisos del host. En Claude Code quedan en `.claude/skills/` y `.claude/agents/`. Abre una sesión nueva en el destino para que el host redescubra las skills; si no aparecen, verifica la ruta y pide leer el `SKILL.md` correspondiente.
+
+### Actualizar con tus cambios a salvo
+
+Desde este clon, tras traer una revisión aprobada, revisa el plan y aplícalo:
+
+```powershell
+node scripts/install-agents.mjs --host all --target "../mi-proyecto" --update --dry-run
+node scripts/install-agents.mjs --host all --target "../mi-proyecto" --update
+```
+
+`--update` compara hashes con el manifiesto anterior: actualiza archivos intactos, conserva tus ediciones y deja una propuesta `.eos-new` cuando hay conflicto. Revisa y resuelve esas propuestas antes de declarar la actualización completa. No borres el manifiesto para eludir conflictos. Para retirar EOS, usa el manifiesto para identificar únicamente archivos sin cambios y elimina solo los bloques `EOS:BEGIN`/`EOS:END` tras revisión; no existe un comando de desinstalación automática.
+
+### Otros sistemas: integración por lectura
+
+Cursor, otros asistentes o modelos locales pueden usar EOS si permiten instrucciones de proyecto y lectura de Markdown. No se afirma que descubran automáticamente nuestras carpetas. Instala una copia revisada con `--host codex` o enlaza este clon desde el archivo de instrucciones que admita tu host. Indícale que lea `AGENTS.md`, `EOS-CORE.md`, la skill del modo y el rol pertinente. Si carece de subagentes, recorre los roles secuencialmente y declara esa limitación. No pegues toda la constitución en cada prompt.
+
+<details>
+<summary>🛠️ Algo no despegó: diagnóstico rápido</summary>
+
+| Señal | Qué hacer |
+|---|---|
+| Git responde “Repository not found” | Confirma la cuenta y acceso al repositorio privado; no pegues tokens en el prompt |
+| `node` no se reconoce | Instala Node.js 24 por un canal oficial y abre otra terminal |
+| `--dry-run` anuncia archivos omitidos | Inspecciona su contenido; es la protección contra sobrescritura |
+| El host no ve las skills | Confirma que abriste el proyecto destino y revisa `.agents/skills/` o `.claude/skills/` |
+| `gate` devuelve `BLOCKED` | Inspecciona `gate --plan`; la confianza la concede el responsable tras revisar comandos y revisión |
+| `--update` deja `.eos-new` | Compara ambas versiones y resuelve sin perder tu adaptación |
+| Una capacidad está documentada pero no funciona | Revisa su estado y evidencia; IMPLEMENTED, VERIFIED y OPERATING son etapas diferentes |
+
+</details>
+
 ### Ahorro de tokens en el proyecto instalado
 
 El CLI viaja en `.eos/scripts/eos.mjs`. No usa modelos, red ni dependencias.
@@ -197,16 +275,6 @@ node .eos/scripts/eos.mjs gate --json
 
 `eos.gate.json` del proyecto destino define sus comandos, por ejemplo `{"commands":[{"name":"tests","run":"npm test"},{"name":"lint","run":"npm run lint"}]}`. Se ejecutan con la shell del sistema, por eso `gate` **no ejecuta nada sin revisión**: `gate --plan` muestra comandos, SHA-256 y estado; `gate --trust` registra tu aprobación en `~/.eos/trusted-gates.json` (fuera del repositorio, para que un repo no pueda autoaprobarse; `EOS_HOME` o `EOS_TRUST_STORE` cambian la ruta). La confianza cubre el archivo **y la revisión del repositorio** (árbol de HEAD, cambios sin commit y archivos nuevos no ignorados): si alguien cambia `package.json`, un script o un test, vuelve a `BLOCKED` aunque `npm test` siga igual. En un repositorio propio que editas a menudo, `gate --trust-commands` confía solo en los comandos, y el plan lo muestra como alcance reducido. Confiar no es aislar: un repositorio ajeno debe ejecutarse en un contenedor o una máquina desechable. Comandos de descarga y ejecución, borrado masivo, `git push`, `npm publish` o `gh pr merge` nunca se pueden confiar.
 
-### Actualizar una instalación existente
-
-```bash
-# desde la copia nueva de EOS: muestra nuevos, actualizados, conflictos y retirados sin escribir
-node scripts/install-agents.mjs --host all --target ../mi-proyecto --update --dry-run
-node scripts/install-agents.mjs --host all --target ../mi-proyecto --update
-```
-
-Se reemplaza solo lo que EOS instaló y nadie modificó (según el SHA-256 de `.eos/install-manifest.json`). La actualización es transaccional: primero planifica, luego respalda en `.eos/.update-backup/`, escribe, verifica cada hash y, ante cualquier error, restaura todo; el manifiesto se escribe al final. El instalador añade a `.gitignore` un bloque EOS para paquetes de contexto, respaldos y `.eos-new`. Una edición local se conserva y la versión nueva queda junto a ella como `<archivo>.eos-new`. En instalaciones 3.x sin hashes, `.eos/` se trata como propiedad de EOS (se informa cada archivo y la versión anterior queda en el respaldo) y lo demás como conflicto. El bloque EOS de `AGENTS.md` se renueva entre sus marcadores. Los archivos retirados solo se informan.
-
 ### Medir tokens y costo reales
 
 ```bash
@@ -214,9 +282,9 @@ node .eos/scripts/eos.mjs run --agent eos-planner --task "plan OAuth" -- claude 
 node .eos/scripts/eos.mjs runs
 ```
 
- o comillas dentro del prompt no ejecutan nada. En Windows, un shim `.cmd` (como `codex.cmd` de npm) pasa por `cmd.exe` con cada argumento entre comillas y se rechazan `"`, `%`, `!` y saltos de línea; para esos textos usa el `.exe` o un archivo. El ledger vive fuera del repositorio, en `~/.eos/runs/<proyecto>.jsonl`, y guarda la tarea solo como huella SHA-256 salvo `--log-task`. Registra agente, estado, duración y el uso que reporte el host (`usage` y `total_cost_usd` de Claude Code; eventos `usage` de `codex exec --json`). Si el host no reporta uso, el registro queda `n/d`: no se estima. La selección de `context` es léxica (BM25 con stemming ligero), estima tokens por tamaño (unos 3.7 caracteres por token) y puede omitir una sección relevante redactada con otras palabras; si sospechas un hueco, amplía la consulta o el presupuesto.
+`run` conserva los argumentos sin ejecutar una shell; los metacaracteres dentro del prompt llegan como texto literal. En Windows, un shim `.cmd` (como `codex.cmd` de npm) pasa por `cmd.exe` con cada argumento entre comillas y se rechazan `"`, `%`, `!` y saltos de línea; para esos textos usa el `.exe` o un archivo. El ledger vive fuera del repositorio, en `~/.eos/runs/<proyecto>.jsonl`, y guarda la tarea solo como huella SHA-256 salvo `--log-task`. Registra agente, estado, duración y el uso que reporte el host (`usage` y `total_cost_usd` de Claude Code; eventos `usage` de `codex exec --json`). Si el host no reporta uso, el registro queda `n/d`: no se estima. La selección de `context` es léxica (BM25 con stemming ligero), estima tokens por tamaño (unos 3.7 caracteres por token) y puede omitir una sección relevante redactada con otras palabras; si sospechas un hueco, amplía la consulta o el presupuesto.
 
-Para desinstalar, elimina los archivos listados en `.eos/install-manifest.json` y el bloque entre `<!-- EOS:BEGIN -->` y `<!-- EOS:END -->` de tu `AGENTS.md`.
+Para retirar la integración, sigue la revisión de archivos y bloques indicada en «Actualizar con tus cambios a salvo»; conserva cualquier adaptación del proyecto.
 
 ### Otro host o modelo local
 
@@ -290,7 +358,7 @@ La constitución sirve de entrada y autoridad común. Las skills, prompts y plan
 Ejemplo de petición adaptada:
 
 ```text
-Aplica EOS 4.2.0 en MODE=ADOPT a este repositorio.
+Aplica EOS 4.3.0 en MODE=ADOPT a este repositorio.
 Objetivo: documentar y corregir el fallo de sesión que describo.
 Alcance: autenticación web y pruebas relacionadas.
 No cambies pagos, base de datos ni infraestructura.

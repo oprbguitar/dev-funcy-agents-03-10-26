@@ -1325,3 +1325,23 @@ STO-Q003. Las cifras de ejemplos permanecen hipotéticas y no deben copiarse com
 STO-Q004. Las decisiones sobre datos de terceros corresponden al responsable del producto con revisión competente cuando aplique.
 STO-Q005. Los agentes preparan análisis y planes; las acciones productivas sobre datos requieren autorización específica.
 STO-Q006. Firma editorial: Pierre R. Boss (oprbguitar), con desarrollo documental asistido por IA.
+
+## Anexo R. Finalidad, retención y supresión comprobable
+
+STO-R001. El inventario enlaza cada conjunto de datos con finalidad, sujeto, responsable/encargado, ubicación, terceros, acceso y decisión de [privacidad](../../skills/eos-privacy-review/SKILL.md).
+STO-R002. Distinguir producción, dispositivos, réplicas, exports, índices, caches, logs y backups; una eliminación de la tabla primaria no prueba eliminación completa.
+STO-R003. La retención documenta evento inicial, periodo y fuente aplicable, excepción o bloqueo legal, dueño, ejecución y evidencia. No imponer una duración universal sin sustento.
+STO-R004. Al terminar una finalidad, decidir supresión, anonimización verificable o conservación justificada; seudonimización sigue pudiendo ser tratamiento de datos personales.
+STO-R005. Una solicitud de derechos verifica identidad y alcance de manera proporcional, registra decisión, destinatarios y ejecución sin duplicar documentos sensibles por rutina.
+STO-R006. Supresión es idempotente, restringida por permisos y probada con datos sintéticos. No ejecutar borrados productivos por el mero hecho de completar la documentación.
+STO-R007. Las excepciones de conservación señalan motivo, acceso reducido, vencimiento y revisión; una excepción no mantiene acceso operativo ilimitado.
+STO-R008. Cuando un backup no permita borrado selectivo, documentar aislamiento, expiración, restricciones de restauración y aplicación de supresiones antes de reabrir servicio.
+STO-R009. El registro de supresiones conserva referencias mínimas no reversibles cuando resulte adecuado; no crear una segunda base de datos personales con la evidencia.
+STO-R010. El ensayo de restore incluye un registro sintético previamente suprimido y comprueba que no reaparece en consultas, búsquedas o exports al reanudar servicio.
+STO-R011. Las transferencias a terceros inventarían destino, finalidad, garantías/contrato pertinente, eliminación y evidencia del proveedor; una promesa contractual no es prueba técnica.
+STO-R012. En desktop declarar datos por usuario/equipo, permisos locales, claves, exportación, upgrade y elección de conservación al desinstalar; nunca borrar silenciosamente trabajo del usuario.
+STO-R013. Un producto offline puede contener datos regulados; minimización, acceso, cifrado según amenaza y recuperación se evalúan sin imponer nube o telemetría.
+STO-R014. Cambiar proveedor, finalidad, jurisdicción o política de backup reabre solo las decisiones afectadas y actualiza `docs/EOS-PROJECT-STATUS.md` del destino.
+STO-R015. La evidencia incluye entorno, revisión, comando/artefacto, fecha, resultado y limitación; controles documentados permanecen PLANNED hasta implementarse.
+STO-R016. La aceptación demuestra minimización de un flujo, expiración, acceso denegado y restore sin resurrección con fixtures sintéticos; ausencia de ejecución es NOT_RUN.
+STO-R017. Ejemplo hipotético: un export CSV sobrevivía al borrado en base. Incorporarlo al inventario y al proceso controlado de expiración antes de declarar completa la supresión.

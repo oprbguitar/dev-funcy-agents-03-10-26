@@ -149,16 +149,24 @@ export const POLICY_RULES = [
   { topic: 'release', match: /\b(releas|deploy|desplieg|actualiz|updat|rollback|canary|slo|version)/, sections: [41, 43, 60, 90] },
   { topic: 'incidente', match: /\b(incident|caida|outage|postmort|brecha|breach|filtr|leak)/, sections: [42, 88] },
   { topic: 'cumplimiento', match: /\b(legal|licenc|licens|regul|privac|cumpli|complian|ley|contrat|patent|marca|indecopi|gdpr)/, sections: [47, 48, 50, 56, 91] },
+  { topic: 'privacidad', match: /\b(privac|cooki|consent|dato persona|arco\b|biometr|menor|eprivac|gdpr|pixel|tracking|telemet|anpd|29733)/, sections: [47, 48, 50, 91, 96] },
+  { topic: 'marca-landing', match: /\b(marca|brand|landing|visual|tipogra|token.*visual|identid|color)/, sections: [51, 52, 56, 91, 96] },
+  { topic: 'desktop', match: /\b(desktop|escrito|offline|instala|uninsta|updater|autoupd|window|maco|linux)/, sections: [29, 32, 41, 43, 90, 96] },
+  { topic: 'growth', match: /\b(growth|market|seo|ads|publici|campan|captaci|convers|suscrip|venta|saas|erp|comerci|template)/, sections: [47, 51, 56, 91, 96] },
+  { topic: 'documentacion-viva', match: /\b(handboo|document|hito|estado.*proyec)/, rawMatch: /\b(?:eos-)?project-status\b/, sections: [60, 74, 96] },
   { topic: 'migracion', match: /\b(migr|handoff|transfer|reescrit|rewrite|legacy|hereda)/, sections: [58, 59] },
 ];
 
 export function policySections(sections, task) {
   const query = terms(task).join(' ');
-  const topics = POLICY_RULES.filter(rule => rule.match.test(query));
+  const topics = POLICY_RULES.filter(rule => rule.match.test(query) || rule.rawMatch?.test(normalize(task)));
   const wanted = new Set(topics.flatMap(rule => rule.sections));
   const mandatory = sections.filter(section => section.file === CONSTITUTION
-    && wanted.has(Number(section.heading.match(/^(\d+)\.\s/)?.[1])))
-    .map(section => ({ ...section, mandatory: true, score: 0, tokens: estimateTokens(section.text) }));
+    && (wanted.has(Number(section.heading.match(/^(\d+)\.\s/)?.[1]))
+      || (wanted.has(96) && /^96\.\d+\s/.test(section.heading))))
+    .map(section => ({ ...section, mandatory: true, score: 0, tokens: estimateTokens(section.text) }))
+    // La ampliación transversal se presenta primero para que no quede detrás de gates específicos.
+    .sort((a, b) => Number(/^96\./.test(b.heading)) - Number(/^96\./.test(a.heading)));
   return { topics: topics.map(rule => rule.topic), mandatory };
 }
 
@@ -400,10 +408,16 @@ export function summarizeRuns(lines) {
   return `agente | corridas | PASS | tokens entrada | tokens salida | costo USD | mediana\n${rows.join('\n') || '(sin corridas)'}\n`;
 }
 
-// Evalúa la recuperación de `context` contra casos con secciones esperadas (archivo + parte del encabezado).
+// Evalúa recuperación léxica histórica; retrieval:'policy' comprueba el orden efectivo de contexto:
+// secciones obligatorias primero, luego BM25 sin duplicados. No prueba un runtime de privacidad.
 export function evaluateContext(sections, cases) {
   const results = cases.map(item => {
-    const ranked = rank(sections, item.query, item.mode?.toUpperCase());
+    const relevant = rank(sections, item.query, item.mode?.toUpperCase());
+    const { mandatory } = policySections(sections, item.query);
+    const keys = new Set(mandatory.map(section => `${section.file}:${section.start}`));
+    const ranked = item.retrieval === 'policy'
+      ? [...mandatory, ...relevant.filter(section => !keys.has(`${section.file}:${section.start}`))]
+      : relevant;
     const hits = item.expected.map(expected => ranked.findIndex(section =>
       section.file === expected.file && normalize(section.heading).includes(normalize(expected.heading))) + 1);
     const recall = k => hits.filter(position => position > 0 && position <= k).length / hits.length;

@@ -64,3 +64,9 @@ Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-R
 - Verificación anterior a la última edición: exige reverificar.
 - Rama principal protegida: publica rama y solicitud de integración; no fuerces.
 - Versiones inconsistentes entre manifiestos: corrígelas antes de preparar la release.
+
+## Puertas por canal y compromisos
+
+Antes de liberar, revisa la sección 96, el perfil y `docs/EOS-PROJECT-STATUS.md` del destino. Evalúa por separado web, escritorio y presencia comercial. Usa [eos-desktop-release](../skills/eos-desktop-release/SKILL.md) para instalables; solicita evidencia por SO/arquitectura, hash/procedencia, firma o ausencia explícita, instalación limpia, upgrade, configuración/datos, uninstall y recuperación. Una prueba web no acredita desktop.
+
+Confirma la decisión de privacidad/avisos/consentimiento/contratos con [eos-privacy-review](../skills/eos-privacy-review/SKILL.md) cuando corresponda, y claims/marca/landing con [eos-landing-brand](../skills/eos-landing-brand/SKILL.md). Un dominio no pertinente exige NOT_APPLICABLE justificado. Revisión jurídica determinante pendiente bloquea su publicación; una fuente vencida exige reevaluar. Actualiza el estado vivo con revisión exacta, checks, limitaciones, reversión y autorizaciones; reutiliza autorizaciones vigentes que ya cubran destino y acción.

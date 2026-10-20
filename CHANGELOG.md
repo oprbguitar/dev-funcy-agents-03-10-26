@@ -2,6 +2,15 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 4.3.0 — 2026-10-18
+
+- Amplía gobierno transversal: jurisdicción y privacidad por finalidad, consentimiento condicionado, marca, landing comercial, crecimiento, canales web/escritorio y documentación por hito.
+- Añade skills de privacidad, marca/landing y entrega desktop; reutiliza los trece agentes y los doce manuales mayores sin alterar fuentes históricas ni pisos congelados.
+- Incorpora registros operativos, referencias primarias y decisiones de licencias sin copiar frameworks de terceros ni crear servicios de EOS.
+- Extiende el router de contexto y sus evaluaciones A–P; distingue selección de política de pruebas runtime pendientes en los productos receptores.
+- Añade licencia MIT para aportaciones propias con exclusiones de procedencia, README accesible con animación y guía de instalación/actualización por host.
+- Evidencia reproducible y límites: [estado del proyecto](docs/EOS-PROJECT-STATUS.md) y [verificación](docs/VERIFICATION.md).
+
 ## 4.2.0 — 2026-10-09
 
 ### Estrategia recurrente antes y después de ingeniería

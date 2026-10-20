@@ -30,3 +30,23 @@ Todo agente EOS termina su respuesta con un único bloque `eos-result`. El orque
 - `approval_needed`: operaciones A3 preparadas pero no ejecutadas.
 - Listas vacías se escriben `[]`; no omitas claves. El bloque es JSON válido.
 - El bloque no reemplaza la evidencia: cada `PASS` debe corresponder a un comando realmente ejecutado.
+
+## Aportes al documento vivo (4.3.0)
+
+Para incrementos materiales añade al mismo JSON los campos opcionales `project_status` y `domains`. No cambian las claves obligatorias anteriores ni acreditan operación. Ejemplo hipotético de fragmento:
+
+```json
+{
+  "project_status": {
+    "path": "docs/EOS-PROJECT-STATUS.md",
+    "updated": false,
+    "reason": "Aportes entregados al orchestrator para integración secuencial"
+  },
+  "domains": [
+    {"name": "privacy", "state": "ASSESSED", "evidence": "Ruta del registro revisado"},
+    {"name": "desktop", "state": "NOT_APPLICABLE", "reason": "Biblioteca documental"}
+  ]
+}
+```
+
+Incluye solo dominios afectados o evaluados, su estado de capacidad y fuente/razón. Si el agente es dueño del estado vivo, actualiza antes de cerrar e indica revisión y fecha; de lo contrario, entrega en `next` los aportes concretos al integrador. Un check no ejecutado usa NOT_RUN en `checks`, aunque el documento esté actualizado. No incluyas datos personales, secretos ni políticas no aprobadas en el bloque.

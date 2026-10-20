@@ -18,7 +18,7 @@ La declaración editorial del README se redactó para esta edición. No se prese
 
 La atribución EOS no cambia derechos de autores, colaboradores, proveedores, fuentes oficiales ni titulares de modelos o dependencias. Citar una documentación no concede permiso para redistribuir íntegramente esa documentación. Cada producto debe mantener inventario de licencias y contribuciones, además de revisar contratos cuando corresponda.
 
-El repositorio de origen no contenía una licencia de distribución explícita. Esta edición no inventa una licencia OSS ni concede derechos que el propietario no solicitó conceder. Su visibilidad privada no sustituye una licencia. Antes de redistribuir, vender, relicenciar o abrir públicamente materiales, registra el alcance autorizado y revisa los derechos involucrados.
+El repositorio de origen no contenía una licencia de distribución explícita. El 18 de octubre de 2026 el propietario solicitó añadir una licencia y publicar la ampliación. La edición 4.3 incorpora [MIT](LICENSE) para aportaciones propias, con las exclusiones y reglas de procedencia de [LICENSE-SCOPE](LICENSE-SCOPE.md). Los antecedentes históricos y derechos de terceros no se relicencian. La visibilidad privada no sustituye una licencia ni se cambia con esta decisión.
 
 ## Registro para futuras contribuciones
 

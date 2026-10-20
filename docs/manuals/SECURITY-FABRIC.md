@@ -1187,3 +1187,22 @@ Referencias principales para el implementador, consulta **2026-10-03**:
 - SF-45.38: La firma editorial de Pierre R. Boss (oprbguitar) en agentes propios indica dirección, no auditoría externa de seguridad.
 - SF-45.39: Un sistema de agentes clonable debe ser seguro por defecto en el destino, incluso si el receptor no lo personaliza.
 - SF-45.40: Quiero un ecosistema de agentes que pueda compartir sin compartir también una puerta trasera hacia los sistemas de quien lo use.
+
+## SF-46. Evidencia de privacidad y amenazas por canal
+
+- SF-46.01: El perfil de finalidades, terceros y jurisdicciones se determina con [eos-privacy-review](../../skills/eos-privacy-review/SKILL.md) y [COMPLIANCE-IP-PRODUCT](COMPLIANCE-IP-PRODUCT.md); este manual aporta controles técnicos, no un dictamen.
+- SF-46.02: Una nueva finalidad, proveedor, SDK de analytics/IA o exportación reabre el análisis del flujo afectado antes de exponer datos.
+- SF-46.03: El modelo de amenazas recorre captura, transporte, proceso, logs, caches, backups, soporte, exportación y supresión, incluido almacenamiento local desktop.
+- SF-46.04: Cada límite de confianza vincula actor, datos, propósito, permiso mínimo, control, prueba negativa y responsable; offline no equivale a ausencia de datos personales.
+- SF-46.05: Verificar autorización por sujeto/objeto/tenant y evitar que una exportación, búsqueda o solicitud de derechos permita enumerar datos ajenos.
+- SF-46.06: La verificación de identidad para derechos es proporcional; no recolectar más documentación identificatoria que la necesaria por rutina.
+- SF-46.07: Consentimiento opcional, cuando aplique, se comprueba antes de cargar scripts/SDK pertinentes y después de retirar la elección; inspeccionar red y almacenamiento con datos sintéticos.
+- SF-46.08: La ausencia de banner solo se acepta con decisión de aplicabilidad; su presencia no prueba bloqueo efectivo de rastreadores.
+- SF-46.09: Credenciales desktop usan almacenamiento protegido admitido por el SO; documentar permisos, acceso entre usuarios, pérdida del equipo y límites del cifrado local.
+- SF-46.10: Telemetría, crash reports y soporte no incluyen payloads sensibles, tokens ni rutas personales completas; verificar redacción antes de ingestión.
+- SF-46.11: Updates instalados verifican procedencia, integridad, compatibilidad y recuperación; un hash publicado por el mismo origen comprometido no sustituye autenticidad.
+- SF-46.12: Un incidente registra datos/finalidades afectados, destinatarios, contención, evidencia mínima y decisión de comunicación con fuente y revisor; no inventar un plazo universal.
+- SF-46.13: Las pruebas usan fixtures sintéticos y reportan entorno/revisión/fecha; capturas o logs de evidencia también pasan por minimización.
+- SF-46.14: El revisor envía hallazgos y límites al dueño de `docs/EOS-PROJECT-STATUS.md`; una revisión de seguridad no convierte el estado jurídico en aprobado.
+- SF-46.15: Aceptación: demostrar denegación de acceso ajeno, redacción, comportamiento de terceros admitidos y supresión según política; falta de ejecutor se registra NOT_RUN.
+- SF-46.16: Ejemplo hipotético: una app offline añade crash reporting. El flujo deja de ser exclusivamente local; bloquear envío hasta evaluar proveedor, contenido, base aplicable y pruebas.

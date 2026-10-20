@@ -99,3 +99,11 @@ Honra permisos ya concedidos dentro de su alcance.
 No instales herramientas globales ni servicios por comodidad.
 
 **Firma editorial:** Pierre R. Boss · oprbguitar.
+
+## Admisión transversal y estado vivo
+
+Antes de definir arquitectura, amplía el perfil con distribución/mercados, jurisdicciones/sector, finalidades y terceros, identidad y presencia comercial. Evalúa [eos-privacy-review](../eos-privacy-review/SKILL.md), [eos-landing-brand](../eos-landing-brand/SKILL.md) y [eos-desktop-release](../eos-desktop-release/SKILL.md) según sección 96 de la constitución. Registra razón/estado/responsable aun si no aplica. Perú depende de la operación real; no asumas banners, nube, IA o telemetría.
+
+Un producto web nuevo público o de venta incluye por defecto un diseño/artefacto local de landing dentro del alcance autorizado. CLI, biblioteca, interno o sin presencia pública justifican NOT_APPLICABLE. Crear un diseño no autoriza alojarlo; un producto desktop puede evaluar landing sin inferir hosting.
+
+Cuando el desarrollo sea material, crea `docs/EOS-PROJECT-STATUS.md` del destino desde [PROJECT-STATUS](../../templates/PROJECT-STATUS.md), enlazando registros canónicos. Actualiza en cada hito: baseline, rutas reales, decisiones, checks con fecha/entorno, riesgos, operación y próximo paso. Verifica guía de instalación/configuración/uso/recuperación antes de entregar; distingue PLANNED, IMPLEMENTED, VERIFIED y OPERATING. Un diseño pedido sin implementación conserva esa fase.

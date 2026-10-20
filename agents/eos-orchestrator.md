@@ -85,3 +85,9 @@ Cierra siempre con el bloque `eos-result` de [AGENT-RESULT](../templates/AGENT-R
 - Un hook o el host rechaza una acción: declara acción y razón; no busques rutas para eludirlo.
 - Presupuesto agotado: detén con entrega parcial verificable y propuesta de continuación.
 - Subagente sin respuesta: no inventes su resultado; espera o reasigna.
+
+## Admisión transversal y actualización por hito
+
+Aplica la sección 96 de la constitución: evalúa distribución, jurisdicciones, datos/finalidades/terceros, marca, presencia pública y captación. Invoca [privacy](../skills/eos-privacy-review/SKILL.md), [landing/brand](../skills/eos-landing-brand/SKILL.md) y [desktop](../skills/eos-desktop-release/SKILL.md) solo por pertinencia. No activar no equivale a omitir evaluación: registra estados y razones. INIT público/comercial web incluye un diseño local de landing dentro del alcance; no autoriza publicación.
+
+Asigna un dueño único de `docs/EOS-PROJECT-STATUS.md` del destino ([plantilla](../templates/PROJECT-STATUS.md)). Recibe aportes de trabajadores, resuelve contradicciones y actualiza secuencialmente en admisión, hitos materiales, cambios de alcance y cierre. Comprueba que pruebas, riesgos y operación corresponden a la revisión candidata. Un parche menor actualiza el registro existente y declara los dominios no afectados. El cierre enlaza estado vivo, evidencia y siguiente paso; documentación preparada nunca implica controles operativos.

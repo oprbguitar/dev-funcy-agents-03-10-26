@@ -1177,6 +1177,30 @@
 - UR-AX-0149: El agente debe notificar límite técnico telemetría con cardinalidad y logs minimizados; la aceptación exige evidencia fechada, responsable identificable, dato preservado, límite operativo, falla ensayada, criterio de bloqueo y handoff verificable.
 - UR-AX-0150: El agente debe cerrar riesgo residual telemetría con cardinalidad y logs minimizados; la aceptación exige evidencia fechada, responsable identificable, dato preservado, límite operativo, falla ensayada, criterio de bloqueo y handoff verificable.
 
+## Contrato de entrega por canal web y escritorio
+
+Esta ampliación aplica cuando un proyecto distribuye software ejecutable. Conserva el contrato histórico de profundidad y sus verificaciones; no convierte esta biblioteca de instrucciones en un servicio de actualización. El dueño declara modalidades y versiones soportadas antes de preparar la release. Web estática, API dinámica, escritorio offline, escritorio conectado, híbrido y móvil reciben gates separados; uno no acredita al otro.
+
+Para web estática verifica build, assets/cache, DNS/HTTPS, cabeceras, navegación/CTA, SEO/indexación pertinente, accesibilidad y conexiones reales según decisión de privacidad. Para web dinámica añade auth, sesiones, aislamiento, secretos/configuración, migración y restauración. Registra versión efectiva remota y recuperación. Un push, despliegue verde o captura de frontend no demuestra disponibilidad del backend.
+
+Para escritorio identifica framework real sin imponer stack, SO/arquitectura, formato, cuenta de instalación y herramientas/versiones. Requisitos mínimos se basan en medición reproducible; cuando falte medición permanecen pendientes. Distingue tres controles: checksum detecta corrupción, firma de código valida editor según cadena de confianza y firma del paquete/manifiesto del updater autentica actualización según su mecanismo. Firma editorial EOS no sustituye ninguno. La custodia de claves, certificados y cambios de credenciales no se presupone autorizada.
+
+El paquete distribuido incluye procedencia y licencias/SBOM según alcance, nunca tokens de servicio secretos. Inventaría rutas de datos/configuración, permisos mínimos, mecanismos de claves del SO y cifrado según amenaza. Respaldo, exportación, retención y desinstalación deben explicar qué conserva o borra el usuario. La aplicación offline no debe exigir nube para capacidades prometidas; prueba también expiración de licencia y límites legítimos comunicados.
+
+### Matriz de aceptación del instalador y updater
+
+Usa [DESKTOP-RELEASE-CHECKLIST](../../templates/DESKTOP-RELEASE-CHECKLIST.md) por plataforma y [eos-desktop-release](../../skills/eos-desktop-release/SKILL.md) como procedimiento. Prueba sobre artefacto y cuenta reales: instalación limpia no administradora, arranque, funciones, permisos, copia/restauración y desinstalación. Registra entorno, versión, pasos, resultado y evidencia saneada. Plataformas no disponibles permanecen `NOT_RUN`; no se extrapola un resultado Windows a macOS o Linux.
+
+Una actualización prepara descarga en staging; verifica integridad y autenticidad antes de activar; rechaza artefacto corrupto o firma inválida sin tocar versión vigente; cambia versión de modo atómico si plataforma lo permite. Registra estado recuperable `interrupted`. Ensaya caída de red, corte del proceso, falta de espacio y reinicio. Verifica limpieza de staging y reintentos idempotentes; no repitas migración sobre datos a medio transformar.
+
+Antes de migrar, respalda datos y prueba compatibilidad entre cliente, servidor y esquema. Si el downgrade binario no admite esquema nuevo, evita rollback destructivo: usa restauración compatible autorizada o reparación forward-only ensayada. Define criterio de parada, dueño, preservación de datos y soporte. La afirmación de rollback requiere ensayo con datos sintéticos representativos y resultado; describir el algoritmo no constituye prueba.
+
+En cliente conectado verifica TLS, OAuth/callback, almacenamiento/rotación de tokens de usuario, proxy, fallos cloud, reconexión y conflictos/colas si hay sincronización. Inspecciona conexiones salientes y crash reports; elimina datos personales/secretos innecesarios. La telemetría es mínima o desactivada según fundamento y configuración; requiere decisión de privacidad por finalidad y jurisdicción. No añadas un banner de cookies web a escritorio offline sin tratamiento que lo justifique.
+
+Publicación exige autorización concreta del destino/canal; verifica URL descargable real, hash, versión y firma del artefacto recibido, notas de versión, guía de instalación y soporte. Registra por separado pruebas locales, descarga remota y funcionamiento remoto. No disponer de producto/runtime deja estos ensayos `NOT_RUN`; no distribuir escritorio justifica `NOT_APPLICABLE`. Updater que admite firma inválida, secretos empacados, pérdida de datos sin recuperación o divergencia entre artefacto probado/publicado bloquean ese canal.
+
+**Autoría de esta ampliación:** Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.
+
 ## Firma editorial
 
 **Pierre R. Boss (oprbguitar)** — dirección editorial EOS 3.0.0. Desarrollo documental asistido por IA.

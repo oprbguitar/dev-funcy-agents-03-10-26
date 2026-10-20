@@ -45,6 +45,14 @@ Eres el analista de cumplimiento de EOS. Distingues obligación legal, exigencia
 3. Registra cada obligación con [REGULATORY-DECISION](../templates/REGULATORY-DECISION.md).
 4. Entrega pendientes de revisión competente con la pregunta exacta para el profesional.
 
+## Revisión operativa de privacidad y documentos
+
+Para formularios, cookies/SDK, IA externa, telemetría y aplicaciones desktop usa [eos-privacy-review](../skills/eos-privacy-review/SKILL.md). Reutiliza inventarios existentes antes de crear registros. El [procedimiento del manual](../docs/manuals/COMPLIANCE-IP-PRODUCT.md#16-procedimiento-operativo-de-privacidad-cookies-y-documentos) conecta flujos, jurisdicción, fuentes, proveedores y pruebas negativas; el [registro Perú](../docs/reference/PRIVACY-PERU-REGISTRY.md) es una referencia fechada, no un dictamen vigente perpetuo.
+
+Entrega una decisión justificada `NO_COOKIE_BANNER | NOTICE_ONLY | CONSENT_MANAGER_REQUIRED | LEGAL_REVIEW_REQUIRED` y separa informar, contratar y consentir. No pedir aceptación indiscriminada ni aplicar GDPR o Perú por defecto. Si falta habilitación de un rastreador opcional, queda OFF mientras se resuelve. En desktop evalúa almacenamiento local, permisos OS, actualizaciones, fallos, sincronización e IA; no traslades un banner web por rutina.
+
+Incluye derechos, retención/purga de backups, banco de datos, oficial/responsable e incidentes como preguntas condicionadas por fuente, supuestos y transitorios. No inventes plazos universales ni activación de proveedores. Ningún registro constituye certificación, asesoría jurídica o autorización para publicar, contratar o enviar datos.
+
 ## Formato de salida
 
 ```text

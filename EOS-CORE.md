@@ -27,6 +27,10 @@ RELEASE e INCIDENT son flujos dentro de estos modos, no permisos nuevos. Cada mo
 
 Para INIT y ADOPT que creen o cambien una capacidad de producto, aplica [EOS STRATEGY](skills/eos-strategy/SKILL.md) antes de convertir la petición en plan técnico: registra respuestas conocidas, pregunta solo vacíos materiales y revisa mercado, marketing, personas/HR, gestión y economía según pertinencia. Repite la evaluación en los cambios de estrategia a backlog, entrega y aprendizaje. Un parche local que no altera objetivos ni operación no debe cargar con una entrevista estratégica ajena a su alcance.
 
+En INIT y cambios materiales de ADOPT evalúa distribución, jurisdicciones, datos/finalidades/terceros, marca, landing y marketing según la sección 96. Usa [privacy](skills/eos-privacy-review/SKILL.md), [landing/brand](skills/eos-landing-brand/SKILL.md) y [desktop](skills/eos-desktop-release/SKILL.md) según el perfil. Web nueva pública/comercial: diseño de landing por defecto dentro del alcance; internos/CLI/bibliotecas: `NOT_APPLICABLE` justificado. Evaluar no activa servicios ni publicación.
+
+Actualiza `docs/EOS-PROJECT-STATUS.md` del destino en cada hito material usando [PROJECT-STATUS](templates/PROJECT-STATUS.md): evidencia, decisiones, implementación, controles, operación y próximo paso. Un parche menor actualiza su registro existente sin generar un expediente completo.
+
 ## 4. Autonomía
 
 - **A0 Lectura:** inspeccionar, medir, explicar.
@@ -39,7 +43,7 @@ Para INIT y ADOPT que creen o cambien una capacidad de producto, aplica [EOS STR
 
 Criticidad `L0` prototipo · `L1` herramienta interna mantenible · `L2` producción · `L3` empresarial · `L4` crítico o regulado. Seguridad, pruebas y puertas crecen con el nivel.
 
-**Capacidad presente en el estándar ≠ capacidad activa en el proyecto.** Ciclo de vida: `PRESENT → ASSESSED → DORMANT → PLANNED → IMPLEMENTED → VERIFIED → OPERATING` (más `DEGRADED`, `RETIRED`). No actives pagos, modelos, Docker, schedulers, SDK ni SOC por inferencia. Cada activación registra razón, responsable, costo, flujo de datos, evidencia de aceptación, fallo y desactivación.
+**Capacidad presente en el estándar ≠ capacidad activa en el proyecto.** Ciclo de vida: `PRESENT → ASSESSED → DORMANT → PLANNED → IMPLEMENTED → VERIFIED → OPERATING` (más `NOT_APPLICABLE`, `BLOCKED`, `DEGRADED`, `RETIRED`). No actives pagos, modelos, Docker, schedulers, SDK ni SOC por inferencia. Cada activación registra razón, responsable, costo, flujo de datos, evidencia de aceptación, fallo y desactivación.
 
 El puerto de IA existe conceptualmente en todo sistema y empieza en `OFF`. Antes de usar un modelo pregunta si código determinista resuelve la tarea.
 
@@ -88,8 +92,9 @@ Carga una fila solo cuando la tarea toca su tema. Lee la sección indicada, no e
 | Regulación, PI, licencias, consumidor | 47–57, 91 | [COMPLIANCE-IP-PRODUCT](docs/manuals/COMPLIANCE-IP-PRODUCT.md) |
 | Migración y transferencia | 58, 59 | [MIGRATION-HANDOFF](docs/manuals/MIGRATION-HANDOFF.md) |
 | Excepciones, aprendizaje, radar | 66, 92 | — |
-| Cambios a esta biblioteca | 94 | [VERIFICATION](docs/VERIFICATION.md) |
+| Admisión legal, marca, landing, canales y estado vivo | 96 | Skills condicionales de sección 3 y [COMPLIANCE-IP-PRODUCT](docs/manuals/COMPLIANCE-IP-PRODUCT.md) |
+| Cambios a esta biblioteca | 94, 96 | [VERIFICATION](docs/VERIFICATION.md) |
 
 Una entrega termina cuando se puede verificar, operar y mantener.
 
-**Pierre R. Boss (oprbguitar)** — núcleo EOS 4.2.0. Desarrollo documental asistido por IA.
+**Pierre R. Boss (oprbguitar)** — núcleo EOS 4.3.0. Desarrollo documental asistido por IA.

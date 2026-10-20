@@ -447,7 +447,7 @@ test('policy router adds mandatory constitution sections by topic before relevan
   assert.deepEqual(payments.mandatory.map(section => section.heading), ['33. Sección 33', '34. Sección 34']);
   assert.ok(payments.mandatory.every(section => section.mandatory));
   assert.deepEqual(policySections(sections, 'renovar tokens comprometidos tras la brecha').topics, ['seguridad', 'incidente']);
-  assert.deepEqual(policySections(sections, 'mejorar la tipografía').topics, []);
+  assert.deepEqual(policySections(sections, 'mejorar la tipografía').topics, ['marca-landing']);
   assert.ok(POLICY_RULES.length >= 8);
 
   const relevant = [{ file: 'm.md', start: 1, tokens: 5, score: 3 }, { ...payments.mandatory[0], score: 2, mandatory: false }];
@@ -504,3 +504,51 @@ test('CLI entrypoint sets the process exit code', () => fixture(async root => {
   const bad = spawnSync(process.execPath, [script], { encoding: 'utf8' });
   assert.equal(bad.status, 1);
 }));
+
+test('routes lifecycle topics to the transverse constitution even without lexical overlap', () => {
+  const sections = [{ file: CONSTITUTION, heading: '96. Gobierno transversal', start: 1, end: 2, text: 'Norma transversal.' }];
+  for (const task of ['cookies y consentimiento', 'privacy biometría menores', 'marca tokens visuales', 'landing pública',
+    'desktop offline', 'growth marketing SEO', 'documentación viva handbook', 'GDPR ePrivacy', 'Meta Pixel ads']) {
+    const result = policySections(sections, task);
+    assert.equal(result.mandatory.length, 1, task);
+    assert.ok(result.mandatory[0].mandatory);
+  }
+  assert.equal(policySections(sections, 'renombrar variable local').mandatory.length, 0);
+});
+
+test('policy evaluations check actual required retrieval rather than simulated runtime behavior', () => {
+  const sections = [{ file: CONSTITUTION, heading: '96. Gobierno transversal', start: 1, end: 2, text: 'Sin términos de la consulta.' }];
+  const expected = [{ file: CONSTITUTION, heading: '96.' }];
+  const report = evaluateContext(sections, [
+    { id: 'privacy', query: 'cookies', retrieval: 'policy', expected },
+    { id: 'negative', query: 'variable local', retrieval: 'policy', expected },
+  ]);
+  assert.equal(report.results[0].recall10, 1);
+  assert.equal(report.results[1].recall10, 0);
+});
+
+
+test('transverse routing includes section 96 child contracts without admitting unrelated role headings', () => {
+  const sections = ['96. Gobierno', '96.1 Privacy', '96.3 Brand', '4.11 Integration Architect'].map((heading, index) => ({
+    file: CONSTITUTION, heading, start: index + 1, end: index + 1, text: heading,
+  }));
+  assert.deepEqual(policySections(sections, 'landing').mandatory.map(section => section.heading),
+    ['96. Gobierno', '96.1 Privacy', '96.3 Brand']);
+});
+
+test('routes stemmed platform names and Spanish personal-data rights to lifecycle policy', () => {
+  const sections = [{ file: CONSTITUTION, heading: '96. Gobierno', start: 1, end: 1, text: 'Gobierno' }];
+  for (const query of ['Windows', 'macOS', 'Linux']) {
+    assert.ok(policySections(sections, query).topics.includes('desktop'), query);
+  }
+  for (const query of ['datos personales', 'derechos ARCO']) {
+    assert.ok(policySections(sections, query).topics.includes('privacidad'), query);
+  }
+});
+
+
+test('recognizes named living-status documents without treating every project as documentation', () => {
+  assert.ok(policySections([], 'actualizar project-status').topics.includes('documentacion-viva'));
+  assert.ok(policySections([], 'EOS-PROJECT-STATUS.md').topics.includes('documentacion-viva'));
+  assert.ok(!policySections([], 'project variable').topics.includes('documentacion-viva'));
+});
