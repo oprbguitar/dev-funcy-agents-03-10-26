@@ -142,6 +142,7 @@ export function rank(sections, query, mode) {
 // obligación normativa no debe depender de que la consulta comparta vocabulario con ella.
 export const CONSTITUTION = 'EOS_MASTER_SYSTEM_INSTRUCTION.md';
 export const POLICY_RULES = [
+  { topic: 'ia-calidad-peru', match: /\b(iso\b|ntp\b|31814\b|115-202|intelig|calidad)/, rawMatch: /\bia\b/, sections: [49, 89, 91, 97] },
   { topic: 'pagos', match: /\b(pag|cobr|payment|webhook|reembol|refund|factur|checkout|tarjet|card|ledger|concili)/, sections: [33, 34, 35, 36, 37, 90] },
   { topic: 'seguridad', match: /\b(segur|secur|login|sesion|session|auth|oauth|mfa|ddos|waf|bot|rate|csrf|secret|credenc|token|vulner|cve|ataqu)/, sections: [16, 21, 88] },
   { topic: 'ia', match: /\b(llm|model|prompt|embedd|agent|ollama|openai|claude|gpt|ia)\b/, sections: [11, 13, 14, 15, 89] },

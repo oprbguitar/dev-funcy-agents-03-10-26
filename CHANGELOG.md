@@ -2,6 +2,14 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 4.4.0 — 2026-10-19
+
+- Integra una skill de IA Perú y calidad: aplicabilidad humana, fuentes primarias, ISO 9001/27701 y NTP 42001 según actor, finalidad y riesgo; sin prometer certificación.
+- Añade evaluación reutilizable con responsables, evidencias, excepciones y puerta de entrega; se activa desde INIT, ADOPT, AUDIT y RELEASE.
+- Amplía referencias UI/UX/landing con los 25 candidatos aportados, selección contextual, verificación de licencia por commit y mejora incremental de proyectos existentes.
+- Conecta sección 97 al router de contexto con prueba RED/GREEN; el instalador descubre la nueva skill desde el catálogo.
+- Conserva PDF ISO/ICONTEC fuera de Git: la NTC colombiana aportada no acredita una NTP peruana. No incorpora frameworks, dependencias ni servicios.
+
 ## 4.3.0 — 2026-10-18
 
 - Amplía gobierno transversal: jurisdicción y privacidad por finalidad, consentimiento condicionado, marca, landing comercial, crecimiento, canales web/escritorio y documentación por hito.

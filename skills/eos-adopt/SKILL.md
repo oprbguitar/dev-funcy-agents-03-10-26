@@ -109,3 +109,8 @@ Después de la arqueología y antes del plan técnico, revisa solo los perfiles 
 Mantén `docs/EOS-PROJECT-STATUS.md` del destino con [PROJECT-STATUS](../../templates/PROJECT-STATUS.md) para desarrollo material. Si ya existe un registro equivalente, enlaza/migra con declaración explícita de fuente única. No sobrescribas sin rastro conclusiones históricas ni mantengas estados duplicados. Documenta baseline comprobada, incremento, revisión, evidencia, riesgos y próxima tarea en cada hito; un parche menor actualiza su registro existente justificando dominios no afectados.
 
 La aceptación incluye instrucciones reales por canal y decisiones afectadas con evidencia o NOT_APPLICABLE razonado. Lo no ejecutado permanece NOT_RUN; no declares cumplimiento, firma, consentimiento operativo o release por el mero hecho de documentarlos.
+
+
+## IA Perú y calidad de software
+
+Evalúa [eos-peru-quality](../eos-peru-quality/SKILL.md) según sección 97 de la constitución: sector y conexión con Perú, IA realmente utilizada, datos, riesgos y compromisos ISO/NTP. Conserva decisiones válidas y revisa solo el alcance afectado; registra NOT_APPLICABLE con razón. Usa [AI-QUALITY-ASSESSMENT](../../templates/AI-QUALITY-ASSESSMENT.md) y enlaza evidencia desde el estado canónico. AUDIT mantiene el destino en lectura; RELEASE comprueba responsables, decisiones pendientes, vigencia y evidencia del candidato. Una plantilla, test o instalación no certifica cumplimiento. No actives proveedores ni reescribas UI por este chequeo.

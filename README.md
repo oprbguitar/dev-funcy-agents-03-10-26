@@ -1,6 +1,6 @@
 # Pierre R. Boss — Engineering Operating System
 
-**EOS · Edición de especificaciones de ingeniería 4.3.0 · 18 de octubre de 2026 · Perú**
+**EOS · Edición de especificaciones de ingeniería 4.4.0 · 19 de octubre de 2026 · Perú**
 
 🧭 **Tu copiloto tiene mapa, frenos y bitácora. El volante sigue siendo tuyo.**
 
@@ -21,7 +21,7 @@ node scripts/install-agents.mjs --host codex --target "../mi-proyecto" --dry-run
 3. **Abre tu proyecto en el agente y dale una misión.** Copia este inicio:
 
 ```text
-Aplica EOS 4.3.0 en MODE=ADOPT a este proyecto.
+Aplica EOS 4.4.0 en MODE=ADOPT a este proyecto.
 Lee AGENTS.md y .eos/EOS-CORE.md, inspecciona antes de editar y conserva mi trabajo.
 Objetivo: [describe el cambio]. Primera entrega útil: [resultado observable].
 Evalúa jurisdicción, datos, marca, landing, marketing y canal web/escritorio;
@@ -32,7 +32,26 @@ No publiques ni gastes sin una autorización aplicable.
 
 **¿Proyecto nuevo?** Cambia `ADOPT` por `INIT`. **¿Solo revisar?** Usa `AUDIT`. Una instalación correcta crea `.eos/install-manifest.json`, el bloque EOS de `AGENTS.md` y las carpetas del host indicadas más abajo. EOS queda integrado al proyecto destino; clonar este repositorio por sí solo no lo instala en tus otros proyectos.
 
-## Qué trae la mochila 4.3 🎒
+## Qué trae la mochila 4.4 🎒
+
+### IA en Perú, calidad ISO y referencias UI/UX
+
+EOS incorpora [PERU QUALITY](skills/eos-peru-quality/SKILL.md) para proyectos nuevos y existentes. Antes de activar IA o entregar un cambio material, registra sector público/privado, uso real de IA, datos, finalidad, responsables y riesgos. La [guía de fuentes y controles](docs/reference/AI-PERU-QUALITY.md) distingue obligaciones peruanas, estándares voluntarios, compromisos contractuales y pendientes de revisión. La [evaluación reutilizable](templates/AI-QUALITY-ASSESSMENT.md) conecta decisiones con evidencia, pruebas y seguimiento.
+
+ISO 9001 orienta la gestión de calidad; ISO/IEC 27701, la gestión de privacidad; la NTP-ISO/IEC 42001 se evalúa para gestión de IA según el ámbito aplicable. Una ISO internacional y una NTC colombiana no prueban adopción NTP por INACAL. Los PDF aportados se conservan fuera del repositorio: aquí se publican procedimientos propios, referencias y límites, sin reproducir las normas completas ni afirmar certificación.
+
+El [catálogo UI/UX y landing](docs/reference/LANDING-REPOSITORY-RESEARCH.md) integra los 25 candidatos aportados. Se eligen por tarea, audiencia, arquitectura, accesibilidad, rendimiento y licencia del commit. En INIT sirven para comparar alternativas; en ADOPT se parte del diseño y componentes existentes y se propone una mejora acotada. No se instalan todas las bibliotecas ni se trasladan efectos visuales por rutina. Pierre Design Director gobierna la dirección visual y las pruebas del producto destino.
+
+```text
+Aplica EOS 4.4.0 en MODE=ADOPT a este proyecto.
+Evalúa eos-peru-quality: conexión con Perú, IA efectiva, datos y calidad ISO pertinente.
+Completa AI-QUALITY-ASSESSMENT en la documentación del proyecto con responsables y evidencia.
+Si cambia la UI, usa eos-landing-brand y compara referencias compatibles del catálogo.
+Conserva arquitectura e identidad; verifica licencias antes de incorporar código o assets.
+Actualiza EOS-PROJECT-STATUS y distingue implementado, probado y pendiente de revisión humana.
+```
+
+Para actualizar una instalación existente, ejecuta primero `node scripts/install-agents.mjs --host all --target "../mi-proyecto" --update --dry-run` y revisa el plan; repite sin `--dry-run` para aplicarlo. Las modificaciones locales se preservan como conflictos con propuestas `.eos-new`. En un host único usa `codex` o `claude`. El catálogo distribuye la nueva skill; el equipo receptor debe ejecutar sus controles y revisar sus evidencias.
 
 | Capacidad | Actívala cuando… | Entrega concreta |
 |---|---|---|
@@ -44,7 +63,7 @@ No publiques ni gastes sin una autorización aplicable.
 
 Una web comercial empieza con un blueprint de landing; una herramienta interna puede justificar `NOT_APPLICABLE`. Una página sin tratamientos que requieran consentimiento no recibe un banner ornamental. Los controles de cookies y escritorio se verifican en el producto receptor: las pruebas de EOS comprueban sus herramientas e instrucciones, no esos runtimes futuros.
 
-La edición mantiene trece roles y amplía el catálogo a diez skills. Perú es un perfil prioritario cuando corresponde al proyecto; la [matriz normativa](docs/reference/PRIVACY-PERU-REGISTRY.md) distingue fuentes verificadas, aplicabilidad y pendientes. [Licencias de referencias](docs/reference/LANDING-REPOSITORY-RESEARCH.md) y [sistema de marca](docs/reference/BRAND-AND-COLOR-SYSTEM.md) explican qué se puede estudiar y qué debe revisarse antes de copiar.
+La edición mantiene trece roles y amplía el catálogo a once skills. Perú es un perfil prioritario cuando corresponde al proyecto; la [matriz normativa](docs/reference/PRIVACY-PERU-REGISTRY.md) distingue fuentes verificadas, aplicabilidad y pendientes. [Licencias de referencias](docs/reference/LANDING-REPOSITORY-RESEARCH.md) y [sistema de marca](docs/reference/BRAND-AND-COLOR-SYSTEM.md) explican qué se puede estudiar y qué debe revisarse antes de copiar.
 
 > Quiero software que pueda entender, verificar, proteger, mantener y entregar. Quiero que cada decisión tenga una razón, cada permiso un límite y cada resultado una prueba. La IA debe ampliar mi capacidad de trabajo sin quitarme el control del sistema.
 >
@@ -118,7 +137,7 @@ Las áreas se revisan en cada admisión, pero se activan solo cuando aportan al 
 ### Cómo se ve en una petición
 
 ```text
-Aplica EOS 4.3.0 en MODE=INIT para esta herramienta.
+Aplica EOS 4.4.0 en MODE=INIT para esta herramienta.
 Objetivo: reducir el tiempo para completar el proceso descrito.
 Primero inspecciona el repositorio y resume qué sabes de usuarios, alcance y restricciones.
 Haz las preguntas estratégicas pendientes que sí cambiarían la solución.
@@ -358,7 +377,7 @@ La constitución sirve de entrada y autoridad común. Las skills, prompts y plan
 Ejemplo de petición adaptada:
 
 ```text
-Aplica EOS 4.3.0 en MODE=ADOPT a este repositorio.
+Aplica EOS 4.4.0 en MODE=ADOPT a este repositorio.
 Objetivo: documentar y corregir el fallo de sesión que describo.
 Alcance: autenticación web y pruebas relacionadas.
 No cambies pagos, base de datos ni infraestructura.

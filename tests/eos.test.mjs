@@ -552,3 +552,26 @@ test('recognizes named living-status documents without treating every project as
   assert.ok(policySections([], 'EOS-PROJECT-STATUS.md').topics.includes('documentacion-viva'));
   assert.ok(!policySections([], 'project variable').topics.includes('documentacion-viva'));
 });
+
+test('routes Peruvian AI and ISO quality assessments without converting a software test into legal approval', () => {
+  const sections = [{ file: CONSTITUTION, heading: '97. IA Perú y calidad', start: 1, end: 4, text: 'Decisión humana con evidencia.' }];
+  for (const query of ['IA en Perú', 'inteligencia artificial peruana', 'ISO 9001', 'ISO/IEC 27701:2025',
+    'NTP 42001', 'Ley 31814', 'DS 115-2025-PCM', 'evaluación de calidad del software']) {
+    const result = policySections(sections, query);
+    assert.ok(result.topics.includes('ia-calidad-peru'), query);
+    assert.equal(result.mandatory[0]?.heading, '97. IA Perú y calidad', query);
+  }
+  assert.ok(!policySections(sections, 'renombrar variable local').topics.includes('ia-calidad-peru'));
+  const result = policySections(sections, 'ISO 9001');
+  const tight = selectWithinBudget([], 1, 12, result.mandatory);
+  assert.equal(tight.omitted.length, 1);
+});
+
+test('CLI includes the human-assessment contract for ISO requests in an adopted repository', () => fixture(async root => {
+  const file = path.join(root, CONSTITUTION);
+  const original = await readFile(file, 'utf8');
+  await writeFile(file, `${original}\n# 97. IA Perú y calidad\nDecisión humana con evidencia y alcance.\n`);
+  const result = spawnSync(process.execPath, [script, 'context', 'ISO 27701', '--mode', 'ADOPT', '--root', root, '--list'], { encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /97\. IA Perú y calidad.*obligatoria/);
+}));

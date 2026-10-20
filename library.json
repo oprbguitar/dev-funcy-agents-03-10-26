@@ -1,8 +1,8 @@
 {
-  "version": "4.3.0",
+  "version": "4.4.0",
   "owner": "Pierre R. Boss (oprbguitar)",
   "repository": "oprbguitar/dev-funcy-agents-03-10-26",
-  "edition_date": "2026-10-18",
+  "edition_date": "2026-10-19",
   "timezone": "America/Lima",
   "language": "es-PE",
   "authorship": "Autoría y dirección de Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.",
@@ -117,7 +117,10 @@
     "templates/README.md",
     "templates/REGULATORY-DECISION.md",
     "templates/RELEASE-RECORD.md",
-    "templates/TASK-PACKET.md"
+    "templates/TASK-PACKET.md",
+    "skills/eos-peru-quality/SKILL.md",
+    "docs/reference/AI-PERU-QUALITY.md",
+    "templates/AI-QUALITY-ASSESSMENT.md"
   ],
   "sources": [
     {

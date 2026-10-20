@@ -107,3 +107,8 @@ Antes de definir arquitectura, amplía el perfil con distribución/mercados, jur
 Un producto web nuevo público o de venta incluye por defecto un diseño/artefacto local de landing dentro del alcance autorizado. CLI, biblioteca, interno o sin presencia pública justifican NOT_APPLICABLE. Crear un diseño no autoriza alojarlo; un producto desktop puede evaluar landing sin inferir hosting.
 
 Cuando el desarrollo sea material, crea `docs/EOS-PROJECT-STATUS.md` del destino desde [PROJECT-STATUS](../../templates/PROJECT-STATUS.md), enlazando registros canónicos. Actualiza en cada hito: baseline, rutas reales, decisiones, checks con fecha/entorno, riesgos, operación y próximo paso. Verifica guía de instalación/configuración/uso/recuperación antes de entregar; distingue PLANNED, IMPLEMENTED, VERIFIED y OPERATING. Un diseño pedido sin implementación conserva esa fase.
+
+
+## IA Perú y calidad de software
+
+Evalúa [eos-peru-quality](../eos-peru-quality/SKILL.md) según sección 97 de la constitución: sector y conexión con Perú, IA realmente utilizada, datos, riesgos y compromisos ISO/NTP. Conserva decisiones válidas y revisa solo el alcance afectado; registra NOT_APPLICABLE con razón. Usa [AI-QUALITY-ASSESSMENT](../../templates/AI-QUALITY-ASSESSMENT.md) y enlaza evidencia desde el estado canónico. AUDIT mantiene el destino en lectura; RELEASE comprueba responsables, decisiones pendientes, vigencia y evidencia del candidato. Una plantilla, test o instalación no certifica cumplimiento. No actives proveedores ni reescribas UI por este chequeo.

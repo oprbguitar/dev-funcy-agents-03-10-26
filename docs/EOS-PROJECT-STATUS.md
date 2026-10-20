@@ -1,8 +1,8 @@
-# EOS — estado del proyecto y plan de ampliación 4.3
+# EOS — estado del proyecto y ampliación 4.4
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Actualizado: 2026-10-18, America/Lima. Modo ADOPT, criticidad L1. Base: `40cafdbd582cc1476a52f59b299a52a386dbd78a`. Rama: `feat/eos-4.3-lifecycle-governance`. Responsable de publicación: propietario; ejecución asistida por Codex. Autorización directa: implementar en el sistema, subir a GitHub y añadir licencia y README con guía usable. No incluye desplegar productos, campañas, gastos ni cambiar visibilidad.
+Actualizado: 2026-10-19, America/Lima. La sección 4.4 al final es el estado vigente; los hitos 4.3 siguientes son antecedentes fechados. Modo ADOPT, criticidad L1. Base: `40cafdbd582cc1476a52f59b299a52a386dbd78a`. Rama: `feat/eos-4.3-lifecycle-governance`. Responsable de publicación: propietario; ejecución asistida por Codex. Autorización directa: implementar en el sistema, subir a GitHub y añadir licencia y README con guía usable. No incluye desplegar productos, campañas, gastos ni cambiar visibilidad.
 
 ## Qué se conserva y qué cambia
 
@@ -57,3 +57,16 @@ Verificación integrada final: instalación real temporal `--host all` y actuali
 ## Publicación verificada
 
 Commit de implementación `fbc5b862dc0e45ca078c72b7619a8cecdf368506`: SHA local igual a ref remota `feat/eos-4.3-lifecycle-governance`. [CI de push](https://github.com/oprbguitar/dev-funcy-agents-03-10-26/actions/runs/39169682169) completado en Linux y Windows con resultado SUCCESS. Este registro posterior solo documenta ese hito; los checks del PR muestran la verificación de la revisión más reciente, incluida esta actualización documental. No se fusionó `main` ni se desplegó una aplicación.
+
+
+## Estado vigente — 4.4.0, 2026-10-19
+
+Modo ADOPT, L1 documental, base `b32aa646889bffd1e70fde6fa217ac2b23fcc8b4`, rama `feat/eos-4.4-peru-quality-ui`. Autorización directa del propietario: integrar referencias de IA Perú/ISO y UI/UX en el sistema local, actualizar README y subir a GitHub. Conserva visibilidad privada, fuentes históricas y trabajo anterior; no fusiona ramas, publica PDF ni despliega aplicaciones. Esta rama parte de la ampliación 4.3 ya publicada, aún no fusionada a main.
+
+Plan realizado: inspección y baseline; dos especialistas con archivos separados (normativa y catálogo UI); integración secuencial de núcleo, constitución97, modos INIT/ADOPT/AUDIT/RELEASE, rol compliance, catálogo/versión4.4 y README. Nueva skill `eos-peru-quality`, referencia primaria y plantilla de evaluación. IA del producto permanece DORMANT/OFF: no se instalaron modelos, dependencias ni servicios. El catálogo incorpora25 candidatos; consulta parcial fechada de licencias, sin adoptar código/activos de terceros. No hay frontend; design-pick/lint y pruebas visuales corresponden al producto receptor.
+
+Verificación local Windows/Node24.14.0:75 pruebas PASS (25 validador,19 instalador,31 CLI); coberturas líneas/ramas/funciones:100/95.21/93.10,100/92.25/100 y100/96.13/98.20 respectivamente. Validador estructural:87 documentos,4 fuentes históricas intactas,13 agentes. RED/GREEN del nuevo router observado: falló antes de implementar y pasó después; prueba E2E CLI confirma sección97 obligatoria para ISO. Instalación temporal real ambos hosts y actualización sin conflictos PASS; snapshot validado. Recuperación `peru_quality`:R@10=1.000,MRR=0.188 para2 casos; exige inclusión, no prioridad sobre otras políticas. Suites históricas mantienen umbrales; adversarialR@10=0.600 sin umbral, límite léxico conocido. No es clasificación jurídica ni control runtime.
+
+Límites: portadas/metadatos de PDF solo identificados, no autenticados; NTC colombiana no acredita NTP. Fichas ISO9001:2026 y27701:2025 verificadas, sin revisión de cláusulas completas ni certificación. DS115 revisado en disposiciones citadas, sin dictamen exhaustivo ni calendario universal. Fuentes/ref: [IA y calidad](reference/AI-PERU-QUALITY.md), [UI](reference/LANDING-REPOSITORY-RESEARCH.md). No se recibieron los XLSX/CSV/JSON enumerados dentro del README adjunto; no se inventaron ni se declara integrado ese catálogo exhaustivo. Las verificaciones pendientes se mantienen explícitas por fuente.
+
+Revisión independiente de código/seguridad: PASS, sin hallazgos accionables pendientes; se corrigió ruta CLI de la nueva skill y se comprobó desde raíz de receptor instalado. Publicación: pendiente de verificar para este candidato. Se preparará PR dependiente de la rama4.3 (PR7); no se fusiona ninguna rama. Recuperación: revertir los commits propios en rama nueva si se requiere; no reescribir historia ni revertir cambios ajenos. Para destinos usar --update --dry-run y resolver .eos-new conservando ediciones locales. Esta entrega modifica la biblioteca local; no instala automáticamente EOS en todos los demás proyectos ni altera skills globales.

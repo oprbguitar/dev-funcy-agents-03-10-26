@@ -2,7 +2,7 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Edición documentada: 4.3.0 (2026-10-18).
+Edición documentada: 4.4.0 (2026-10-19). La evidencia histórica se conserva con su fecha y alcance.
 
 En la edición 4.3.0 se ejecutaron las tres suites de soporte con sus gates de cobertura. Resultados locales del 2026-10-18 (Windows, Node v24.14.0): 73 pruebas PASS, cero fallos; validador 25, instalador 19, CLI 29. No se atribuye cobertura al texto de los manuales.
 
@@ -103,3 +103,14 @@ TDD de la ampliación: primero tres fallos por ausencia del routing96/evaluació
 La verificación estructural registra84 documentos,4 fuentes históricas intactas y13 agentes. El instalador incluye las diez skills por catálogo, licencia, alcance y assets del README. La revisión y estado remoto se registran en [EOS-PROJECT-STATUS](EOS-PROJECT-STATUS.md); un resultado local no significa CI remoto aprobado.
 
 Verificación integrada final: instalación real temporal `--host all` y actualización sin conflictos PASS; las diez skills están presentes para ambos hosts y el snapshot de84 documentos supera el validador. El gate de biblioteca se copia únicamente como referencia en `.eos/`; el producto necesita su gate propio revisado. Render Markdown de GitHub PASS: conserva picture, GIF, PNG, media de reducción de movimiento y detalles desplegables. Imagen estática inspeccionada. Revisión independiente: P2 del stemming corregido y regresión añadida; sin bloqueantes en segunda revisión.
+
+
+## Evidencia local 4.4.0 — 2026-10-19
+
+75 pruebas PASS con los tres comandos de cobertura anteriores: validador25 (100/95.21/93.10), instalador19 (100/92.25/100), CLI31 (100/96.13/98.20), en orden líneas/ramas/funciones. 87 documentos,4 fuentes,13 agentes verificados. La nueva prueba del router falló antes de implementar; después pasó, junto al E2E CLI de sección97. Instalación temporal real --host all, snapshot validado y actualización sin conflictos PASS. No se modificaron instalador/validador.
+
+`eval-context` PASS: devR@10=.767,holdout=.950,adversarial=.600 sin umbral; lifecycle_policy y lifecycle_manualsR@10=1.000; peru_qualityR@10=1.000 en2 casos,MRR=.188 informado. El gate nuevo exige recuperar sección97 entre políticas aplicables, no situarla antes de todos los controles constitucionales. Se mantuvieron los umbrales históricos. Estos resultados no prueban cumplimiento jurídico ni comportamiento de un producto futuro.
+
+La revisión de PDF se limitó a identidad por portada/metadatos, sin publicación de archivos o extractos. Las fuentes legales/ISO y licencias consultadas se detallan en sus referencias, con pendientes. No hay frontend ni nuevos paquetes que construir o auditar en esta ampliación. No se ejecutó gate --trust: se invocaron directamente las verificaciones revisadas, sin crear confianza global.
+
+Revisión independiente de código y seguridad: sin hallazgos accionables pendientes. Corregida ruta de CLI en nueva skill; ejecución real desde raíz de un receptor temporal recupera sección97 como obligatoria. Escaneo de patrones de secretos en diff y archivos nuevos: sin coincidencias; no sustituye auditoría exhaustiva de productos.
