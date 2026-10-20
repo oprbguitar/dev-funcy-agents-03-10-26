@@ -2,7 +2,7 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
-Edición documentada: 4.4.1 (2026-10-19). La evidencia histórica se conserva con su fecha y alcance.
+Edición documentada: 4.5.0 (2026-10-19). La evidencia histórica se conserva con su fecha y alcance.
 
 En la edición 4.3.0 se ejecutaron las tres suites de soporte con sus gates de cobertura. Resultados locales del 2026-10-18 (Windows, Node v24.14.0): 73 pruebas PASS, cero fallos; validador 25, instalador 19, CLI 29. No se atribuye cobertura al texto de los manuales.
 
@@ -123,3 +123,14 @@ Revisión independiente de código y seguridad: sin hallazgos accionables pendie
 Análisis de ENIA y revisión selectiva ISO: páginas y hashes documentados en referencias; tabla ENIA p.69 renderizada e inspeccionada. No se publica texto extraído ni PDF. Los resultados comprueban coherencia de biblioteca/herramientas, no autenticidad de documentos o conformidad de una aplicación. El estado canónico conserva revisión y publicación de cada candidato por separado.
 
 Revisión independiente: sin hallazgos accionables; muestreo de alcance, metas y seguimiento ENIA e índices ISO coincide con copias locales. Instalación temporal real ambos hosts, snapshot de 88 documentos, actualización sin conflictos y CLI instalada que recupera ENIA/97.1 PASS.
+
+
+## Evidencia 4.5.0 — auditoría y guía integrada
+
+2026-10-19, Windows/Node24.14.0: 94 pruebas PASS (25 validador, 31 instalador, 38 CLI). Coberturas líneas/ramas/funciones: 100/95.21/93.10, 100/91.96/100 y 100/96.61/98.25. Incluye RED→GREEN de timeout run, presupuesto total gate/fail-fast, rutas/junctions, registro final, colisiones y rollback duplicado, reconocimiento de ayuda y --help antes/después del delimitador. Las pruebas emplean temporales y datos sintéticos; no operaciones reales de negocio.
+
+Validador PASS: 92 documentos, cuatro fuentes históricas intactas, 13 agentes. Doce skills copiadas a ambos hosts en instalación real temporal; snapshot validado, --help y contexto98 desde raíz receptor PASS. Actualización real conserva cambio local y propone .eos-new; LICENSE deduplicada. Revisión independiente reproduce problema de rollback, valida su arreglo y cierra sin hallazgos pendientes; 69 pruebas de herramientas PASS. Estados de ayuda normalizados a PASS/FAIL/NOT_RUN/NOT_APPLICABLE.
+
+Corpus mantiene umbrales anteriores. Nuevo conjunto ayuda: dos casos, Recall@10=1.000, MRR=.125 informado; Perú tres casos R@10=1.000. No se promete robustez universal ni se cambia el conjunto adversarial para aparentar mejoría. Help UI de Smart Storage/personalERP se inspeccionó estáticamente por commits; pruebas de navegación renderizada/onboarding de esos productos NOT_RUN. No se crea frontend en EOS.
+
+Gate de esta biblioteca: 60000ms/comando y 120000ms para secuencia; no se ejecutó gate --trust ni se cambió confianza global. Se invocaron directamente los comandos de verificación revisados. Los límites de subprocesos y los controles de ruta no son sandbox, garantía de matar descendientes ni atomicidad ante crash/TOCTOU. Consultar [AUDIT-RESPONSE](AUDIT-RESPONSE.md) para decisiones implementadas y backlog; [estado](EOS-PROJECT-STATUS.md) para evidencia remota del candidato exacto.

@@ -83,3 +83,5 @@ Declarar hechos y limitaciones del proyecto receptor.
 ## IA y calidad
 
 [AI-QUALITY-ASSESSMENT](AI-QUALITY-ASSESSMENT.md) registra aplicabilidad, responsables, evidencias, riesgos, mejora continua y decisión de entrega. Enlaza privacidad, modelos y decisiones regulatorias existentes; no crea una certificación ni un segundo registro de estado.
+
+[USER-GUIDE-CHECKLIST](USER-GUIDE-CHECKLIST.md) comprueba documentación de uso integrada, navegación, onboarding y recuperación por perfil. Un registro vacío no es una guía ni evidencia de operación.

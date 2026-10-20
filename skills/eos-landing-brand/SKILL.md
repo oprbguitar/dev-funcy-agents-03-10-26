@@ -30,3 +30,8 @@ Evalúa siempre la landing. En producto web nuevo público o comercial empieza e
 Entrega brief, tokens versionados, decisión de landing, matriz claim → evidencia y checks `PASS | FAIL | NOT_RUN | NOT_APPLICABLE`. Un archivo escrito no demuestra UI funcionando: sin producto/runtime las pruebas visuales, SEO remoto y red son `NOT_RUN`, con responsable y siguiente paso. Usa los estados de capacidad EOS: `PLANNED`, `IMPLEMENTED`, `VERIFIED`, `OPERATING`; no saltes por documentación.
 
 Bloquea publicación por claims falsos, assets sin derechos, secretos, tracking contrario a la decisión de privacidad o fallo crítico de accesibilidad del flujo. Continúa tareas locales independientes. Campañas, dominios, anuncios, gastos, envío comercial y publicación requieren autorización A3 concreta; reutiliza la ya concedida dentro de su alcance. Cierra con [AGENT-RESULT](../../templates/AGENT-RESULT.md).
+
+
+## Navegación y documentación para quien usa el producto
+
+Integra [eos-user-help](../eos-user-help/SKILL.md) cuando haya aplicación o flujo interactivo. El diseño incorpora acceso a ayuda y menú de módulos pertinente; usa como referencia los [patrones inspeccionados](../../docs/reference/USER-HELP-NAVIGATION-PATTERNS.md) conservando identidad. Tokens, estados, iconos con etiquetas y teclado/foco cubren también la guía, no solo la pantalla principal. Una landing informativa simple no necesita un panel de manual artificial; su información de uso debe ser localizable y adecuada al producto.

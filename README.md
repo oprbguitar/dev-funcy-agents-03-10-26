@@ -1,6 +1,6 @@
 # Pierre R. Boss — Engineering Operating System
 
-**EOS · Edición de especificaciones de ingeniería 4.4.1 · 19 de octubre de 2026 · Perú**
+**EOS · Edición de especificaciones de ingeniería 4.5.0 · 19 de octubre de 2026 · Perú**
 
 🧭 **Tu copiloto tiene mapa, frenos y bitácora. El volante sigue siendo tuyo.**
 
@@ -21,7 +21,7 @@ node scripts/install-agents.mjs --host codex --target "../mi-proyecto" --dry-run
 3. **Abre tu proyecto en el agente y dale una misión.** Copia este inicio:
 
 ```text
-Aplica EOS 4.4.1 en MODE=ADOPT a este proyecto.
+Aplica EOS 4.5.0 en MODE=ADOPT a este proyecto.
 Lee AGENTS.md y .eos/EOS-CORE.md, inspecciona antes de editar y conserva mi trabajo.
 Objetivo: [describe el cambio]. Primera entrega útil: [resultado observable].
 Evalúa jurisdicción, datos, marca, landing, marketing y canal web/escritorio;
@@ -32,7 +32,42 @@ No publiques ni gastes sin una autorización aplicable.
 
 **¿Proyecto nuevo?** Cambia `ADOPT` por `INIT`. **¿Solo revisar?** Usa `AUDIT`. Una instalación correcta crea `.eos/install-manifest.json`, el bloque EOS de `AGENTS.md` y las carpetas del host indicadas más abajo. EOS queda integrado al proyecto destino; clonar este repositorio por sí solo no lo instala en tus otros proyectos.
 
-## Qué trae la mochila 4.4 🎒
+## Qué trae la mochila 4.5 🎒
+
+### Guía de uso dentro del sistema, menús e iconos
+
+Cada aplicación creada con EOS incluye ayuda para quien la usa, accesible desde su propia interfaz. Debe explicar tareas concretas, permisos, errores y recuperación con funciones que existan en esa versión. El README técnico sigue sirviendo al desarrollador; no reemplaza la guía de usuario. En una biblioteca o CLI, la documentación y `--help` de sus comandos son el canal pertinente; no se añade una web artificial.
+
+Para consultar los comandos de la propia biblioteca ejecuta `node scripts/eos.mjs --help` o `node scripts/eos.mjs <comando> --help`.
+
+La nueva [skill USER HELP](skills/eos-user-help/SKILL.md) y su [checklist](templates/USER-GUIDE-CHECKLIST.md) se aplican en INIT, ADOPT y RELEASE. En un proyecto existente se inspecciona lo que ya tiene, se corrigen carencias del alcance autorizado y se registran otras brechas con responsable. No se declara una guía terminada por crear una plantilla. Debe probarse que un usuario con el rol correspondiente puede encontrarla y completar sus tareas.
+
+Los [patrones inspeccionados de Smart Storage 360 y personalERP](docs/reference/USER-HELP-NAVIGATION-PATTERNS.md) aportan navegación agrupada desplegable, iconos junto a etiquetas, ayuda por módulo y guías iniciales. Se adaptan al producto y a su arquitectura; no se copia código propietario ni se impone un estilo universal. La guía inicial permite saltar, desactivar y reactivar desde Ayuda. Verifica teclado/foco, permisos, móvil y movimiento reducido también en la ayuda.
+
+```text
+Aplica EOS 4.5.0 en MODE=ADOPT.
+Inspecciona navegación, iconos y ayuda actual; conserva la identidad del proyecto.
+Implementa la guía de uso dentro del sistema para los módulos afectados por este cambio.
+Usa eos-user-help y los patrones de Smart Storage/personalERP cuando encajen.
+Documenta tareas, permisos, errores y recuperación con contenido real de esta versión.
+Prueba acceso a Ayuda y onboarding: saltar, desactivar, reactivar y teclado.
+Registra las brechas restantes y actualiza el estado del proyecto.
+```
+
+### Auditoría aplicada y límites reales
+
+La [respuesta a la auditoría](docs/AUDIT-RESPONSE.md) diferencia correcciones implementadas de propuestas pendientes. `run` recibe un límite de tiempo explícito y registra timeout como fallo; `gate` tiene presupuesto total y opción fail-fast, conservando la revisión de confianza. La configuración de esta biblioteca usa 60 segundos por comando y 120 segundos para la secuencia. No se debe activar automáticamente `gate --trust`.
+
+```powershell
+node scripts/eos.mjs run --agent eos-qa-verifier --timeout-ms 60000 -- node scripts/validate-library.mjs
+node scripts/eos.mjs gate --plan
+# Tras confianza concedida por el responsable, se puede acotar la secuencia:
+node scripts/eos.mjs gate --total-timeout-ms 120000 --fail-fast --json
+```
+
+Los valores por defecto del CLI son 600000 ms por ejecución/comando y para el total de gate; el rango admitido es 1–3600000 ms. El presupuesto total cubre la secuencia de comandos, no la preparación del fingerprint. Timeout no es aislamiento ni garantía de terminar todos los procesos descendientes; los permisos A3/A4 siguen dependiendo del host y de la autorización humana. No se ha implantado una lista de comandos que pretenda reconocer por texto todos los efectos peligrosos.
+
+El instalador valida rutas del catálogo y del registro, origen, destino, propuestas y backups antes de escribir. Admite una raíz elegida que resuelva por junction, pero rechaza enlaces interiores incluso si apuntan dentro. Los errores capturados restauran contenidos, incluido el registro final; no garantiza recuperación ante apagado abrupto ni cambios concurrentes de rutas. Puede conservar backups y carpetas vacías. La instalación en proyectos con enlaces interiores requiere reorganizar la ruta de instalación, sin desactivar estas comprobaciones.
 
 ### IA en Perú, calidad ISO y referencias UI/UX
 
@@ -45,7 +80,7 @@ El análisis de la [ENIA 2026–2030](docs/reference/ENIA-2026-2030.md) añade c
 El [catálogo UI/UX y landing](docs/reference/LANDING-REPOSITORY-RESEARCH.md) integra los 25 candidatos aportados. Se eligen por tarea, audiencia, arquitectura, accesibilidad, rendimiento y licencia del commit. En INIT sirven para comparar alternativas; en ADOPT se parte del diseño y componentes existentes y se propone una mejora acotada. No se instalan todas las bibliotecas ni se trasladan efectos visuales por rutina. Pierre Design Director gobierna la dirección visual y las pruebas del producto destino.
 
 ```text
-Aplica EOS 4.4.1 en MODE=ADOPT a este proyecto.
+Aplica EOS 4.5.0 en MODE=ADOPT a este proyecto.
 Evalúa eos-peru-quality: conexión con Perú, IA efectiva, datos y calidad ISO pertinente.
 Completa AI-QUALITY-ASSESSMENT en la documentación del proyecto con responsables y evidencia.
 Si cambia la UI, usa eos-landing-brand y compara referencias compatibles del catálogo.
@@ -61,11 +96,12 @@ Para actualizar una instalación existente, ejecuta primero `node scripts/instal
 | [Marca y landing](skills/eos-landing-brand/SKILL.md) | Haya UI, producto web público o captación comercial | Brief, tokens, landing dentro del alcance y claims respaldados |
 | [Escritorio](skills/eos-desktop-release/SKILL.md) | Distribuyas Windows, macOS, Linux o híbrido | Instalación, almacenamiento, firma, actualización, desinstalación y recuperación |
 | [Estrategia y marketing](skills/eos-strategy/SKILL.md) | Definas oferta, canales, prioridades o experimentos | Hipótesis, presupuesto propuesto, señales reales y criterio de parada |
+| [Guía integrada al usuario](skills/eos-user-help/SKILL.md) | Haya aplicación, navegación u onboarding | Ayuda por tareas, permisos y recuperación, comprobada en el producto |
 | [Documento vivo](templates/PROJECT-STATUS.md) | Cada hito cambie el sistema | Estado, decisiones, evidencia, riesgos y siguiente paso en un registro canónico |
 
 Una web comercial empieza con un blueprint de landing; una herramienta interna puede justificar `NOT_APPLICABLE`. Una página sin tratamientos que requieran consentimiento no recibe un banner ornamental. Los controles de cookies y escritorio se verifican en el producto receptor: las pruebas de EOS comprueban sus herramientas e instrucciones, no esos runtimes futuros.
 
-La edición mantiene trece roles y amplía el catálogo a once skills. Perú es un perfil prioritario cuando corresponde al proyecto; la [matriz normativa](docs/reference/PRIVACY-PERU-REGISTRY.md) distingue fuentes verificadas, aplicabilidad y pendientes. [Licencias de referencias](docs/reference/LANDING-REPOSITORY-RESEARCH.md) y [sistema de marca](docs/reference/BRAND-AND-COLOR-SYSTEM.md) explican qué se puede estudiar y qué debe revisarse antes de copiar.
+La edición mantiene trece roles y amplía el catálogo a doce skills. Perú es un perfil prioritario cuando corresponde al proyecto; la [matriz normativa](docs/reference/PRIVACY-PERU-REGISTRY.md) distingue fuentes verificadas, aplicabilidad y pendientes. [Licencias de referencias](docs/reference/LANDING-REPOSITORY-RESEARCH.md) y [sistema de marca](docs/reference/BRAND-AND-COLOR-SYSTEM.md) explican qué se puede estudiar y qué debe revisarse antes de copiar.
 
 > Quiero software que pueda entender, verificar, proteger, mantener y entregar. Quiero que cada decisión tenga una razón, cada permiso un límite y cada resultado una prueba. La IA debe ampliar mi capacidad de trabajo sin quitarme el control del sistema.
 >
@@ -139,7 +175,7 @@ Las áreas se revisan en cada admisión, pero se activan solo cuando aportan al 
 ### Cómo se ve en una petición
 
 ```text
-Aplica EOS 4.4.1 en MODE=INIT para esta herramienta.
+Aplica EOS 4.5.0 en MODE=INIT para esta herramienta.
 Objetivo: reducir el tiempo para completar el proceso descrito.
 Primero inspecciona el repositorio y resume qué sabes de usuarios, alcance y restricciones.
 Haz las preguntas estratégicas pendientes que sí cambiarían la solución.
@@ -379,7 +415,7 @@ La constitución sirve de entrada y autoridad común. Las skills, prompts y plan
 Ejemplo de petición adaptada:
 
 ```text
-Aplica EOS 4.4.1 en MODE=ADOPT a este repositorio.
+Aplica EOS 4.5.0 en MODE=ADOPT a este repositorio.
 Objetivo: documentar y corregir el fallo de sesión que describo.
 Alcance: autenticación web y pruebas relacionadas.
 No cambies pagos, base de datos ni infraestructura.

@@ -86,3 +86,12 @@ Registrar `null` y medir antes de dimensionar infraestructura.
 | Entrega por canal, instalación, update y recuperación | PENDIENTE | Pruebas separadas | PENDIENTE |
 
 Estados de capacidad: PRESENT, ASSESSED, DORMANT, PLANNED, IMPLEMENTED, VERIFIED, OPERATING, NOT_APPLICABLE, BLOCKED, DEGRADED o RETIRED. Cada no aplicabilidad lleva razón; bloqueos llevan dependencia y trabajo independiente. No confundir estado con resultado de check. Documentación viva canónica: `docs/EOS-PROJECT-STATUS.md` del destino ([plantilla](PROJECT-STATUS.md)); el perfil permanece como fuente del contexto.
+
+
+## Documentación y navegación de usuario
+
+- Canal de ayuda (UI integrada / CLI / biblioteca / otro justificado), acceso y responsable: PENDIENTE.
+- Guía por tareas, perfiles, permisos, errores y recuperación; versión y evidencia: PENDIENTE.
+- Menús desplegables/iconos: patrón existente o razón de elección; referencias y derechos: PENDIENTE.
+- Onboarding: saltar/desactivar/reactivar, preferencia y pruebas accesibles: PENDIENTE.
+- Brechas de ADOPT fuera del alcance actual y siguiente responsable: PENDIENTE.

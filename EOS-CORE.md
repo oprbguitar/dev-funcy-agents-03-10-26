@@ -31,6 +31,8 @@ En INIT y cambios materiales de ADOPT evalúa distribución, jurisdicciones, dat
 
 Actualiza `docs/EOS-PROJECT-STATUS.md` del destino en cada hito material usando [PROJECT-STATUS](templates/PROJECT-STATUS.md): evidencia, decisiones, implementación, controles, operación y próximo paso. Un parche menor actualiza su registro existente sin generar un expediente completo.
 
+En INIT/ADOPT/RELEASE aplica [ayuda al usuario](skills/eos-user-help/SKILL.md), sección 98: una app entrega guía accesible desde su UI, específica por tareas y permisos, con navegación/iconos contextuales. Una biblioteca/CLI entrega ayuda en su canal; justifica UI no aplicable. En ADOPT corrige las carencias del alcance autorizado y registra el resto. Un README técnico no sustituye ayuda integrada; una plantilla no acredita funcionamiento.
+
 ## 4. Autonomía
 
 En INIT y cambios materiales de ADOPT, evalúa [IA Perú y calidad ISO](skills/eos-peru-quality/SKILL.md), secciones 97 y 97.1: ENIA, IA efectiva, sector, datos, riesgo y compromisos de calidad. En AUDIT revisa evidencia sin mutar el destino; en RELEASE comprueba decisiones pendientes. Usa la [evaluación](templates/AI-QUALITY-ASSESSMENT.md) con alcance proporcional. No confundas ISO internacional, NTC colombiana y NTP peruana; no afirmes certificación por aprobar tests. La elección de referencias UI sigue [landing/brand](skills/eos-landing-brand/SKILL.md), conservando arquitectura e identidad del proyecto existente.
@@ -95,9 +97,10 @@ Carga una fila solo cuando la tarea toca su tema. Lee la sección indicada, no e
 | Migración y transferencia | 58, 59 | [MIGRATION-HANDOFF](docs/manuals/MIGRATION-HANDOFF.md) |
 | Excepciones, aprendizaje, radar | 66, 92 | — |
 | Admisión legal, marca, landing, canales y estado vivo | 96 | Skills condicionales de sección 3 y [COMPLIANCE-IP-PRODUCT](docs/manuals/COMPLIANCE-IP-PRODUCT.md) |
+| Navegación, menús, iconos, guías y onboarding | 96, 98 | [Ayuda de usuario](skills/eos-user-help/SKILL.md) y [patrones](docs/reference/USER-HELP-NAVIGATION-PATTERNS.md) |
 | Cambios a esta biblioteca | 94, 96 | [VERIFICATION](docs/VERIFICATION.md) |
 | IA en Perú, ISO/NTP y calidad de software | 49, 89, 91, 97 | [IA Perú/calidad](skills/eos-peru-quality/SKILL.md) y [fuentes](docs/reference/AI-PERU-QUALITY.md) |
 
 Una entrega termina cuando se puede verificar, operar y mantener.
 
-**Pierre R. Boss (oprbguitar)** — núcleo EOS 4.4.1. Desarrollo documental asistido por IA.
+**Pierre R. Boss (oprbguitar)** — núcleo EOS 4.5.0. Desarrollo documental asistido por IA.

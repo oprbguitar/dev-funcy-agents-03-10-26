@@ -155,6 +155,8 @@ export const POLICY_RULES = [
   { topic: 'desktop', match: /\b(desktop|escrito|offline|instala|uninsta|updater|autoupd|window|maco|linux)/, sections: [29, 32, 41, 43, 90, 96] },
   { topic: 'growth', match: /\b(growth|market|seo|ads|publici|campan|captaci|convers|suscrip|venta|saas|erp|comerci|template)/, sections: [47, 51, 56, 91, 96] },
   { topic: 'documentacion-viva', match: /\b(handboo|document|hito|estado.*proyec)/, rawMatch: /\b(?:eos-)?project-status\b/, sections: [60, 74, 96] },
+  { topic: 'ayuda-usuario', match: /\b(ayuda|onboard|tour\b|navegac|menu\b|sidebar|icono)/,
+    rawMatch: /\b(guia|manual|documentacion)\s+(?:(?:de|del|para|el)\s+)*usuario\b/, sections: [98, 96] },
   { topic: 'migracion', match: /\b(migr|handoff|transfer|reescrit|rewrite|legacy|hereda)/, sections: [58, 59] },
 ];
 
@@ -164,8 +166,8 @@ export function policySections(sections, task) {
   const wanted = new Set(topics.flatMap(rule => rule.sections));
   const mandatory = sections.filter(section => section.file === CONSTITUTION
     && (wanted.has(Number(section.heading.match(/^(\d+)\.\s/)?.[1]))
-      || ([96, 97].some(number => wanted.has(number) && section.heading.startsWith(`${number}.`))
-        && /^(96|97)\.\d+\s/.test(section.heading))))
+      || ([96, 97, 98].some(number => wanted.has(number) && section.heading.startsWith(`${number}.`))
+        && /^(96|97|98)\.\d+\s/.test(section.heading))))
     .map(section => ({ ...section, mandatory: true, score: 0, tokens: estimateTokens(section.text) }))
     // La ampliación transversal se presenta primero para que no quede detrás de gates específicos.
     .sort((a, b) => Number(/^96\./.test(b.heading)) - Number(/^96\./.test(a.heading)));
@@ -326,28 +328,63 @@ export function renderPlan(configPath, hash, trust, commands, revision) {
   ].join('\n') + '\n';
 }
 
-export function runGate(commands, cwd, timeoutMs = 600000) {
-  return commands.map(({ name, run }) => {
+export const DEFAULT_TIMEOUT_MS = 600000;
+export const MAX_TIMEOUT_MS = 3600000;
+export function validateTimeout(value, name = 'timeout_ms') {
+  if (!Number.isInteger(value) || value < 1 || value > MAX_TIMEOUT_MS)
+    throw new Error(`${name}: timeout debe ser entero entre 1 y ${MAX_TIMEOUT_MS} ms`);
+  return value;
+}
+
+// Son límites de la llamada al proceso hijo, no un sandbox ni cancelación garantizada
+// de sus descendientes. SIGKILL evita esperar a que el hijo atienda SIGTERM en POSIX.
+export function executionOutcome(result) {
+  const timed_out = result.error?.code === 'ETIMEDOUT';
+  return { timed_out, signal: result.signal ?? null, error_code: result.error?.code ?? null,
+    failure_reason: timed_out ? 'TIMEOUT' : result.error ? 'SPAWN_ERROR' : result.signal ? 'SIGNAL' : result.status === 0 ? null : 'EXIT_CODE' };
+}
+
+export function runGate(commands, cwd, timeoutMs = DEFAULT_TIMEOUT_MS, { totalTimeoutMs = DEFAULT_TIMEOUT_MS, failFast = false } = {}) {
+  validateTimeout(timeoutMs);
+  validateTimeout(totalTimeoutMs, 'total_timeout_ms');
+  if (typeof failFast !== 'boolean') throw new Error('fail_fast debe ser booleano');
+  const deadline = performance.now() + totalTimeoutMs;
+  const results = [];
+  for (const { name, run } of commands) {
+    const remaining = Math.floor(deadline - performance.now());
+    const stopped = failFast && results.some(item => item.result === 'FAIL');
+    if (remaining <= 0 || stopped) {
+      const reason = stopped ? 'FAIL_FAST' : 'TOTAL_BUDGET';
+      results.push({ name, run, seconds: '0.0', result: 'NOT_RUN', exit: null,
+        failure_reason: reason, detail: [reason] });
+      continue;
+    }
     const began = Date.now();
-    const result = spawnSync(run, { cwd, shell: true, encoding: 'utf8', timeout: timeoutMs });
+    const timeout = Math.min(timeoutMs, remaining);
+    const result = spawnSync(run, { cwd, shell: true, encoding: 'utf8', timeout, killSignal: 'SIGKILL' });
     const seconds = ((Date.now() - began) / 1000).toFixed(1);
-    const passed = result.status === 0 && !result.error;
-    return {
+    const outcome = executionOutcome(result);
+    const passed = outcome.failure_reason === null;
+    results.push({
       name, run, seconds, result: passed ? 'PASS' : 'FAIL', exit: result.status,
+      ...outcome, timeout_ms: timeout,
       detail: passed ? [] : summarizeFailure(`${result.stdout ?? ''}\n${result.stderr ?? ''}\n${result.error?.message ?? ''}`),
-    };
-  });
+    });
+  }
+  return results;
 }
 
 export function renderGate(results, asJson) {
-  const failed = results.filter(item => item.result === 'FAIL');
+  const failed = results.filter(item => item.result !== 'PASS');
   if (asJson) {
     return `\`\`\`eos-result\n${JSON.stringify({
       agent: 'eos-gate',
       status: failed.length ? 'FAILED' : 'COMPLETED',
       summary: `${results.length - failed.length}/${results.length} verificaciones PASS`,
       files: [],
-      checks: results.map(item => ({ cmd: item.run, result: item.result, note: (item.detail[0] ?? `${item.seconds}s`).slice(0, 80) })),
+      checks: results.map(item => ({ cmd: item.run, result: item.result, note: (item.detail[0] ?? `${item.seconds}s`).slice(0, 80),
+        exit: item.exit, failure_reason: item.failure_reason ?? null, timed_out: item.timed_out ?? false,
+        error_code: item.error_code ?? null, signal: item.signal ?? null, timeout_ms: item.timeout_ms ?? null })),
       findings: [],
       next: failed.map(item => ({ item: `Corregir ${item.name}`, owner: 'eos-implementer' })),
       approval_needed: [],
@@ -432,8 +469,8 @@ export function evaluateContext(sections, cases) {
 
 export function parseOptions(args) {
   const options = { positional: [] };
-  const flags = new Set(['--list', '--json', '--plan', '--trust', '--trust-commands', '--log-task']);
-  const valued = new Set(['--mode', '--budget', '--out', '--root', '--config', '--limit', '--agent', '--task', '--ledger', '--cases']);
+  const flags = new Set(['--list', '--json', '--plan', '--trust', '--trust-commands', '--log-task', '--fail-fast', '--help']);
+  const valued = new Set(['--mode', '--budget', '--out', '--root', '--config', '--limit', '--agent', '--task', '--ledger', '--cases', '--timeout-ms', '--total-timeout-ms']);
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
     if (arg === '--') { options.command = args.slice(index + 1); break; }
@@ -449,13 +486,15 @@ export function parseOptions(args) {
 }
 
 const USAGE = `Uso:
+  node scripts/eos.mjs help | --help    (cada comando admite --help antes de --)
   node scripts/eos.mjs context "<tarea>" [--mode INIT|ADOPT|AUDIT|MIGRATE|RELEASE|INCIDENT] [--budget 8000] [--limit 12] [--list] [--out archivo]
-  node scripts/eos.mjs gate [--config eos.gate.json] [--plan | --trust] [--json]
+  node scripts/eos.mjs gate [--config eos.gate.json] [--plan | --trust] [--json] [--timeout-ms 600000] [--total-timeout-ms 600000] [--fail-fast]
     --plan muestra comandos, SHA-256 y confianza; --trust registra la revisión fuera del repo sin ejecutar.
     Sin confianza vigente para ese SHA-256, gate termina BLOCKED (código 2) y no ejecuta nada.
   node scripts/eos.mjs index [--out .eos-index.json]
-  node scripts/eos.mjs run --agent <rol> [--task "<texto>"] [--ledger .eos/runs.jsonl] -- <comando del host>
+  node scripts/eos.mjs run --agent <rol> [--task "<texto>"] [--ledger .eos/runs.jsonl] [--timeout-ms 600000] -- <comando del host>
     p. ej. -- claude -p "..." --output-format json   |   -- codex exec --json "..."
+    Timeout: entero de 1 a 3600000 ms; run termina con código 124 si expira. No verifica autorización A3/A4.
   node scripts/eos.mjs runs [--ledger .eos/runs.jsonl]
   node scripts/eos.mjs eval-context [--cases evals/context/cases.json]
   Opción común: --root <biblioteca EOS> (por defecto, la carpeta que contiene este script)
@@ -467,7 +506,9 @@ export async function main(args, {
 } = {}) {
   const [command, ...rest] = args;
   const options = parseOptions(rest);
-  if (!options || !['context', 'gate', 'index', 'run', 'runs', 'eval-context'].includes(command)) { err(USAGE); return 1; }
+  const commands = ['context', 'gate', 'index', 'run', 'runs', 'eval-context'];
+  if (options && (['help', '--help'].includes(command) || (commands.includes(command) && options.help))) { out(USAGE); return 0; }
+  if (!options || !commands.includes(command)) { err(USAGE); return 1; }
   const root = path.resolve(cwd, options.root ?? path.dirname(path.dirname(fileURLToPath(import.meta.url))));
   const emit = async text => {
     if (!options.out) { out(text); return; }
@@ -502,11 +543,14 @@ export async function main(args, {
     if (command === 'run') {
       // Sin shell: cada argumento llega intacto y ; & | $ ` no se reinterpretan.
       if (!options.agent || !options.command?.length) { err(USAGE); return 1; }
+      const timeoutMs = validateTimeout(Number(options['timeout-ms'] ?? DEFAULT_TIMEOUT_MS));
       let spawn;
       try { spawn = buildSpawn(options.command); }
       catch (error) { err(`ERROR: ${error.message}\n`); return 1; }
       const began = Date.now();
-      const result = spawnSync(spawn.file, spawn.args, { cwd, shell: false, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, ...spawn.options });
+      const result = spawnSync(spawn.file, spawn.args, { cwd, shell: false, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024,
+        timeout: timeoutMs, killSignal: 'SIGKILL', ...spawn.options });
+      const outcome = executionOutcome(result);
       const usage = extractUsage(result.stdout ?? '');
       // La tarea puede ser confidencial: por defecto se guarda solo su huella; --log-task guarda el texto.
       const task = options.task ?? null;
@@ -515,7 +559,8 @@ export async function main(args, {
         ts: new Date(began).toISOString(), agent: options.agent,
         task: options['log-task'] ? task : null,
         task_sha256: task === null ? null : createHash('sha256').update(task).digest('hex').slice(0, 16),
-        host_cmd: options.command[0], exit: result.status, status: result.status === 0 ? 'PASS' : 'FAIL',
+        host_cmd: options.command[0], exit: result.status, status: outcome.failure_reason === null ? 'PASS' : 'FAIL',
+        ...outcome, timeout_ms: timeoutMs,
         duration_ms: Date.now() - began, input_tokens: usage.input_tokens, output_tokens: usage.output_tokens,
         cache_read_tokens: usage.cache_read_tokens, cost_usd: usage.cost_usd,
       };
@@ -525,8 +570,9 @@ export async function main(args, {
         err(`${summarizeFailure(`${result.stderr ?? ''}\n${result.error?.message ?? ''}`).join('\n')}\n`);
       }
       err(`[eos run] ${entry.run_id} ${entry.agent} ${entry.status} ${(entry.duration_ms / 1000).toFixed(1)}s`
-        + ` tokens ${entry.input_tokens ?? 'n/d'}→${entry.output_tokens ?? 'n/d'} costo ${entry.cost_usd ?? 'n/d'}\n`);
-      return result.status === 0 ? 0 : 1;
+        + ` tokens ${entry.input_tokens ?? 'n/d'}→${entry.output_tokens ?? 'n/d'} costo ${entry.cost_usd ?? 'n/d'}`
+        + ` salida ${entry.exit ?? 'n/d'}${entry.failure_reason ? ` ${entry.failure_reason}` : ''}\n`);
+      return entry.timed_out ? 124 : entry.status === 'PASS' ? 0 : 1;
     }
     if (command === 'runs') {
       out(summarizeRuns(await readFile(ledger, 'utf8').catch(() => '')));
@@ -563,6 +609,10 @@ export async function main(args, {
     const commands = Array.isArray(config?.commands)
       ? config.commands.filter(item => typeof item?.name === 'string' && typeof item?.run === 'string' && item.run) : [];
     if (!commands.length) { err(`eos.gate.json sin comandos válidos: ${configPath}\n`); return 1; }
+    const timeoutMs = validateTimeout(options['timeout-ms'] === undefined ? (config.timeout_ms ?? DEFAULT_TIMEOUT_MS) : Number(options['timeout-ms']));
+    const totalTimeoutMs = validateTimeout(options['total-timeout-ms'] === undefined ? (config.total_timeout_ms ?? DEFAULT_TIMEOUT_MS) : Number(options['total-timeout-ms']), 'total_timeout_ms');
+    const failFast = options['fail-fast'] ?? config.fail_fast ?? false;
+    if (typeof failFast !== 'boolean') throw new Error('fail_fast debe ser booleano');
     const hash = createHash('sha256').update(raw).digest('hex');
     const revision = revisionFingerprint(path.dirname(configPath));
     const trust = await trustStatus(store, configPath, hash, revision);
@@ -595,9 +645,9 @@ export async function main(args, {
       } else out(`${plan}BLOCKED: ${reason}. Revisa comandos y cambios y, si son correctos, ejecuta \`gate --trust\` (no ejecuta nada).\n`);
       return 2;
     }
-    const results = runGate(commands, path.dirname(configPath), Number(config.timeout_ms ?? 600000));
+    const results = runGate(commands, path.dirname(configPath), timeoutMs, { totalTimeoutMs, failFast });
     await emit(renderGate(results, options.json));
-    return results.some(item => item.result === 'FAIL') ? 1 : 0;
+    return results.some(item => item.result !== 'PASS') ? 1 : 0;
   } catch (error) {
     err(`ERROR: ${error.message}\n`);
     return 1;

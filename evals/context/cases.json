@@ -20,6 +20,9 @@
     },
     "peru_quality": {
       "recall_at_10": 1
+    },
+    "user_help": {
+      "recall_at_10": 1
     }
   },
   "sets": {
@@ -914,6 +917,32 @@
           {
             "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
             "heading": "97. IA Perú"
+          }
+        ]
+      }
+    ],
+    "user_help": [
+      {
+        "id": "help-guides",
+        "query": "guía de usuario y ayuda contextual",
+        "mode": "INIT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "98. Ayuda"
+          }
+        ]
+      },
+      {
+        "id": "help-adopt",
+        "query": "onboarding menu sidebar iconos",
+        "mode": "ADOPT",
+        "retrieval": "policy",
+        "expected": [
+          {
+            "file": "EOS_MASTER_SYSTEM_INSTRUCTION.md",
+            "heading": "98. Ayuda"
           }
         ]
       }

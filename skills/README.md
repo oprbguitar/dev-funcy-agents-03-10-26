@@ -27,6 +27,7 @@ Combinar modos exige explicar la transición y conservar límites previos.
 | Servicio afectado | [INCIDENT](eos-incident/SKILL.md) | Contención y recuperación acotadas |
 | Datos, cookies, proveedores o jurisdicción | [PRIVACY REVIEW](eos-privacy-review/SKILL.md) | Aplicabilidad por finalidad, controles y evidencia |
 | UI, identidad o producto web comercial | [LANDING BRAND](eos-landing-brand/SKILL.md) | Marca, tokens, blueprint y marketing verificable |
+| Guía de uso, onboarding, menús o iconos | [USER HELP](eos-user-help/SKILL.md) | Ayuda integrada por tareas, roles y recuperación, verificada en el producto |
 | Distribución nativa, offline o híbrida | [DESKTOP RELEASE](eos-desktop-release/SKILL.md) | Instalación, datos locales, firma, actualización y recuperación |
 | IA en Perú, compromisos ISO/NTP o calidad de software | [PERU QUALITY](eos-peru-quality/SKILL.md) | Aplicabilidad humana, evidencia de controles y mejora continua |
 

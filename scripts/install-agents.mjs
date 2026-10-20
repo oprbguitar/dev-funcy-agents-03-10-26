@@ -4,8 +4,9 @@
 // a .claude/ (Claude Code) o .agents/ (Codex). La instalación nunca sobrescribe archivos
 // existentes. Con --update reemplaza solo archivos que EOS instaló y nadie modificó (SHA-256
 // del manifiesto de instalación), de forma transaccional: planifica, respalda, aplica, verifica
-// y revierte todo ante un error. No descarga código, no ejecuta comandos y no toca permisos.
-import { readFile, writeFile, mkdir, stat, rm, cp } from 'node:fs/promises';
+// y revierte errores capturados. No garantiza atomicidad ante caída del proceso ni aislamiento
+// frente a cambios concurrentes de rutas (TOCTOU). No descarga ni ejecuta código.
+import { readFile, writeFile, mkdir, stat, lstat, realpath, readdir, rm, cp } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -19,11 +20,53 @@ const END = '<!-- EOS:END -->';
 
 const toPosix = value => value.split(path.sep).join('/');
 const sha256 = data => createHash('sha256').update(data).digest('hex');
-const exists = file => stat(file).then(() => true, () => false);
+const missingOnly = error => { if (error.code !== 'ENOENT') throw error; return null; };
+const exists = async file => (await stat(file).catch(missingOnly)) !== null;
 const isInside = (parent, child) => {
   const relative = path.relative(parent, child);
-  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+  return relative === '' || (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
 };
+
+// Resuelve una raíz elegida por el usuario (incluida una junction legítima), sin crearla.
+async function canonicalRoot(root) {
+  try { return await realpath(root); }
+  catch (error) {
+    missingOnly(error);
+    // Una raíz enlazada pero rota no es un directorio nuevo seguro.
+    const entry = await lstat(root).catch(missingOnly);
+    if (entry) throw new Error(`Ruta raíz inaccesible: ${root}`);
+    return path.join(await canonicalRoot(path.dirname(root)), path.basename(root));
+  }
+}
+
+function validateRelative(relative) {
+  if (typeof relative !== 'string' || !relative || /[\\:\x00]/.test(relative)
+      || relative.startsWith('/') || relative.split('/').some(part => !part || part === '.' || part === '..'
+        || /[. ]$/.test(part) || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part))) {
+    throw new Error(`Ruta de manifiesto inválida: ${String(relative)}`);
+  }
+  return relative;
+}
+
+// Las raíces se canonicalizan; bajo ellas no seguimos enlaces/junctions, ni siquiera rotos.
+async function assertSafePath(root, file) {
+  if (!isInside(root, file)) throw new Error(`Ruta fuera de la raíz: ${file}`);
+  let current = root;
+  for (const part of path.relative(root, file).split(path.sep).filter(Boolean)) {
+    current = path.join(current, part);
+    const entry = await lstat(current).catch(missingOnly);
+    if (!entry) break;
+    if (entry.isSymbolicLink()) throw new Error(`Enlace no permitido en ruta: ${current}`);
+    if (!isInside(root, await realpath(current))) throw new Error(`Ruta física fuera de la raíz: ${current}`);
+  }
+}
+
+async function assertSafeBackup(root, directory) {
+  await assertSafePath(root, directory);
+  const entry = await lstat(directory).catch(missingOnly);
+  if (!entry?.isDirectory()) return;
+  for (const name of await readdir(directory)) await assertSafeBackup(root, path.join(directory, name));
+}
 
 // Reescribe enlaces Markdown relativos que apuntan dentro de la biblioteca para que,
 // desde la nueva ubicación del archivo, apunten a la copia instalada en .eos/.
@@ -75,16 +118,28 @@ const BACKUP = '.eos/.update-backup';
 
 export async function installAgents({ source, target, host = 'all', dryRun = false, update = false, hooks = {} }) {
   if (!HOSTS.has(host)) throw new Error(`host inválido: ${host}; usa claude, codex o all`);
-  const libraryRoot = path.resolve(source);
-  const destRoot = path.resolve(target);
+  const libraryRoot = await canonicalRoot(path.resolve(source));
+  const destRoot = await canonicalRoot(path.resolve(target));
   if (isInside(libraryRoot, destRoot)) throw new Error('El destino no puede ser el repositorio de origen ni estar dentro de él');
+  await assertSafePath(libraryRoot, path.join(libraryRoot, 'library.json'));
   let manifest;
   try { manifest = JSON.parse(await readFile(path.join(libraryRoot, 'library.json'), 'utf8')); }
   catch { throw new Error('library.json ausente o inválido en el origen'); }
 
+  for (const relative of [...manifest.documents, ...manifest.sources.map(item => item.path), ...(manifest.agents ?? [])]) {
+    validateRelative(relative);
+    if (relative.toLowerCase() === 'install-manifest.json' || relative.split('/')[0].toLowerCase() === '.update-backup') {
+      throw new Error(`Ruta reservada del instalador: ${relative}`);
+    }
+    await assertSafePath(libraryRoot, path.join(libraryRoot, relative));
+  }
+
   const snapshotRoot = path.join(destRoot, '.eos');
   const record = path.join(snapshotRoot, 'install-manifest.json');
-  const previous = JSON.parse(await readFile(record, 'utf8').catch(() => '{"created":[]}'));
+  await assertSafePath(destRoot, record);
+  await assertSafeBackup(destRoot, path.join(destRoot, BACKUP));
+  const previous = JSON.parse(await readFile(record, 'utf8').catch(error => missingOnly(error) ?? '{"created":[]}'));
+  for (const relative of [...(previous.created ?? []), ...Object.keys(previous.files ?? {})]) validateRelative(relative);
   const recorded = previous.files ?? {};
   const files = { ...recorded };
   const created = [];
@@ -96,14 +151,34 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
   const desired = new Set();
   // Fase 1: solo planifica. Ninguna escritura ocurre hasta conocer el plan completo.
   const pending = [];
-  const write = async (destFile, content) => { pending.push({ destFile, content }); };
+  const destinationKey = file => process.platform === 'win32' ? file.toLowerCase() : file;
+  // Dos entradas de la biblioteca pueden referir la misma licencia/extra. Deduplica antes
+  // de contar o escribir; una colisión distinta se rechaza sin tocar el destino.
+  const destinations = new Map();
+  const writes = new Map();
+  const firstDestination = (registry, destFile, content) => {
+    const key = destinationKey(destFile);
+    const hash = sha256(content);
+    const prior = registry.get(key);
+    if (prior) {
+      if (prior.destFile !== destFile || prior.hash !== hash) throw new Error(`Colisión de destino: ${destFile}`);
+      return false;
+    }
+    registry.set(key, { destFile, hash });
+    return true;
+  };
+  const write = async (destFile, content) => {
+    if (firstDestination(writes, destFile, content)) pending.push({ destFile, content });
+  };
   // Instalación: nunca sobrescribe. Actualización: reemplaza solo lo que EOS escribió y nadie editó;
   // una edición local queda intacta y la versión nueva se deja al lado como <archivo>.eos-new.
   const put = async (destFile, content) => {
+    if (!firstDestination(destinations, destFile, content)) return;
     const relative = toPosix(path.relative(destRoot, destFile));
     const hash = sha256(content);
     desired.add(relative);
-    const current = await readFile(destFile).catch(() => null);
+    await assertSafePath(destRoot, destFile);
+    const current = await readFile(destFile).catch(missingOnly);
     if (current === null) { created.push(relative); files[relative] = hash; await write(destFile, content); return; }
     if (!update) { skipped.push(relative); return; }
     const currentHash = sha256(current);
@@ -123,7 +198,8 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
   };
   const placeBlock = async (destFile, block, alreadyPresent) => {
     const relative = toPosix(path.relative(destRoot, destFile));
-    const current = await readFile(destFile, 'utf8').catch(() => null);
+    await assertSafePath(destRoot, destFile);
+    const current = await readFile(destFile, 'utf8').catch(missingOnly);
     if (current !== null && alreadyPresent(current)) {
       const marker = current.indexOf(BEGIN);
       const finish = current.indexOf(END, marker);
@@ -143,6 +219,7 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
 
   const snapshot = [...manifest.documents, ...manifest.sources.map(item => item.path), 'library.json'];
   for (const relative of SNAPSHOT_EXTRAS) {
+    await assertSafePath(libraryRoot, path.join(libraryRoot, relative));
     if (await exists(path.join(libraryRoot, relative))) snapshot.push(relative);
   }
   for (const relative of snapshot) {
@@ -179,10 +256,8 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
       .filter(relative => !desired.has(relative) && !managed.has(relative))
     : [];
 
-  if (!dryRun) {
-    await applyTransaction(destRoot, pending, hooks);
-    if (created.length || update) {
-      await writeFile(record, JSON.stringify({
+  if (created.length || update) {
+      await write(record, JSON.stringify({
         tool: 'scripts/install-agents.mjs',
         owner: manifest.owner,
         version: manifest.version,
@@ -191,21 +266,25 @@ export async function installAgents({ source, target, host = 'all', dryRun = fal
         created: [...new Set([...(previous.created ?? []), ...created])],
         files,
       }, null, 2) + '\n');
-    }
   }
+  // Audita el plan completo, incluidas propuestas y el registro, antes de la primera escritura.
+  for (const { destFile } of pending) await assertSafePath(destRoot, destFile);
+  if (!dryRun) await applyTransaction(destRoot, pending, hooks);
   return { created, skipped, updated, unchanged, conflicts, removed, legacy, dryRun };
 }
 
 // Fase 2: respalda lo que se va a reemplazar en .eos/.update-backup/, escribe, verifica el hash de
 // cada archivo y, ante cualquier error, restaura los respaldos y borra lo recién creado. El
-// manifiesto se escribe solo después, así una actualización fallida no deja una versión híbrida.
+// manifiesto es la última escritura y participa también del rollback de errores capturados.
 async function applyTransaction(destRoot, pending, hooks) {
   const backupRoot = path.join(destRoot, BACKUP);
   const applied = [];
+  await assertSafeBackup(destRoot, backupRoot);
   if (pending.length) await rm(backupRoot, { recursive: true, force: true });
   try {
     for (const [index, { destFile, content }] of pending.entries()) {
       const relative = toPosix(path.relative(destRoot, destFile));
+      await assertSafePath(destRoot, destFile);
       const existed = await exists(destFile);
       if (existed) await cp(destFile, path.join(backupRoot, relative), { force: true });
       applied.push({ destFile, relative, existed });

@@ -51,3 +51,8 @@ El destino mantiene `docs/EOS-PROJECT-STATUS.md` con [esta plantilla](../templat
 ## IA Perú y calidad — 4.4.0
 
 La sección 97 enlaza [eos-peru-quality](../skills/eos-peru-quality/SKILL.md), [fuentes](reference/AI-PERU-QUALITY.md) y [evaluación](../templates/AI-QUALITY-ASSESSMENT.md). Se activa por perfil y cambio material, sin convertir la selección de contexto en dictamen. Para mejoras visuales consulta la skill de landing y su catálogo contextual; no cargues las 25 referencias ni las normas íntegras al contexto.
+
+
+## Guías, navegación y auditoría aplicada — 4.5.0
+
+Sección 98, [eos-user-help](../skills/eos-user-help/SKILL.md) y [checklist](../templates/USER-GUIDE-CHECKLIST.md) conectan documentación de usuario y pruebas en el producto. Las fuentes Smart Storage/personalERP están [inspeccionadas por commit/ruta](reference/USER-HELP-NAVIGATION-PATTERNS.md); no son dependencias copiadas. [AUDIT-RESPONSE](AUDIT-RESPONSE.md) contiene decisiones implementadas y pendientes. Las ramas históricas 4.3 y 4.4 se consolidan en main conservando commits y evidencia; no hay obligación de cargar manuales completos por este incremento.

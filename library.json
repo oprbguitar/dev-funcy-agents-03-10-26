@@ -1,5 +1,5 @@
 {
-  "version": "4.4.1",
+  "version": "4.5.0",
   "owner": "Pierre R. Boss (oprbguitar)",
   "repository": "oprbguitar/dev-funcy-agents-03-10-26",
   "edition_date": "2026-10-19",
@@ -121,7 +121,11 @@
     "skills/eos-peru-quality/SKILL.md",
     "docs/reference/AI-PERU-QUALITY.md",
     "templates/AI-QUALITY-ASSESSMENT.md",
-    "docs/reference/ENIA-2026-2030.md"
+    "docs/reference/ENIA-2026-2030.md",
+    "docs/reference/USER-HELP-NAVIGATION-PATTERNS.md",
+    "skills/eos-user-help/SKILL.md",
+    "templates/USER-GUIDE-CHECKLIST.md",
+    "docs/AUDIT-RESPONSE.md"
   ],
   "sources": [
     {
