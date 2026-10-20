@@ -2,6 +2,14 @@
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
+## 4.5.0 — 2026-10-19
+
+- Consolida las ampliaciones 4.3 y 4.4/ENIA en main; evalúa la auditoría aportada con decisiones implementadas y pendientes explícitos.
+- Incorpora ayuda para el usuario dentro de aplicaciones: skill, checklist y patrones inspeccionados de Smart Storage 360 y personalERP, sin copiar código propietario ni alterar esos productos.
+- Integra menús desplegables e iconos por contexto, documentación por tareas y onboarding accesible, omitible y reactivable desde INIT/ADOPT/RELEASE; un README técnico no sustituye ayuda de usuario.
+- Endurece tiempo de ejecución de run y presupuesto global de gate; protege rutas del instalador y sus actualizaciones frente a escapes y enlaces interiores, con regresiones.
+- Conserva límites: no sandbox ni aprobación A3/A4 automática, no benchmark de productividad inventado y ningún dashboard, caché o radar activado por inferencia.
+
 ## 4.4.1 — 2026-10-19
 
 - Analiza el anexo ENIA 2026–2030 aportado, con referencias de página, identidad/hash, ejes, acciones, metas acumuladas, responsables y límites de verificación.

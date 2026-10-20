@@ -36,7 +36,7 @@ Any coding agent, autonomous agent, Claude/Codex-style tool, local model, or hum
 
 ---
 
-## Operación de esta edición — EOS 4.4.1
+## Operación de esta edición — EOS 4.5.0
 
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
@@ -98,7 +98,7 @@ No hay dependencias npm o Python instalables en este alcance; un `npm audit` sin
 
 Publica únicamente al remoto y rama autorizados, sin cambiar visibilidad, sobrescribir historia ni incluir datos ajenos. Usa commits convencionales. Verifica el árbol local, el commit remoto y los checks disponibles. Informa archivos, resultados, alcance, commit y limitaciones. La firma editorial no exige falsificar una firma criptográfica del propietario.
 
-### Admisión transversal y estado vivo — 4.4.1
+### Admisión transversal y estado vivo — 4.5.0
 
 Aplica la sección 96 de la constitución en INIT y cambios materiales de ADOPT. Evalúa distribución, jurisdicciones, finalidades y terceros, marca, presencia pública y captación. Perú es prioritario cuando el proyecto opere allí; no se presume universalmente. Evaluar no activa servicios: documenta NOT_APPLICABLE con razón y BLOCKED con responsable.
 
@@ -107,8 +107,13 @@ Usa [eos-privacy-review](skills/eos-privacy-review/SKILL.md), [eos-landing-brand
 Cada incremento material actualiza `docs/EOS-PROJECT-STATUS.md` del destino usando [PROJECT-STATUS](templates/PROJECT-STATUS.md). Enlaza perfil, ADR, controles, evidencias y manuales canónicos. Los trabajadores remiten aportes y el orchestrator integra secuencialmente. Un parche menor actualiza el registro existente y justifica por qué no requiere reevaluación completa. Una salida documental no acredita operación ni cumplimiento jurídico.
 
 
-### IA Perú, ISO y selección contextual de UI — 4.4.1
+### IA Perú, ISO y selección contextual de UI — 4.5.0
 
 Aplica sección 97 y [eos-peru-quality](skills/eos-peru-quality/SKILL.md) desde INIT/ADOPT y antes de RELEASE; AUDIT revisa sin modificar. Distingue aplicabilidad legal, contrato, práctica voluntaria y pendiente, con responsables humanos y evidencia. No confundir NTC colombiana con NTP peruana ni tests con certificación. Los PDF ISO/ICONTEC aportados no se publican; el repositorio contiene procedimientos y referencias propios.
 
 Para UI/UX y landing, sigue [eos-landing-brand](skills/eos-landing-brand/SKILL.md) y el catálogo por contexto. Conserva arquitectura/identidad en ADOPT, compara alternativas en INIT y valida licencia por commit antes de reutilizar código o assets. Una referencia no es dependencia activa.
+
+
+### Ayuda de uso y navegación — 4.5.0
+
+Sección 98 y [eos-user-help](skills/eos-user-help/SKILL.md) son obligatorias cuando se crea o cambia un producto. Entrega documentación para el usuario en el canal apropiado: dentro de la app cuando existe UI, o ayuda de comandos/manual para CLI y biblioteca. Usa patrones de menú/iconos de Smart Storage/personalERP cuando encajen, con origen y límites. En ADOPT inspecciona carencias y corrige el alcance autorizado, sin declarar que EOS actualizó otras aplicaciones. Incluye pruebas de acceso a ayuda, instrucciones reales por rol, recuperación y onboarding omitible/desactivable/reactivable.

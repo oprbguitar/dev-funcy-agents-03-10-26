@@ -1,7 +1,7 @@
 // Pruebas del instalador del sistema de agentes EOS.
 // Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo asistido por IA.
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, writeFile, rm, stat } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, rm, stat, symlink, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -11,6 +11,155 @@ import { installAgents, rewriteLinks, parseArgs } from '../scripts/install-agent
 
 const signature = 'Pierre R. Boss (oprbguitar)';
 const exists = async file => stat(file).then(() => true, () => false);
+
+const directoryLink = (destination, link) => symlink(destination, link, process.platform === 'win32' ? 'junction' : 'dir');
+
+test('rejects manifest traversal before creating any destination files', () => withDirs(async (source, target) => {
+  const manifestFile = path.join(source, 'library.json');
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
+  await writeFile(manifestFile, JSON.stringify({ ...manifest, documents: [...manifest.documents, '../outside.txt'] }));
+  await assert.rejects(installAgents({ source, target }), /ruta|path/i);
+  assert.deepEqual(await readdir(target), []);
+}));
+
+test('rejects a destination junction before any snapshot or outside write', () => withDirs(async (source, target) => {
+  const outside = await mkdtemp(path.join(tmpdir(), 'eos-outside-'));
+  try {
+    await directoryLink(outside, path.join(target, '.agents'));
+    await assert.rejects(installAgents({ source, target, host: 'codex' }), /enlace|ruta/i);
+    assert.equal(await exists(path.join(target, '.eos')), false);
+    assert.deepEqual(await readdir(outside), []);
+  } finally { await rm(outside, { recursive: true, force: true }); }
+}));
+
+test('rejects backup junctions without deleting their external contents', () => withDirs(async (source, target) => {
+  await installAgents({ source, target });
+  const outside = await mkdtemp(path.join(tmpdir(), 'eos-outside-'));
+  try {
+    await writeFile(path.join(outside, 'sentinel.txt'), 'keep');
+    await directoryLink(outside, path.join(target, '.eos/.update-backup'));
+    await bumpLibrary(source, '4.0.0', 'new');
+    const before = await readFile(path.join(target, '.eos/library.json'), 'utf8');
+    await assert.rejects(installAgents({ source, target, update: true }), /enlace|ruta/i);
+    assert.equal(await readFile(path.join(target, '.eos/library.json'), 'utf8'), before);
+    assert.equal(await readFile(path.join(outside, 'sentinel.txt'), 'utf8'), 'keep');
+  } finally { await rm(outside, { recursive: true, force: true }); }
+}));
+
+test('accepts an explicitly selected canonical target junction and a not-yet-created target', () => withDirs(async (source, target) => {
+  const links = await mkdtemp(path.join(tmpdir(), 'eos-links-'));
+  try {
+    const alias = path.join(links, 'target');
+    await directoryLink(target, alias);
+    await installAgents({ source, target: alias, host: 'codex' });
+    assert.ok(await exists(path.join(target, '.eos/install-manifest.json')));
+    await installAgents({ source, target: path.join(links, 'new/nested'), host: 'codex' });
+    assert.ok(await exists(path.join(links, 'new/nested/.eos/install-manifest.json')));
+    const sourceAlias = path.join(links, 'source');
+    await directoryLink(source, sourceAlias);
+    await assert.rejects(installAgents({ source, target: sourceAlias }), /origen/);
+  } finally { await rm(links, { recursive: true, force: true }); }
+}));
+
+test('validates all manifest surfaces and portable unsafe path forms', () => withDirs(async (source, target) => {
+  const file = path.join(source, 'library.json');
+  const original = JSON.parse(await readFile(file, 'utf8'));
+  for (const invalid of ['../outside', '/absolute', 'C:/outside', 'dir\\outside', 'dir/../outside', 'dir//file', 'dir/.. /outside', 'CON.txt', '.update-backup/file', 'install-manifest.json']) {
+    for (const key of ['documents', 'agents', 'sources']) {
+      const item = key === 'sources' ? { path: invalid } : invalid;
+      await writeFile(file, JSON.stringify({ ...original, [key]: [...original[key], item] }));
+      await assert.rejects(installAgents({ source, target, dryRun: true }), /ruta/i, `${key}: ${invalid}`);
+    }
+  }
+  assert.deepEqual(await readdir(target), []);
+}));
+
+test('rejects source junctions before copying external content', () => withDirs(async (source, target) => {
+  const outside = await mkdtemp(path.join(tmpdir(), 'eos-outside-'));
+  try {
+    await writeFile(path.join(outside, 'PRIME.md'), 'private');
+    await rm(path.join(source, 'docs/manuals'), { recursive: true });
+    await directoryLink(outside, path.join(source, 'docs/manuals'));
+    await assert.rejects(installAgents({ source, target }), /enlace/i);
+    assert.deepEqual(await readdir(target), []);
+  } finally { await rm(outside, { recursive: true, force: true }); }
+}));
+
+test('rejects nested backup junctions and conflict proposals before the first write', () => withDirs(async (source, target) => {
+  await installAgents({ source, target });
+  const outside = await mkdtemp(path.join(tmpdir(), 'eos-outside-'));
+  try {
+    await mkdir(path.join(target, '.eos/.update-backup'), { recursive: true });
+    await directoryLink(outside, path.join(target, '.eos/.update-backup/nested'));
+    await assert.rejects(installAgents({ source, target, update: true }), /enlace/i);
+    await rm(path.join(target, '.eos/.update-backup/nested'));
+    await writeFile(path.join(target, '.agents/eos-agents/eos-demo.md'), 'local');
+    await directoryLink(outside, path.join(target, '.agents/eos-agents/eos-demo.md.eos-new'));
+    await assert.rejects(installAgents({ source, target, update: true }), /enlace/i);
+    assert.deepEqual(await readdir(outside), []);
+  } finally { await rm(outside, { recursive: true, force: true }); }
+}));
+
+test('rolls back contents when the final installation record write fails', () => withDirs(async (source, target) => {
+  await installAgents({ source, target });
+  const record = path.join(target, '.eos/install-manifest.json');
+  const before = await readFile(record, 'utf8');
+  const agent = path.join(target, '.agents/eos-agents/eos-demo.md');
+  const agentBefore = await readFile(agent, 'utf8');
+  await bumpLibrary(source, '4.0.0', 'new version');
+  const hooks = { beforeWrite: relative => { if (relative === '.eos/install-manifest.json') throw new Error('record failure'); } };
+  await assert.rejects(installAgents({ source, target, update: true, hooks }), /revertida.*record failure/);
+  assert.equal(await readFile(record, 'utf8'), before);
+  assert.equal(await readFile(agent, 'utf8'), agentBefore);
+}));
+
+test('deduplicates document/source/extra destinations and restores the original baseline on rollback', () => withDirs(async (source, target) => {
+  const manifestPath = path.join(source, 'library.json');
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  await writeFile(path.join(source, 'LICENSE'), 'original license');
+  await writeFile(manifestPath, JSON.stringify({ ...manifest,
+    documents: [...manifest.documents, 'LICENSE', 'LICENSE'],
+    sources: [...manifest.sources, { path: 'LICENSE' }] }));
+  const initial = await installAgents({ source, target });
+  assert.equal(initial.created.filter(file => file === '.eos/LICENSE').length, 1);
+  await writeFile(path.join(source, 'LICENSE'), 'updated license');
+  const plan = await installAgents({ source, target, update: true, dryRun: true });
+  assert.equal(plan.updated.filter(file => file === '.eos/LICENSE').length, 1);
+  const hooks = { beforeWrite: relative => { if (relative === '.eos/install-manifest.json') throw new Error('record failure'); } };
+  await assert.rejects(installAgents({ source, target, update: true, hooks }), /record failure/);
+  assert.equal(await readFile(path.join(target, '.eos/LICENSE'), 'utf8'), 'original license');
+  assert.equal(await readFile(path.join(target, '.eos/.update-backup/.eos/LICENSE'), 'utf8'), 'original license');
+}));
+
+test('rejects different agents mapped to the same host filename before creating files', () => withDirs(async (source, target) => {
+  await mkdir(path.join(source, 'other'));
+  await writeFile(path.join(source, 'other/eos-demo.md'), 'different agent');
+  const file = path.join(source, 'library.json');
+  const manifest = JSON.parse(await readFile(file, 'utf8'));
+  await writeFile(file, JSON.stringify({ ...manifest, agents: [...manifest.agents, 'other/eos-demo.md'] }));
+  await assert.rejects(installAgents({ source, target }), /colisión/i);
+  assert.deepEqual(await readdir(target), []);
+}));
+
+test('rejects Windows case aliases of the same planned destination', { skip: process.platform !== 'win32' }, () => withDirs(async (source, target) => {
+  const file = path.join(source, 'library.json');
+  const manifest = JSON.parse(await readFile(file, 'utf8'));
+  await writeFile(file, JSON.stringify({ ...manifest, documents: [...manifest.documents, 'agents/EOS-DEMO.md'] }));
+  await assert.rejects(installAgents({ source, target }), /colisión/i);
+  assert.deepEqual(await readdir(target), []);
+}));
+
+test('CLI rejects a physical escape and leaves the project untouched', () => withDirs(async (source, target) => {
+  const outside = await mkdtemp(path.join(tmpdir(), 'eos-outside-'));
+  try {
+    await directoryLink(outside, path.join(target, '.eos'));
+    const run = spawnSync(process.execPath, [path.resolve('scripts/install-agents.mjs'), '--source', source, '--target', target], { encoding: 'utf8' });
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /ERROR:.*Enlace/);
+    assert.deepEqual(await readdir(outside), []);
+    assert.equal(await exists(path.join(target, 'AGENTS.md')), false);
+  } finally { await rm(outside, { recursive: true, force: true }); }
+}));
 
 const library = async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'eos-src-'));

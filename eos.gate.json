@@ -1,12 +1,32 @@
 {
   "owner": "Pierre R. Boss (oprbguitar)",
-  "timeout_ms": 600000,
+  "timeout_ms": 60000,
   "commands": [
-    { "name": "validador", "run": "node scripts/validate-library.mjs" },
-    { "name": "pruebas validador", "run": "node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs" },
-    { "name": "pruebas instalador", "run": "node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs" },
-    { "name": "pruebas eos", "run": "node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/eos.test.mjs" },
-    { "name": "evaluación de contexto", "run": "node scripts/eos.mjs eval-context" },
-    { "name": "espacios en diff", "run": "git diff --check" }
-  ]
+    {
+      "name": "validador",
+      "run": "node scripts/validate-library.mjs"
+    },
+    {
+      "name": "pruebas validador",
+      "run": "node --test --experimental-test-coverage --test-coverage-include=scripts/validate-library.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/validate-library.test.mjs"
+    },
+    {
+      "name": "pruebas instalador",
+      "run": "node --test --experimental-test-coverage --test-coverage-include=scripts/install-agents.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/install-agents.test.mjs"
+    },
+    {
+      "name": "pruebas eos",
+      "run": "node --test --experimental-test-coverage --test-coverage-include=scripts/eos.mjs --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 tests/eos.test.mjs"
+    },
+    {
+      "name": "evaluación de contexto",
+      "run": "node scripts/eos.mjs eval-context"
+    },
+    {
+      "name": "espacios en diff",
+      "run": "git diff --check"
+    }
+  ],
+  "total_timeout_ms": 120000,
+  "fail_fast": false
 }

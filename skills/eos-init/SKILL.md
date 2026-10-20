@@ -112,3 +112,8 @@ Cuando el desarrollo sea material, crea `docs/EOS-PROJECT-STATUS.md` del destino
 ## IA Perú y calidad de software
 
 Evalúa [eos-peru-quality](../eos-peru-quality/SKILL.md) según sección 97 de la constitución: sector y conexión con Perú, IA realmente utilizada, datos, riesgos y compromisos ISO/NTP. Conserva decisiones válidas y revisa solo el alcance afectado; registra NOT_APPLICABLE con razón. Usa [AI-QUALITY-ASSESSMENT](../../templates/AI-QUALITY-ASSESSMENT.md) y enlaza evidencia desde el estado canónico. AUDIT mantiene el destino en lectura; RELEASE comprueba responsables, decisiones pendientes, vigencia y evidencia del candidato. Una plantilla, test o instalación no certifica cumplimiento. No actives proveedores ni reescribas UI por este chequeo.
+
+
+## Ayuda integrada al usuario
+
+Aplica [eos-user-help](../eos-user-help/SKILL.md) y [USER-GUIDE-CHECKLIST](../../templates/USER-GUIDE-CHECKLIST.md), sección 98. INIT entrega guía con el producto; ADOPT inventaría ayuda, menús e iconos existentes y corrige vacíos relacionados con el cambio autorizado; registra otras brechas sin fingir cobertura. RELEASE prueba acceso desde UI, contenido por tareas/roles, versión y recuperación; onboarding se puede saltar, desactivar y reactivar. AUDIT verifica evidencia sin modificar. Para CLI/biblioteca la ayuda usa el canal pertinente y motiva no aplicabilidad de UI. Un README técnico o una plantilla vacía no satisfacen ayuda de aplicación. Conserva identidad y consulta los patrones de Smart Storage/personalERP sin copiar código ni activos.

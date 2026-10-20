@@ -12,6 +12,7 @@ import {
   summarizeFailure, runGate, renderGate, parseOptions, main,
   riskyReason, defaultTrustStore, extractUsage, summarizeRuns, evaluateContext,
   resolveExecutable, buildSpawn, revisionFingerprint, defaultLedger, eosHome, policySections, POLICY_RULES, CONSTITUTION,
+  executionOutcome, DEFAULT_TIMEOUT_MS,
 } from '../scripts/eos.mjs';
 
 const signature = 'Pierre R. Boss (oprbguitar)';
@@ -364,6 +365,12 @@ test('run keeps the ledger outside the repository and stores only a task fingerp
     assert.equal(lines.length, 5);
     assert.equal(lines[1].task, 'tarea pública');
     assert.equal(lines[2].task_sha256, null);
+    assert.equal(lines[0].timeout_ms, DEFAULT_TIMEOUT_MS);
+    assert.equal(lines[0].failure_reason, null);
+    assert.equal(lines[2].failure_reason, 'EXIT_CODE');
+    assert.equal(lines[2].exit, 4);
+    assert.equal(lines[4].failure_reason, 'SPAWN_ERROR');
+    assert.equal(lines[4].error_code, 'ENOENT');
 
     const summary = capture();
     assert.equal(await main(['runs'], { cwd: root, ...summary }), 0);
@@ -582,3 +589,114 @@ test('ENIA routing preserves the detailed strategy contract under section 97', (
   assert.deepEqual(policySections(sections, 'ENIA').mandatory.map(section => section.heading),
     ['97. IA Perú y calidad', '97.1 ENIA y evidencia']);
 });
+
+test('run timeout is finite, validated and recorded without claiming policy approval', () => fixture(async root => {
+  const ledger = path.join(root, 'timeout.jsonl');
+  const result = spawnSync(process.execPath, [script, 'run', '--agent', 'test', '--timeout-ms', '150', '--ledger', ledger,
+    '--', process.execPath, '-e', 'setTimeout(() => {}, 10000)'], { cwd: root, encoding: 'utf8', timeout: 5000 });
+  assert.equal(result.status, 124, result.stderr);
+  assert.match(result.stderr, /TIMEOUT/);
+  const entry = JSON.parse((await readFile(ledger, 'utf8')).trim());
+  assert.equal(entry.status, 'FAIL');
+  assert.equal(entry.failure_reason, 'TIMEOUT');
+  assert.equal(entry.timed_out, true);
+  assert.equal(entry.timeout_ms, 150);
+  assert.equal(entry.error_code, 'ETIMEDOUT');
+  assert.equal(entry.exit, null);
+  assert.ok(entry.signal);
+  assert.equal(entry.approved, undefined);
+  for (const invalid of ['0', '-1', 'Infinity', 'NaN', '1.5', '3600001']) {
+    const io = capture();
+    assert.equal(await main(['run', '--agent', 'test', '--timeout-ms', invalid, '--ledger', 'invalid.jsonl',
+      '--', process.execPath, '-e', "require('fs').writeFileSync('unexpected','x')"], { cwd: root, ...io }), 1);
+    assert.match(io.stderr, /timeout/);
+  }
+  assert.equal(await readFile(path.join(root, 'unexpected'), 'utf8').catch(() => null), null);
+}));
+
+test('gate bounds aggregate runtime and marks remaining checks NOT_RUN', () => {
+  const results = runGate([
+    { name: 'slow', run: 'node -e "setTimeout(() => {}, 500)"' },
+    { name: 'pending', run: 'node -e "process.exit(0)"' },
+  ], process.cwd(), 1000, { totalTimeoutMs: 80 });
+  assert.equal(results[0].result, 'FAIL');
+  assert.equal(results[0].failure_reason, 'TIMEOUT');
+  assert.equal(results[0].timed_out, true);
+  assert.ok(results[0].timeout_ms > 0 && results[0].timeout_ms <= 80);
+  assert.equal(results[1].result, 'NOT_RUN');
+  assert.equal(results[1].failure_reason, 'TOTAL_BUDGET');
+  assert.match(renderGate(results, false), /NOT_RUN pending[\s\S]*FAIL: 0\/2/);
+  const report = JSON.parse(renderGate(results, true).replace(/^```eos-result\n|```\n$/g, ''));
+  assert.equal(report.status, 'FAILED');
+  assert.equal(report.checks[1].result, 'NOT_RUN');
+  assert.deepEqual(report.approval_needed, []);
+});
+
+test('gate fail-fast skips later checks and validates limits before trust or execution', () => fixture(async root => {
+  const commands = [{ name: 'bad', run: 'node -e "process.exit(3)"' }, { name: 'later', run: 'node -e "process.exit(0)"' }];
+  const results = runGate(commands, root, 1000, { totalTimeoutMs: 5000, failFast: true });
+  assert.equal(results[0].exit, 3);
+  assert.equal(results[0].failure_reason, 'EXIT_CODE');
+  assert.equal(results[1].failure_reason, 'FAIL_FAST');
+  assert.equal(results[1].result, 'NOT_RUN');
+  const configPath = path.join(root, 'eos.gate.json');
+  const store = path.join(root, 'trust.json');
+  for (const config of [{ timeout_ms: 0 }, { total_timeout_ms: -1 }, { total_timeout_ms: '1000' }, { fail_fast: 'yes' }]) {
+    await writeFile(configPath, JSON.stringify({ commands, ...config }));
+    const io = capture();
+    assert.equal(await main(['gate', '--trust'], { cwd: root, store, ...io }), 1);
+    assert.match(io.stderr, /timeout|fail_fast/);
+  }
+  assert.equal(await readFile(store, 'utf8').catch(() => null), null);
+  await writeFile(configPath, JSON.stringify({ commands }));
+  const trusted = capture();
+  assert.equal(await main(['gate', '--trust-commands', '--timeout-ms', '1000', '--total-timeout-ms', '5000'], { cwd: root, store, ...trusted }), 0);
+  const executed = capture();
+  assert.equal(await main(['gate', '--fail-fast', '--timeout-ms', '1000', '--total-timeout-ms', '5000'], { cwd: root, store, ...executed }), 1);
+  assert.match(executed.stdout, /NOT_RUN later/);
+  assert.throws(() => runGate(commands, root, Infinity), /timeout/);
+}));
+
+test('user assistance queries retrieve section 98 and its child contracts', () => {
+  const sections = ['98. Ayuda del usuario', '98.1 Navegación accesible', '96. Gobierno', '4.11 Integration Architect']
+    .map((heading, index) => ({ file: CONSTITUTION, heading, start: index + 1, end: index + 1, text: heading }));
+  for (const query of ['ayuda del usuario', 'guía de usuario', 'manual de usuario', 'onboarding', 'tour',
+    'menú desplegable', 'sidebar con iconos', 'documentación para el usuario', 'navegación accesible']) {
+    const selected = policySections(sections, query);
+    assert.ok(selected.topics.includes('ayuda-usuario'), query);
+    assert.ok(selected.mandatory.some(section => section.heading === '98.1 Navegación accesible'), query);
+    assert.ok(selected.mandatory.some(section => section.heading === '96. Gobierno'), query);
+    assert.ok(!selected.mandatory.some(section => section.heading.startsWith('4.11')), query);
+  }
+  for (const query of ['renombrar variable', 'documentación de API', 'manual técnico del compilador'])
+    assert.ok(!policySections(sections, query).topics.includes('ayuda-usuario'), query);
+});
+
+test('execution outcomes distinguish signals, timeouts, launch failures and successful status', () => {
+  assert.equal(executionOutcome({ status: 0 }).failure_reason, null);
+  assert.equal(executionOutcome({ status: 4 }).failure_reason, 'EXIT_CODE');
+  assert.equal(executionOutcome({ status: null, signal: 'SIGTERM' }).failure_reason, 'SIGNAL');
+  assert.equal(executionOutcome({ status: 0, error: { code: 'ENOBUFS' } }).failure_reason, 'SPAWN_ERROR');
+  assert.deepEqual(executionOutcome({ status: null, signal: 'SIGKILL', error: { code: 'ETIMEDOUT' } }),
+    { timed_out: true, signal: 'SIGKILL', error_code: 'ETIMEDOUT', failure_reason: 'TIMEOUT' });
+});
+
+test('help is discoverable globally and per command without executing a host', () => fixture(async root => {
+  for (const args of [['help'], ['--help'], ['run', '--help'], ['gate', '--help']]) {
+    const io = capture();
+    assert.equal(await main(args, { cwd: root, ...io }), 0);
+    assert.match(io.stdout, /^Uso:/);
+    assert.match(io.stdout, /--timeout-ms/);
+    assert.equal(io.stderr, '');
+    const cli = spawnSync(process.execPath, [script, ...args], { cwd: root, encoding: 'utf8' });
+    assert.equal(cli.status, 0, cli.stderr);
+    assert.match(cli.stdout, /^Uso:/);
+  }
+  const incomplete = capture();
+  assert.equal(await main(['run'], { cwd: root, ...incomplete }), 1);
+  assert.match(incomplete.stderr, /^Uso:/);
+  const hostHelp = capture();
+  assert.equal(await main(['run', '--agent', 'test', '--ledger', 'help.jsonl', '--', process.execPath,
+    '-e', 'console.log(process.argv[1])', '--', '--help'], { cwd: root, ...hostHelp }), 0);
+  assert.equal(hostHelp.stdout, '--help\n');
+}));
