@@ -128,6 +128,8 @@ El expediente conserva mediciones agregadas, manifest de backup, resultados de r
 
 Referencia primaria consultada el **2026-10-03**: [ANPD, DS 016-2024-JUS](https://www.gob.pe/institucion/anpd/normas-legales/6554453-n-016-2024-jus). La aplicabilidad, finalidad, transferencias y conservación quedan pendientes de revisión competente para cada proyecto. Las cifras y umbrales de este manual son ejemplos de ingeniería y deben sustituirse por mediciones.
 
+Para diseñar o cambiar un modelo de datos por etapas conversadas con el usuario usa [EOS DATA DESIGN](../../skills/eos-data-design/SKILL.md) y el [diseño de sistemas inicial](../reference/SYSTEM-DESIGN-BASELINE.md); este manual conserva la autoridad sobre clasificación, integridad, migraciones y restauración.
+
 **Firma documental:** Pierre R. Boss · oprbguitar. Quiero expansión con presupuesto, conservación con propósito y recuperación que otro operador pueda demostrar.
 
 ---

@@ -186,6 +186,8 @@ Referencias principales para el implementador, consulta **2026-10-03**:
 - [OWASP: Logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html).
 - [OWASP: LLM Prompt Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html).
 
+Mínimo programable para implementadores (bots, fuerza bruta, abuso, inyección y ataques guiados a agentes, con ejemplos y pruebas de aceptación): [SECURE-CODING-BASELINE](../reference/SECURE-CODING-BASELINE.md). Es un resumen subordinado a este manual.
+
 **Autoría y dirección: Pierre R. Boss (oprbguitar). Desarrollo documental asistido por IA.**
 
 ## 17. SF-17 — Perfil de defensa y activación proporcionada

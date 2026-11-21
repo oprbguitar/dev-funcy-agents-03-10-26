@@ -90,6 +90,9 @@ Carga una fila solo cuando la tarea toca su tema. Lee la sección indicada, no e
 | Seguridad, login, sesiones, DDoS, cadena de suministro | 16–28, 88 | [SECURITY-FABRIC](docs/manuals/SECURITY-FABRIC.md) |
 | Pagos | 33–37, 90 | [PAYMENTS](docs/manuals/PAYMENTS.md) |
 | Datos, almacenamiento, backup | 29–32, 38, 90 | [STORAGE-DATA](docs/manuals/STORAGE-DATA.md) |
+| Diseño de sistema y base de datos por etapas | 29, 38, 90 | [DATA DESIGN](skills/eos-data-design/SKILL.md) y [diseño inicial](docs/reference/SYSTEM-DESIGN-BASELINE.md) |
+| Seguridad mínima programable: bots, fuerza bruta, inyección | 16, 21, 88 | [SECURE-CODING-BASELINE](docs/reference/SECURE-CODING-BASELINE.md) |
+| Documentación interna | 60, 74 | [Centro de documentación](docs/README.md) |
 | Actualizaciones, SLO, observabilidad | 40, 41, 43, 90 | [UPDATES-RELIABILITY](docs/manuals/UPDATES-RELIABILITY.md) |
 | Calidad, pruebas, puertas | 60–62, 74 | [ENGINEERING-QUALITY](docs/manuals/ENGINEERING-QUALITY.md) |
 | Incidentes | 42 | [INCIDENT-RESPONSE](docs/manuals/INCIDENT-RESPONSE.md) |
@@ -97,7 +100,7 @@ Carga una fila solo cuando la tarea toca su tema. Lee la sección indicada, no e
 | Migración y transferencia | 58, 59 | [MIGRATION-HANDOFF](docs/manuals/MIGRATION-HANDOFF.md) |
 | Excepciones, aprendizaje, radar | 66, 92 | — |
 | Admisión legal, marca, landing, canales y estado vivo | 96 | Skills condicionales de sección 3 y [COMPLIANCE-IP-PRODUCT](docs/manuals/COMPLIANCE-IP-PRODUCT.md) |
-| Navegación, menús, iconos, guías y onboarding | 96, 98 | [Ayuda de usuario](skills/eos-user-help/SKILL.md) y [patrones](docs/reference/USER-HELP-NAVIGATION-PATTERNS.md) |
+| Navegación, menús, iconos, guías y onboarding | 96, 98 | [Ayuda de usuario](skills/eos-user-help/SKILL.md), [patrones](docs/reference/USER-HELP-NAVIGATION-PATTERNS.md) y [shell](docs/reference/APP-SHELL-NAVIGATION.md) |
 | Cambios a esta biblioteca | 94, 96 | [VERIFICATION](docs/VERIFICATION.md) |
 | IA en Perú, ISO/NTP y calidad de software | 49, 89, 91, 97 | [IA Perú/calidad](skills/eos-peru-quality/SKILL.md) y [fuentes](docs/reference/AI-PERU-QUALITY.md) |
 

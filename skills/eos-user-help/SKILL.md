@@ -16,6 +16,9 @@ no sustituye la ayuda del usuario.
 
 Lee [EOS-CORE](../../EOS-CORE.md) y
 [USER-HELP-NAVIGATION-PATTERNS](../../docs/reference/USER-HELP-NAVIGATION-PATTERNS.md).
+Toda app con UI parte del [shell de navegación](../../docs/reference/APP-SHELL-NAVIGATION.md):
+menú plegable y compacto, varios temas, Guía, Documentación y Acceso administrador
+siempre visibles; en ADOPT se conserva la navegación existente y se cubren carencias.
 Para decisiones visuales usa primero `pierre-design-director`; para IA, privacidad
 y calidad usa [EOS PERU QUALITY](../eos-peru-quality/SKILL.md) cuando aplique.
 

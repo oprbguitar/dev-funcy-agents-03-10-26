@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" role="img" aria-labelledby="t d">
+  <!-- Pierre R. Boss (oprbguitar). Diagrama animado propio; desarrollo documental asistido por IA. -->
+  <title id="t">Cómo se coordinan los agentes</title>
+  <desc id="d">El orquestador envía un paquete de tarea a cada rol en secuencia: planner, architect, tdd-guide e implementer, revisores de código y seguridad, qa-verifier y docs-writer. Cada uno devuelve un bloque eos-result que el orquestador integra.</desc>
+  <style>
+    :root{--bg:#f7f8fc;--card:#ffffff;--line:#c9cfe3;--ink:#1d2340;--mute:#5b6382;--a:#5b5bd6;--b:#0f9d8a;--c:#d9822b}
+    @media (prefers-color-scheme:dark){:root{--bg:#12152a;--card:#1c2140;--line:#3a4270;--ink:#eef0ff;--mute:#a9b0d6;--a:#9b9bff;--b:#3fd6c0;--c:#ffb366}}
+    .bg{fill:var(--bg)} .card{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+    .hub{fill:var(--card);stroke:var(--a);stroke-width:2.5}
+    .h{font:700 14px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--ink)}
+    .s{font:12px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--mute)}
+    .ttl{font:700 17px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--ink)}
+    .wire{fill:none;stroke:var(--line);stroke-width:2}
+    .out{fill:none;stroke:var(--a);stroke-width:3;stroke-dasharray:8 200;stroke-dashoffset:0;opacity:0;animation:go 12s linear infinite}
+    .in{fill:none;stroke:var(--b);stroke-width:3;stroke-dasharray:8 200;opacity:0;animation:back 12s linear infinite}
+    .r1{animation-delay:0s}.r2{animation-delay:2s}.r3{animation-delay:4s}.r4{animation-delay:6s}.r5{animation-delay:8s}.r6{animation-delay:10s}
+    .beat{fill:none;stroke:var(--a);stroke-width:2;transform-origin:480px 175px;animation:beat 2s ease-out infinite}
+    @keyframes go{0%{opacity:1;stroke-dashoffset:0}7%{opacity:1;stroke-dashoffset:-92}8%,100%{opacity:0;stroke-dashoffset:-92}}
+    @keyframes back{0%,8%{opacity:0;stroke-dashoffset:-92}9%{opacity:1;stroke-dashoffset:-92}16%{opacity:1;stroke-dashoffset:0}17%,100%{opacity:0}}
+    @keyframes beat{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.35);opacity:0}}
+    @media (prefers-reduced-motion:reduce){.out,.in,.beat{animation:none;opacity:0}}
+  </style>
+  <rect class="bg" width="960" height="330" rx="16"/>
+  <text class="ttl" x="24" y="32">Cómo se coordinan: un orquestador, roles con límites, resultados integrados</text>
+  <!-- cables: centro (480,175) a cada rol -->
+  <path class="wire" d="M480 175L170 95M480 175L170 255M480 175L480 70M480 175L790 95M480 175L790 255M480 175L480 290"/>
+  <path pathLength="100" class="out r1" d="M480 175L170 95"/><path pathLength="100" class="in r1" d="M480 175L170 95"/>
+  <path pathLength="100" class="out r2" d="M480 175L480 70"/><path pathLength="100" class="in r2" d="M480 175L480 70"/>
+  <path pathLength="100" class="out r3" d="M480 175L790 95"/><path pathLength="100" class="in r3" d="M480 175L790 95"/>
+  <path pathLength="100" class="out r4" d="M480 175L790 255"/><path pathLength="100" class="in r4" d="M480 175L790 255"/>
+  <path pathLength="100" class="out r5" d="M480 175L480 290"/><path pathLength="100" class="in r5" d="M480 175L480 290"/>
+  <path pathLength="100" class="out r6" d="M480 175L170 255"/><path pathLength="100" class="in r6" d="M480 175L170 255"/>
+  <circle class="beat" cx="480" cy="175" r="58"/>
+  <circle class="hub" cx="480" cy="175" r="58"/>
+  <text class="h" x="480" y="171" text-anchor="middle">orchestrator</text>
+  <text class="s" x="480" y="190" text-anchor="middle">integra eos-result</text>
+  <g text-anchor="middle">
+    <rect class="card" x="70" y="66" width="200" height="56" rx="12"/><text class="h" x="170" y="90">1 · planner</text><text class="s" x="170" y="108">plan, riesgos, paquete</text>
+    <rect class="card" x="380" y="44" width="200" height="52" rx="12"/><text class="h" x="480" y="66">2 · architect</text><text class="s" x="480" y="84">ADR y diseño de datos</text>
+    <rect class="card" x="690" y="66" width="200" height="56" rx="12"/><text class="h" x="790" y="90">3 · tdd-guide + implementer</text><text class="s" x="790" y="108">prueba roja, cambio, verde</text>
+    <rect class="card" x="690" y="227" width="200" height="56" rx="12"/><text class="h" x="790" y="251">4 · code + security review</text><text class="s" x="790" y="269">hallazgos verificados</text>
+    <rect class="card" x="380" y="266" width="200" height="52" rx="12"/><text class="h" x="480" y="288">5 · qa-verifier</text><text class="s" x="480" y="306">gate y evidencia</text>
+    <rect class="card" x="70" y="227" width="200" height="56" rx="12"/><text class="h" x="170" y="251">6 · docs-writer</text><text class="s" x="170" y="269">ayuda, docs y estado</text>
+  </g>
+  <g class="s"><rect x="24" y="300" width="14" height="4" fill="var(--a)"/><text x="44" y="306">paquete de tarea</text><rect x="160" y="300" width="14" height="4" fill="var(--b)"/><text x="180" y="306">resultado eos-result</text></g>
+</svg>

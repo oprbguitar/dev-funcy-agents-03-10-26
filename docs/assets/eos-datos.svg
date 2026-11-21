@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 340" role="img" aria-labelledby="t d">
+  <!-- Pierre R. Boss (oprbguitar). Diagrama animado propio; desarrollo documental asistido por IA. -->
+  <title id="t">Construcción conversada de la base de datos</title>
+  <desc id="d">Seis etapas en ciclo: dominio y glosario, entidades, esquema y contratos, propiedad y clasificación, linaje y calidad, migración y catálogo. Entre etapas el agente se detiene a conversar con el usuario: decisión propuesta, plan, avance y confirmación.</desc>
+  <style>
+    :root{--bg:#f7f8fc;--card:#ffffff;--line:#c9cfe3;--ink:#1d2340;--mute:#5b6382;--a:#5b5bd6;--b:#0f9d8a;--c:#d9822b}
+    @media (prefers-color-scheme:dark){:root{--bg:#12152a;--card:#1c2140;--line:#3a4270;--ink:#eef0ff;--mute:#a9b0d6;--a:#9b9bff;--b:#3fd6c0;--c:#ffb366}}
+    .bg{fill:var(--bg)} .card{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+    .talk{fill:var(--card);stroke:var(--c);stroke-width:2.5}
+    .h{font:700 14px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--ink)}
+    .s{font:12px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--mute)}
+    .ttl{font:700 17px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--ink)}
+    .orbit{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:5 7}
+    .spin{transform-origin:480px 185px;animation:spin 12s linear infinite}
+    .runner{fill:var(--b)}
+    .ask{opacity:.25;animation:ask 2s ease-in-out infinite}
+    .a2{animation-delay:.3s}.a3{animation-delay:.6s}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes ask{0%,100%{opacity:.25}50%{opacity:1}}
+    @media (prefers-reduced-motion:reduce){.spin,.ask{animation:none}.ask{opacity:1}}
+  </style>
+  <rect class="bg" width="960" height="340" rx="16"/>
+  <text class="ttl" x="24" y="32">Base de datos por partes: cada etapa se conversa antes de construirse</text>
+  <circle class="orbit" cx="480" cy="185" r="125"/>
+  <g class="spin"><circle class="runner" cx="480" cy="60" r="9"/></g>
+  <rect class="talk" x="370" y="140" width="220" height="92" rx="14"/>
+  <text class="h" x="480" y="164" text-anchor="middle">Checkpoint con el usuario</text>
+  <text class="s" x="480" y="184" text-anchor="middle">decisión · plan · avance</text>
+  <text class="s" x="480" y="202" text-anchor="middle">«¿confirmas o ajustamos?»</text>
+  <g fill="var(--c)"><circle class="ask" cx="462" cy="220" r="3.5"/><circle class="ask a2" cx="480" cy="220" r="3.5"/><circle class="ask a3" cx="498" cy="220" r="3.5"/></g>
+  <g text-anchor="middle">
+    <rect class="card" x="390" y="44" width="180" height="40" rx="10"/><text class="h" x="480" y="69">1 · Dominio y glosario</text>
+    <rect class="card" x="650" y="96" width="200" height="40" rx="10"/><text class="h" x="750" y="121">2 · Entidades y nombres</text>
+    <rect class="card" x="650" y="236" width="200" height="40" rx="10"/><text class="h" x="750" y="261">3 · Esquema y contratos</text>
+    <rect class="card" x="380" y="288" width="200" height="40" rx="10"/><text class="h" x="480" y="313">4 · Dueños y clasificación</text>
+    <rect class="card" x="110" y="236" width="200" height="40" rx="10"/><text class="h" x="210" y="261">5 · Linaje y calidad</text>
+    <rect class="card" x="110" y="96" width="200" height="40" rx="10"/><text class="h" x="210" y="121">6 · Migración y catálogo</text>
+  </g>
+</svg>

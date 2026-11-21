@@ -108,3 +108,11 @@ Candidato `e54b64b38f9c59b98c8284fe5f68f71fb7f29337`, árbol idéntico al increm
 Se comprobó merge-base --is-ancestor antes de retirar cinco ramas remotas y cuatro ramas locales. `git ls-remote --heads origin` confirmó únicamente main; checkout local main, limpio y sincronizado al cierre de implementación. Historial preservado, sin push forzado ni cambio de visibilidad privada. Este commit documental posterior registra la publicación; sus propios checks se consultan por SHA y no se confunden con los del candidato de implementación.
 
 La nueva guía/menu/iconos es una capacidad distribuida por EOS, no un frontend creado para la biblioteca ni una modificación automática de Smart Storage/personalERP. La ayuda de comandos de EOS sí se implementó y probó. Los productos receptores reciben procedimiento/checklist y deben demostrar su propia ayuda real por tareas/roles, onboarding y accesibilidad antes de declararla terminada.
+
+### Incremento documental — 2026-11-21, README corto, documentación interna, seguridad, navegación y datos
+
+Modo ADOPT, L1, rama `claude/sharp-shannon-jv3m6o` sobre `ff0897a`. Autorización: petición directa del propietario de mejorar README, documentación interna, seguridad básica, patrón de menús y diseño de sistema/datos. Parche documental dentro de 4.5.0: no cambia código de herramientas, constitución, manuales salvo un enlace de referencia en SECURITY-FABRIC y STORAGE-DATA, ni fuentes históricas; por eso no requiere reevaluación completa de admisión.
+
+Entregado: README corto con tres SVG animados propios; [centro de documentación](README.md); [guía completa](GUIA-COMPLETA.md) con el contenido previo; [seguridad básica](reference/SECURE-CODING-BASELINE.md); [shell de navegación](reference/APP-SHELL-NAVIGATION.md); [diseño de sistemas](reference/SYSTEM-DESIGN-BASELINE.md) (CC BY 4.0, atribuido); [skill DATA DESIGN](../skills/eos-data-design/SKILL.md) y [registro](../templates/DATA-MODEL-RECORD.md). Catálogo: trece skills, 13 agentes.
+
+Límites: los ejemplos de código son ilustrativos y no están ejecutados en un producto; las referencias no acreditan seguridad ni cumplimiento. Los productos receptores implementan y prueban sus propios controles, shell y modelo de datos. Evidencia del gate en el reporte de entrega de este incremento.

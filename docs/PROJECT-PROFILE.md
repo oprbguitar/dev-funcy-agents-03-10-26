@@ -5,7 +5,7 @@
 | Campo | Valor confirmado o decisión de esta edición |
 |---|---|
 | Producto | Biblioteca de instrucciones de ingeniería EOS |
-| Edición | 4.5.0: doce especificaciones mayores (pisos congelados), núcleo EOS-CORE, CLI `eos.mjs` endurecido y doce skills, con estrategia, privacidad, marca/landing y entrega de escritorio, IA Perú/calidad ISO selección contextual UI, ayuda de usuario integrada y herramientas con límites de ejecución/rutas |
+| Edición | 4.5.0: doce especificaciones mayores (pisos congelados), núcleo EOS-CORE, CLI `eos.mjs` endurecido y trece skills (incluida DATA-DESIGN), con estrategia, privacidad, marca/landing y entrega de escritorio, IA Perú/calidad ISO selección contextual UI, ayuda de usuario integrada y herramientas con límites de ejecución/rutas |
 | Propietario editorial | Pierre R. Boss / oprbguitar |
 | Repositorio | `oprbguitar/dev-funcy-agents-03-10-26` |
 | Modo de este trabajo | ADOPT: conservar y ampliar una constitución existente |
