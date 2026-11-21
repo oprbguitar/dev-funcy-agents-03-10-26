@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 250" role="img" aria-labelledby="t d">
+  <!-- Pierre R. Boss (oprbguitar). Diagrama animado propio; desarrollo documental asistido por IA. -->
+  <title id="t">Cómo funciona EOS</title>
+  <desc id="d">Una petición pasa por EOS-CORE, se clasifica en un modo, la ejecutan skills y agentes, atraviesa el gate de pruebas y revisión y termina en una entrega con estado vivo; lo aprendido vuelve al inicio.</desc>
+  <style>
+    :root{--bg:#f7f8fc;--card:#ffffff;--line:#c9cfe3;--ink:#1d2340;--mute:#5b6382;--a:#5b5bd6;--b:#0f9d8a;--c:#d9822b}
+    @media (prefers-color-scheme:dark){:root{--bg:#12152a;--card:#1c2140;--line:#3a4270;--ink:#eef0ff;--mute:#a9b0d6;--a:#9b9bff;--b:#3fd6c0;--c:#ffb366}}
+    .bg{fill:var(--bg)} .card{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+    .h{font:700 15px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--ink)}
+    .s{font:12px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--mute)}
+    .ttl{font:700 17px system-ui,-apple-system,Segoe UI,sans-serif;fill:var(--ink)}
+    .flow{fill:none;stroke:var(--a);stroke-width:2.5;stroke-dasharray:7 7;animation:dash 1.2s linear infinite}
+    .back{fill:none;stroke:var(--c);stroke-width:2;stroke-dasharray:4 8;animation:dash 2s linear infinite reverse}
+    .dot{fill:var(--b);animation:pulse 6s ease-in-out infinite}
+    .n1{animation-delay:0s}.n2{animation-delay:1s}.n3{animation-delay:2s}.n4{animation-delay:3s}.n5{animation-delay:4s}.n6{animation-delay:5s}
+    .ring{fill:none;stroke:var(--b);stroke-width:3;opacity:0;animation:glow 6s ease-in-out infinite}
+    @keyframes dash{to{stroke-dashoffset:-28}}
+    @keyframes glow{0%,100%{opacity:0}4%,14%{opacity:1}20%{opacity:0}}
+    @keyframes pulse{0%,100%{opacity:.35}4%,14%{opacity:1}}
+    @media (prefers-reduced-motion:reduce){.flow,.back,.ring,.dot{animation:none}.ring{opacity:0}.dot{opacity:1}}
+  </style>
+  <rect class="bg" width="960" height="250" rx="16"/>
+  <text class="ttl" x="24" y="32">Cómo funciona: de la petición a la entrega verificable</text>
+  <g transform="translate(0,58)">
+    <path class="flow" d="M148 52H170M306 52H328M464 52H486M622 52H644M780 52H802"/>
+    <g><rect class="card" x="20" y="10" width="128" height="84" rx="12"/><rect class="ring n1" x="20" y="10" width="128" height="84" rx="12"/><circle class="dot n1" cx="38" cy="30" r="6"/><text class="h" x="52" y="35">Petición</text><text class="s" x="32" y="60">objetivo y</text><text class="s" x="32" y="76">límites del usuario</text></g>
+    <g><rect class="card" x="178" y="10" width="128" height="84" rx="12"/><rect class="ring n2" x="178" y="10" width="128" height="84" rx="12"/><circle class="dot n2" cx="196" cy="30" r="6"/><text class="h" x="210" y="35">EOS-CORE</text><text class="s" x="190" y="60">reglas, autonomía</text><text class="s" x="190" y="76">A0–A4 y contexto</text></g>
+    <g><rect class="card" x="336" y="10" width="128" height="84" rx="12"/><rect class="ring n3" x="336" y="10" width="128" height="84" rx="12"/><circle class="dot n3" cx="354" cy="30" r="6"/><text class="h" x="368" y="35">Modo</text><text class="s" x="348" y="60">INIT · ADOPT</text><text class="s" x="348" y="76">AUDIT · MIGRATE</text></g>
+    <g><rect class="card" x="494" y="10" width="128" height="84" rx="12"/><rect class="ring n4" x="494" y="10" width="128" height="84" rx="12"/><circle class="dot n4" cx="512" cy="30" r="6"/><text class="h" x="526" y="35">Skills</text><text class="s" x="506" y="60">procedimiento +</text><text class="s" x="506" y="76">agentes por rol</text></g>
+    <g><rect class="card" x="652" y="10" width="128" height="84" rx="12"/><rect class="ring n5" x="652" y="10" width="128" height="84" rx="12"/><circle class="dot n5" cx="670" cy="30" r="6"/><text class="h" x="684" y="35">Gate</text><text class="s" x="664" y="60">pruebas, revisión</text><text class="s" x="664" y="76">y seguridad</text></g>
+    <g><rect class="card" x="810" y="10" width="128" height="84" rx="12"/><rect class="ring n6" x="810" y="10" width="128" height="84" rx="12"/><circle class="dot n6" cx="828" cy="30" r="6"/><text class="h" x="842" y="35">Entrega</text><text class="s" x="822" y="60">commit, evidencia</text><text class="s" x="822" y="76">y estado vivo</text></g>
+    <path class="back" d="M874 94V140H84V94"/>
+    <text class="s" x="372" y="160">aprendizaje y evidencia vuelven a la siguiente petición</text>
+  </g>
+</svg>

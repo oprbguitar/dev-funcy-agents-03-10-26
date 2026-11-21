@@ -4,6 +4,15 @@
 
 ## 4.5.0 — 2026-10-19
 
+- README (2026-11-21): Sección «Publicar gratis tu producto»: hosting, backend y base de datos con plan gratuito (Cloudflare, Vercel, Netlify, GitHub Pages, Render, D1, Supabase, Neon, Turso), subdominios que generan, registradores de dominio barato anual y prompt para que la IA prepare el despliegue con checkpoints; la compra y las cuentas quedan a cargo del usuario. Sin cifras de planes: se verifican en fuente oficial.
+
+- README (2026-11-21): Reescrito corto: finalidad, tres diagramas SVG animados propios (flujo, coordinación de agentes, datos conversados; respetan `prefers-reduced-motion` y modo oscuro), despegue en tres pasos y mapa agrupado en Gobierno, Operación, Conocimiento, Estado y Herramientas. El contenido extenso se traslada sin pérdida a `docs/GUIA-COMPLETA.md`.
+- Documentación interna (2026-11-21): `docs/README.md` como centro de documentación del repositorio y contrato mínimo de documentación interna para cada producto.
+- Seguridad (2026-11-21): `docs/reference/SECURE-CODING-BASELINE.md` con controles programables mínimos contra bots, fuerza bruta, credential stuffing, enumeración, IDOR, inundación L7, inyección, XSS, CSRF, webhooks y ataques guiados a agentes; ejemplos ilustrativos y pruebas de aceptación. Subordinado a SECURITY-FABRIC.
+- Navegación (2026-11-21): `docs/reference/APP-SHELL-NAVIGATION.md` con menú plegable completo/compacto/cajón, temas base+paleta con alto contraste, Guía, Documentación y Acceso administrador siempre visibles; enlazado desde eos-user-help.
+- Diseño de sistemas (2026-11-21): `docs/reference/SYSTEM-DESIGN-BASELINE.md`, adaptación CC BY 4.0 de *The System Design Primer* con método, compromisos CAP/consistencia/disponibilidad, base de datos, caché, asincronía y lista de revisión.
+- Datos (2026-11-21): skill `eos-data-design` y plantilla `DATA-MODEL-RECORD`: base de datos en seis etapas con checkpoint conversado (decisión, plan, avance, confirmación), aplicando conceptos de catálogo de OpenMetadata sin adoptar la plataforma. Catálogo: trece skills.
+
 - README (2026-11-21): Reescribe el despegue como pasos 0–3 explicados de forma sencilla, con marcador `RUTA/DE/TU-PROYECTO` en lugar de rutas de ejemplo y aviso de cuándo usar `--update`.
 - README (2026-11-21): Retira del README las referencias a repositorios privados de patrones de ayuda; la skill eos-user-help conserva el contrato.
 - README (2026-11-21): Destaca la alineación de los agentes con ISO 9001:2026, ISO/IEC 27701:2025, NTP-ISO/IEC 42001/27002, NTP-ISO 31000 y normativa peruana citada en los registros de fuentes, más la lista de mínimos de una web; sin afirmar certificación.

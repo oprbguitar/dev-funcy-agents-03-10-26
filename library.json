@@ -125,7 +125,14 @@
     "docs/reference/USER-HELP-NAVIGATION-PATTERNS.md",
     "skills/eos-user-help/SKILL.md",
     "templates/USER-GUIDE-CHECKLIST.md",
-    "docs/AUDIT-RESPONSE.md"
+    "docs/AUDIT-RESPONSE.md",
+    "docs/README.md",
+    "docs/GUIA-COMPLETA.md",
+    "docs/reference/SECURE-CODING-BASELINE.md",
+    "docs/reference/APP-SHELL-NAVIGATION.md",
+    "docs/reference/SYSTEM-DESIGN-BASELINE.md",
+    "skills/eos-data-design/SKILL.md",
+    "templates/DATA-MODEL-RECORD.md"
   ],
   "sources": [
     {

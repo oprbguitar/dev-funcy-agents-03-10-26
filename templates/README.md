@@ -32,6 +32,7 @@ Copiar únicamente los formatos pertinentes.
 | [EXEC-PLAN.md](EXEC-PLAN.md) | Trabajo largo con varios hitos o agentes |
 | [AGENT-RESULT.md](AGENT-RESULT.md) | Cierre de cada entrega de agente para integración compacta |
 | [ADR.md](ADR.md) | Decisión arquitectónica |
+| [DATA-MODEL-RECORD.md](DATA-MODEL-RECORD.md) | Diccionario, contratos, linaje, calidad y checkpoints del modelo de datos |
 | [FINDING.md](FINDING.md) | Riesgo con evidencia |
 | [EXCEPTION.md](EXCEPTION.md) | Desviación temporal permitida |
 | [MODEL-CARD.md](MODEL-CARD.md) | Evaluación de modelo |

@@ -11,7 +11,7 @@
     {
       "name": "eos-agents",
       "source": "./",
-      "description": "Trece agentes especializados y doce skills EOS (INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT, STRATEGY, PRIVACY, LANDING-BRAND, DESKTOP-RELEASE PERU-QUALITY y USER-HELP) firmados por Pierre R. Boss (oprbguitar).",
+      "description": "Trece agentes especializados y trece skills EOS (INIT, ADOPT, AUDIT, MIGRATE, RELEASE, INCIDENT, STRATEGY, PRIVACY, LANDING-BRAND, DESKTOP-RELEASE, PERU-QUALITY, USER-HELP y DATA-DESIGN) firmados por Pierre R. Boss (oprbguitar).",
       "version": "4.5.0"
     }
   ]
