@@ -4,7 +4,7 @@
 
 🧭 **Tu copiloto tiene mapa, frenos y bitácora. El volante sigue siendo tuyo.**
 
-[Empezar](#empezar-en-tres-pasos) · [Mapa](#mapa-del-repositorio) · [Documentación interna](docs/README.md) · [Guía completa](docs/GUIA-COMPLETA.md) · [Estado real](docs/EOS-PROJECT-STATUS.md) · [Licencia MIT](LICENSE) ([alcance](LICENSE-SCOPE.md))
+[Empezar](#empezar-en-tres-pasos) · [Publicar gratis](#publicar-gratis-tu-producto) · [Mapa](#mapa-del-repositorio) · [Documentación interna](docs/README.md) · [Guía completa](docs/GUIA-COMPLETA.md) · [Estado real](docs/EOS-PROJECT-STATUS.md) · [Licencia MIT](LICENSE) ([alcance](LICENSE-SCOPE.md))
 
 ![Cómo funciona EOS: petición, EOS-CORE, modo, skills y agentes, gate y entrega con estado vivo](docs/assets/eos-flujo.svg)
 
@@ -44,6 +44,38 @@ Antes de cada etapa dime la decisión, el plan y el avance, y espera mi confirma
 ```
 
 Detalles por host, actualización, ahorro de tokens y calidad ISO/Perú: [guía completa](docs/GUIA-COMPLETA.md).
+
+## Publicar gratis tu producto
+
+Sugerencias para el **producto que construyas con EOS** (EOS no se despliega). Los planes gratuitos, límites y precios cambian: **verifícalos en la web oficial antes de elegir** (lista revisada el 2026-11-21, sin cifras para no envejecer).
+
+| Necesitas | Opciones con plan gratuito | Dominio que te generan |
+|---|---|---|
+| Web estática o frontend | [Cloudflare Pages](https://pages.cloudflare.com/), [Vercel](https://vercel.com/), [Netlify](https://www.netlify.com/), [GitHub Pages](https://pages.github.com/) | `tu-app.pages.dev`, `tu-app.vercel.app`, `tu-app.netlify.app`, `usuario.github.io` |
+| API o backend | [Cloudflare Workers](https://workers.cloudflare.com/), funciones de Vercel o Netlify, [Render](https://render.com/) (el plan gratis se duerme sin uso) | `tu-api.<cuenta>.workers.dev`, `tu-api.onrender.com` |
+| Base de datos | [Cloudflare D1](https://developers.cloudflare.com/d1/) (SQLite), [Supabase](https://supabase.com/) o [Neon](https://neon.tech/) (PostgreSQL), [Turso](https://turso.tech/) (SQLite) | Conexión por URL y clave; nunca en el código |
+
+**Combinación simple sugerida:** Cloudflare Pages + Workers + D1 (todo en una cuenta) o Vercel + Supabase/Neon si el proyecto usa PostgreSQL.
+
+**Dominio propio barato (pago anual):** registradores como [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) (vende al costo, sin margen), [Porkbun](https://porkbun.com/) o [Namecheap](https://www.namecheap.com/). Compara el precio de **renovación**, no solo el del primer año; `.com` suele ser más estable que extensiones en oferta; activa la privacidad WHOIS y la renovación automática. Para un dominio `.pe` usa un registrador acreditado ante PUNTO.PE.
+
+Pide a tu IA que lo haga paso a paso (la IA prepara y ejecuta lo técnico; **tú creas las cuentas, pagas el dominio y apruebas cada publicación**):
+
+```text
+Aplica EOS 4.5.0 en MODE=RELEASE para publicar este proyecto en un plan gratuito.
+1. Inspecciona el stack y propón 2 opciones de hosting y base de datos gratis
+   (p. ej. Cloudflare Pages+Workers+D1 o Vercel+Supabase), con límites vigentes
+   verificados en la web oficial y la fecha de consulta.
+2. Espera mi elección. Prepara configuración, variables de entorno (sin secretos
+   en el repo), migraciones de la base y un despliegue de prueba en el subdominio
+   gratuito (*.pages.dev, *.vercel.app…).
+3. Antes de cada paso externo (crear base, migrar, desplegar) dime la decisión,
+   el plan y el avance, y espera mi confirmación.
+4. Si quiero dominio propio: compara 3 registradores por precio de registro y de
+   renovación anual; yo lo compro. Luego configura DNS, HTTPS y redirecciones.
+5. Verifica la URL publicada, cabeceras de seguridad y backup de la base;
+   registra todo en docs/EOS-PROJECT-STATUS.md con cómo revertir.
+```
 
 ## Mapa del repositorio
 

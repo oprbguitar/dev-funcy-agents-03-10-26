@@ -4,6 +4,8 @@
 
 ## 4.5.0 — 2026-10-19
 
+- README (2026-11-21): Sección «Publicar gratis tu producto»: hosting, backend y base de datos con plan gratuito (Cloudflare, Vercel, Netlify, GitHub Pages, Render, D1, Supabase, Neon, Turso), subdominios que generan, registradores de dominio barato anual y prompt para que la IA prepare el despliegue con checkpoints; la compra y las cuentas quedan a cargo del usuario. Sin cifras de planes: se verifican en fuente oficial.
+
 - README (2026-11-21): Reescrito corto: finalidad, tres diagramas SVG animados propios (flujo, coordinación de agentes, datos conversados; respetan `prefers-reduced-motion` y modo oscuro), despegue en tres pasos y mapa agrupado en Gobierno, Operación, Conocimiento, Estado y Herramientas. El contenido extenso se traslada sin pérdida a `docs/GUIA-COMPLETA.md`.
 - Documentación interna (2026-11-21): `docs/README.md` como centro de documentación del repositorio y contrato mínimo de documentación interna para cada producto.
 - Seguridad (2026-11-21): `docs/reference/SECURE-CODING-BASELINE.md` con controles programables mínimos contra bots, fuerza bruta, credential stuffing, enumeración, IDOR, inundación L7, inyección, XSS, CSRF, webhooks y ataques guiados a agentes; ejemplos ilustrativos y pruebas de aceptación. Subordinado a SECURITY-FABRIC.
