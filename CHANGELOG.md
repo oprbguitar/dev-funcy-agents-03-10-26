@@ -4,6 +4,10 @@
 
 ## 4.5.0 — 2026-10-19
 
+- README (2026-11-21): Reescribe el despegue como pasos 0–3 explicados de forma sencilla, con marcador `RUTA/DE/TU-PROYECTO` en lugar de rutas de ejemplo y aviso de cuándo usar `--update`.
+- README (2026-11-21): Retira del README las referencias a repositorios privados de patrones de ayuda; la skill eos-user-help conserva el contrato.
+- README (2026-11-21): Destaca la alineación de los agentes con ISO 9001:2026, ISO/IEC 27701:2025, NTP-ISO/IEC 42001/27002, NTP-ISO 31000 y normativa peruana citada en los registros de fuentes, más la lista de mínimos de una web; sin afirmar certificación.
+- README (2026-11-21): Corrige conteos: 12 skills y constitución con secciones 0–98.
 - Consolida las ampliaciones 4.3 y 4.4/ENIA en main; evalúa la auditoría aportada con decisiones implementadas y pendientes explícitos.
 - Incorpora ayuda para el usuario dentro de aplicaciones: skill, checklist y patrones inspeccionados de Smart Storage 360 y personalERP, sin copiar código propietario ni alterar esos productos.
 - Integra menús desplegables e iconos por contexto, documentación por tareas y onboarding accesible, omitible y reactivable desde INIT/ADOPT/RELEASE; un README técnico no sustituye ayuda de usuario.

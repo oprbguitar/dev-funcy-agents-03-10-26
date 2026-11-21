@@ -8,17 +8,68 @@
 
 ## Despegue en tres pasos
 
-Necesitas Git, Node.js 24 y acceso al repositorio privado. No hay `npm install`, Docker, Python, claves de API ni servicios de pago para instalar EOS. Los comandos siguientes se ejecutan en PowerShell, macOS o Linux; sustituye la ruta del proyecto por una carpeta existente.
+Piensa en EOS como una **mochila de reglas y ayudantes** que vas a meter dentro de tu proyecto. Antes de empezar revisa que tienes estas tres cosas:
 
-```powershell
+| Necesitas | Cómo comprobarlo | Si falta |
+|---|---|---|
+| Git | Escribe `git --version` en una terminal y aparece un número | Instálalo desde [git-scm.com](https://git-scm.com/) |
+| Node.js 24 | Escribe `node --version` y aparece `v24…` | Instálalo desde [nodejs.org](https://nodejs.org/) |
+| Acceso a este repositorio | Puedes abrir esta página con tu cuenta de GitHub | Pide acceso al propietario; nunca pegues contraseñas ni tokens en un prompt |
+
+No hace falta `npm install`, Docker, Python, claves de API ni servicios de pago. Los comandos funcionan igual en PowerShell (Windows), macOS y Linux.
+
+En los ejemplos, `RUTA/DE/TU-PROYECTO` es un **marcador**: cámbialo por la ubicación de la carpeta de tu propio proyecto (debe existir). EOS no conoce ni guarda la ubicación de tus carpetas.
+
+### Paso 0 · Descarga la mochila (solo la primera vez)
+
+Abre una terminal en el lugar donde guardas tus repositorios y copia:
+
+```bash
 git clone https://github.com/oprbguitar/dev-funcy-agents-03-10-26.git
 cd dev-funcy-agents-03-10-26
-node scripts/install-agents.mjs --host codex --target "../mi-proyecto" --dry-run
 ```
 
-1. **Mira el equipaje.** Revisa el plan de `--dry-run`: muestra qué archivos recibiría tu proyecto.
-2. **Instala.** Repite el último comando sin `--dry-run`. Usa `--host claude` para Claude Code o `--host all` para ambos.
-3. **Abre tu proyecto en el agente y dale una misión.** Copia este inicio:
+Ahora tienes una copia de EOS y la terminal está «parada» dentro de ella.
+
+### Paso 1 · Mira qué entraría, sin tocar nada
+
+```bash
+node scripts/install-agents.mjs --host codex --target "RUTA/DE/TU-PROYECTO" --dry-run
+```
+
+`--dry-run` es un **ensayo**: muestra la lista de archivos que tu proyecto recibiría, pero no escribe ninguno. Lee la lista con calma. Si ves «omitido», significa que ese archivo ya existe y EOS **no** lo va a pisar.
+
+Elige el ayudante con `--host`:
+
+- `--host codex` → para Codex.
+- `--host claude` → para Claude Code.
+- `--host all` → para los dos.
+
+### Paso 2 · Instala de verdad
+
+Copia el mismo comando **sin** `--dry-run`:
+
+```bash
+node scripts/install-agents.mjs --host codex --target "RUTA/DE/TU-PROYECTO"
+```
+
+¿Cómo sé que salió bien? Dentro de tu proyecto aparecen la carpeta `.eos/`, el archivo `.eos/install-manifest.json` (la lista de lo que se instaló) y un bloque EOS al final de `AGENTS.md`. Ejecutarlo dos veces no rompe nada.
+
+> **¿Ya tenías EOS instalado y quieres la versión nueva?** No repitas la instalación: usa **actualizar**. Primero `git pull` dentro de esta copia; después el ensayo y la actualización:
+>
+> ```bash
+> node scripts/install-agents.mjs --host all --target "RUTA/DE/TU-PROYECTO" --update --dry-run
+> ```
+>
+> ```bash
+> node scripts/install-agents.mjs --host all --target "RUTA/DE/TU-PROYECTO" --update
+> ```
+>
+> Si cambiaste algún archivo de EOS, tu versión se queda y la nueva llega al lado como `.eos-new` para que compares. Si es tu primera instalación, **no necesitas** `--update`.
+
+### Paso 3 · Abre tu proyecto en el agente y dale una misión
+
+Abre la carpeta de tu proyecto (no la de EOS) en Codex o Claude Code, inicia una sesión nueva y pega este inicio:
 
 ```text
 Aplica EOS 4.5.0 en MODE=ADOPT a este proyecto.
@@ -42,13 +93,13 @@ Para consultar los comandos de la propia biblioteca ejecuta `node scripts/eos.mj
 
 La nueva [skill USER HELP](skills/eos-user-help/SKILL.md) y su [checklist](templates/USER-GUIDE-CHECKLIST.md) se aplican en INIT, ADOPT y RELEASE. En un proyecto existente se inspecciona lo que ya tiene, se corrigen carencias del alcance autorizado y se registran otras brechas con responsable. No se declara una guía terminada por crear una plantilla. Debe probarse que un usuario con el rol correspondiente puede encontrarla y completar sus tareas.
 
-Los [patrones inspeccionados de Smart Storage 360 y personalERP](docs/reference/USER-HELP-NAVIGATION-PATTERNS.md) aportan navegación agrupada desplegable, iconos junto a etiquetas, ayuda por módulo y guías iniciales. Se adaptan al producto y a su arquitectura; no se copia código propietario ni se impone un estilo universal. La guía inicial permite saltar, desactivar y reactivar desde Ayuda. Verifica teclado/foco, permisos, móvil y movimiento reducido también en la ayuda.
+La skill define navegación agrupada desplegable, iconos junto a etiquetas, ayuda por módulo y guías iniciales. Se adaptan al producto y a su arquitectura; no se impone un estilo universal. La guía inicial permite saltar, desactivar y reactivar desde Ayuda. Verifica teclado/foco, permisos, móvil y movimiento reducido también en la ayuda.
 
 ```text
 Aplica EOS 4.5.0 en MODE=ADOPT.
 Inspecciona navegación, iconos y ayuda actual; conserva la identidad del proyecto.
 Implementa la guía de uso dentro del sistema para los módulos afectados por este cambio.
-Usa eos-user-help y los patrones de Smart Storage/personalERP cuando encajen.
+Usa eos-user-help: menús agrupados, iconos con etiqueta y ayuda por módulo cuando encajen.
 Documenta tareas, permisos, errores y recuperación con contenido real de esta versión.
 Prueba acceso a Ayuda y onboarding: saltar, desactivar, reactivar y teclado.
 Registra las brechas restantes y actualiza el estado del proyecto.
@@ -73,7 +124,38 @@ El instalador valida rutas del catálogo y del registro, origen, destino, propue
 
 EOS incorpora [PERU QUALITY](skills/eos-peru-quality/SKILL.md) para proyectos nuevos y existentes. Antes de activar IA o entregar un cambio material, registra sector público/privado, uso real de IA, datos, finalidad, responsables y riesgos. La [guía de fuentes y controles](docs/reference/AI-PERU-QUALITY.md) distingue obligaciones peruanas, estándares voluntarios, compromisos contractuales y pendientes de revisión. La [evaluación reutilizable](templates/AI-QUALITY-ASSESSMENT.md) conecta decisiones con evidencia, pruebas y seguimiento.
 
-ISO 9001 orienta la gestión de calidad; ISO/IEC 27701, la gestión de privacidad; la NTP-ISO/IEC 42001 se evalúa para gestión de IA según el ámbito aplicable. Una ISO internacional y una NTC colombiana no prueban adopción NTP por INACAL. Los PDF aportados se conservan fuera del repositorio: aquí se publican procedimientos propios, referencias y límites, sin reproducir las normas completas ni afirmar certificación.
+#### ✅ Calidad ISO y normativa peruana que aplican los agentes
+
+Los trece agentes de EOS trabajan **alineados con estándares ISO de calidad, privacidad, seguridad, riesgo e IA**, y con la normativa peruana sobre datos personales, IA, consumidor y seguridad informática. Cada agente debe aplicar estos controles en INIT, ADOPT y RELEASE, citar la norma que usa y dejar evidencia en [AI-QUALITY-ASSESSMENT](templates/AI-QUALITY-ASSESSMENT.md) y en el estado vivo del proyecto.
+
+| Norma o estándar | Para qué la usan los agentes | Fuente citada en el repositorio |
+|---|---|---|
+| **ISO 9001:2026** (ed. 6, publicada 2026-09) | Gestión de calidad: requisitos, riesgos, verificación y mejora continua (PDCA) en cada incremento | [Q-ISO-01](docs/reference/AI-PERU-QUALITY.md) |
+| **ISO/IEC 27701:2025** (ed. 2, publicada 2025-10) | Gestión de privacidad: finalidades, roles, minimización, derechos y retención | [P-ISO-01](docs/reference/AI-PERU-QUALITY.md) |
+| **NTP-ISO/IEC 42001:2025** | Sistema de gestión de IA; exigida al desarrollo de IA por entidades públicas (DS 115-2025-PCM, art. 28.2) | [AI-PE-02](docs/reference/AI-PERU-QUALITY.md) |
+| **NTP-ISO/IEC 27002** y **NTP-ISO 31000** vigentes | Controles de seguridad de la información y gestión de riesgos; uso obligatorio en el sector público (DS 115-2025-PCM, sexta disposición final) | [AI-PE-02](docs/reference/AI-PERU-QUALITY.md) |
+| **Ley 29733** y su reglamento **DS 016-2024-JUS** | Protección de datos personales: información, consentimiento cuando corresponde, transferencias y seguridad | [PE-01, PE-02](docs/reference/PRIVACY-PERU-REGISTRY.md) |
+| **Ley 31814** y su reglamento **DS 115-2025-PCM** | Uso de IA: riesgos, transparencia, supervisión humana y evaluación de impacto | [AI-PE-01, AI-PE-02](docs/reference/AI-PERU-QUALITY.md) |
+| **ENIA 2026–2030** (RM 152-2026-PCM) | Alineamiento con la Estrategia Nacional de IA y el gobierno de datos | [ENIA](docs/reference/ENIA-2026-2030.md) |
+| **Ley 29571** (Código de Protección y Defensa del Consumidor) | Información al consumidor y atención de reclamos cuando hay relación de consumo | [PE-07](docs/reference/PRIVACY-PERU-REGISTRY.md) |
+| **Ley 28493** | Correo electrónico comercial no solicitado | [PE-08](docs/reference/PRIVACY-PERU-REGISTRY.md) |
+| **Ley 27269** | Firmas y certificados digitales | [PE-11](docs/reference/PRIVACY-PERU-REGISTRY.md) |
+| **Ley 30096** (modificada por Ley 30171) | Delitos informáticos: límites de acceso, pruebas de seguridad autorizadas | [PE-12](docs/reference/PRIVACY-PERU-REGISTRY.md) |
+
+Fuentes primarias consultadas el 2026-10-19 (Congreso, El Peruano, gob.pe, ISO); cada registro indica su grado de verificación. Antes de una entrega, el agente revisa si hubo cambios normativos.
+
+**Lo que toda página web creada con EOS debe tener** (los agentes lo implementan y lo prueban en el producto):
+
+1. **Política de privacidad** clara y aviso de tratamiento de datos, conforme a la Ley 29733 y el DS 016-2024-JUS.
+2. **Consentimiento y cookies** solo cuando hay tratamientos que lo requieren; sin banners decorativos ni rastreo por defecto.
+3. **Información al consumidor y canal de reclamos** cuando la web vende u ofrece servicios (Ley 29571).
+4. **Transparencia de IA**: avisar cuando una función usa IA, con supervisión humana y opción de apagarla (Ley 31814, DS 115-2025-PCM).
+5. **Seguridad**: HTTPS, encabezados de seguridad, sesiones protegidas, mínimos privilegios y gestión de riesgos (NTP-ISO/IEC 27002, NTP-ISO 31000).
+6. **Accesibilidad**: objetivo técnico WCAG AA con teclado, foco, contraste y movimiento reducido.
+7. **Ayuda al usuario** dentro de la web y guía inicial que se puede saltar y reactivar.
+8. **Calidad verificable**: pruebas, evidencia y registro de cambios en cada versión (ISO 9001:2026).
+
+> **Importante:** EOS aplica prácticas alineadas con estas normas, pero no es un organismo certificador. La certificación ISO de una organización la otorga un organismo acreditado, y las decisiones legales de cada proyecto las confirma una persona competente. Una norma ISO internacional o una NTC colombiana no equivale a su adopción como NTP por INACAL. Las copias de normas aportadas se conservan fuera del repositorio; aquí solo hay procedimientos propios y referencias.
 
 El análisis de la [ENIA 2026–2030](docs/reference/ENIA-2026-2030.md) añade cuatro ejes, acciones, metas y seguimiento con páginas del anexo. Separa alineamiento público de referencia privada y conecta formación, gobierno de datos, recursos y participación con cada proyecto. La skill y la evaluación permiten registrar ese alineamiento; las metas nacionales no se convierten en KPI del producto ni prueban plataformas o fondos operativos.
 
@@ -88,7 +170,7 @@ Conserva arquitectura e identidad; verifica licencias antes de incorporar códig
 Actualiza EOS-PROJECT-STATUS y distingue implementado, probado y pendiente de revisión humana.
 ```
 
-Para actualizar una instalación existente, ejecuta primero `node scripts/install-agents.mjs --host all --target "../mi-proyecto" --update --dry-run` y revisa el plan; repite sin `--dry-run` para aplicarlo. Las modificaciones locales se preservan como conflictos con propuestas `.eos-new`. En un host único usa `codex` o `claude`. El catálogo distribuye la nueva skill; el equipo receptor debe ejecutar sus controles y revisar sus evidencias.
+Para actualizar una instalación existente, ejecuta primero `node scripts/install-agents.mjs --host all --target "RUTA/DE/TU-PROYECTO" --update --dry-run` y revisa el plan; repite sin `--dry-run` para aplicarlo. Las modificaciones locales se preservan como conflictos con propuestas `.eos-new`. En un host único usa `codex` o `claude`. El catálogo distribuye la nueva skill; el equipo receptor debe ejecutar sus controles y revisar sus evidencias.
 
 | Capacidad | Actívala cuando… | Entrega concreta |
 |---|---|---|
@@ -193,7 +275,7 @@ git clone https://github.com/oprbguitar/dev-funcy-agents-03-10-26.git
 
 | Host | Cómo usarlo | Qué obtienes |
 |---|---|---|
-| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 10 skills |
+| Claude Code (dentro del repo) | Abre el clon; [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md) | Reglas EOS, 13 subagentes y 12 skills |
 | Claude Code (como plugin) | `/plugin marketplace add oprbguitar/dev-funcy-agents-03-10-26` y luego instala `eos-agents` | Subagentes `eos-*` y skills en cualquier proyecto |
 | Claude Code (copia local) | `node scripts/install-agents.mjs --host claude --target <proyecto>` | `.claude/agents/`, `.claude/skills/`, `.eos/` y bloque en `AGENTS.md`/`CLAUDE.md` |
 | Codex | `node scripts/install-agents.mjs --host codex --target <proyecto>` | Bloque EOS en `AGENTS.md`, skills en `.agents/skills/`, roles en `.agents/eos-agents/` |
@@ -225,13 +307,13 @@ dev-funcy-agents-03-10-26/
 ├─ AGENTS.md                      Reglas de arranque para cualquier host (fuente única)
 ├─ CLAUDE.md                      Importa AGENTS.md para Claude Code
 ├─ EOS-CORE.md                    Núcleo obligatorio (~2k tokens) y tabla de carga bajo demanda
-├─ EOS_MASTER_SYSTEM_INSTRUCTION.md   Constitución maestra (secciones 0–95), solo por secciones
+├─ EOS_MASTER_SYSTEM_INSTRUCTION.md   Constitución maestra (secciones 0–98), solo por secciones
 ├─ library.json                  Manifiesto: documentos, fuentes, agentes y pisos por módulo
 ├─ .claude-plugin/
 │  ├─ plugin.json                Plugin eos-agents para Claude Code
 │  └─ marketplace.json           Marketplace para `/plugin marketplace add`
 ├─ agents/                       13 definiciones de subagentes + README
-├─ skills/                       10 skills: modos, estrategia, privacidad, marca/landing y escritorio
+├─ skills/                       12 skills: modos, estrategia, privacidad, marca/landing, escritorio, calidad Perú y ayuda al usuario
 ├─ docs/
 │  ├─ manuals/                   12 módulos mayores de especificación
 │  ├─ sources/                   4 conversaciones fuente (bytes intactos + SHA-256) y trazabilidad
@@ -259,7 +341,7 @@ La copia local es la ruta reproducible probada por el instalador EOS. Consulta t
 1. Clona el repositorio y ábrelo en el Code tab.
 2. [CLAUDE.md](CLAUDE.md) importa [AGENTS.md](AGENTS.md); Claude lee las reglas EOS al iniciar.
 3. Pide un modo, por ejemplo: «Aplica EOS en MODE=AUDIT y entrégame hallazgos por severidad».
-4. Los 13 subagentes de [agents/](agents/README.md) y las 10 skills quedan disponibles para el orquestador.
+4. Los 13 subagentes de [agents/](agents/README.md) y las 12 skills quedan disponibles para el orquestador.
 
 ### Claude Code como plugin en cualquier proyecto
 
@@ -275,10 +357,10 @@ Tras instalarlo, los subagentes `eos-*` aparecen en la lista de agentes del host
 
 ```bash
 # simula primero y revisa qué se crearía
-node scripts/install-agents.mjs --host all --target ../mi-proyecto --dry-run
+node scripts/install-agents.mjs --host all --target "RUTA/DE/TU-PROYECTO" --dry-run
 
 # instala de verdad (claude | codex | all)
-node scripts/install-agents.mjs --host codex --target ../mi-proyecto
+node scripts/install-agents.mjs --host codex --target "RUTA/DE/TU-PROYECTO"
 ```
 
 El instalador copia una instantánea de la biblioteca en `.eos/`, coloca agentes y skills en el lugar que cada host espera (`.claude/` para Claude Code, `.agents/` para Codex), reescribe los enlaces internos para que apunten a `.eos/`, añade un bloque EOS delimitado al final del `AGENTS.md` del destino y registra lo creado en `.eos/install-manifest.json`. **Nunca sobrescribe un archivo existente**: lo reporta como omitido. Ejecutarlo dos veces es seguro (idempotente).
@@ -290,8 +372,8 @@ En Codex, las skills quedan en `.agents/skills/` y los roles Markdown en `.agent
 Desde este clon, tras traer una revisión aprobada, revisa el plan y aplícalo:
 
 ```powershell
-node scripts/install-agents.mjs --host all --target "../mi-proyecto" --update --dry-run
-node scripts/install-agents.mjs --host all --target "../mi-proyecto" --update
+node scripts/install-agents.mjs --host all --target "RUTA/DE/TU-PROYECTO" --update --dry-run
+node scripts/install-agents.mjs --host all --target "RUTA/DE/TU-PROYECTO" --update
 ```
 
 `--update` compara hashes con el manifiesto anterior: actualiza archivos intactos, conserva tus ediciones y deja una propuesta `.eos-new` cuando hay conflicto. Revisa y resuelve esas propuestas antes de declarar la actualización completa. No borres el manifiesto para eludir conflictos. Para retirar EOS, usa el manifiesto para identificar únicamente archivos sin cambios y elimina solo los bloques `EOS:BEGIN`/`EOS:END` tras revisión; no existe un comando de desinstalación automática.
